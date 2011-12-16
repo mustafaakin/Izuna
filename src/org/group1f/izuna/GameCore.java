@@ -5,8 +5,6 @@ package org.group1f.izuna;
 
 import java.util.prefs.Preferences;
 
-import org.group1f.izuna.Contollers.LoadManager;
-
 /**
  * @author Mustafa
  *

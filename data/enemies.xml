@@ -1,0 +1,9 @@
+<EnemyList>
+	<enemies>
+		<Enemy key="tie-fighter">
+			<health>100</health>
+			<animationKey>TIE_STILL</animationKey>
+			<deathKey>TIE_DIE</deathKey>
+		</Enemy>
+	</enemies>
+</EnemyList>

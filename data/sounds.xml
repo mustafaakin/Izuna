@@ -1,0 +1,16 @@
+<soundList>
+   <list>
+      <sound key="PlayerDie">
+         <file>a.mp3</file>
+      </sound>
+      <sound key="LaserFire">
+         <file>b.mp3</file>
+      </sound>
+      <sound key="BonusTaken">
+         <file>c.mp3</file>
+      </sound>
+      <sound key="EnemyDie">
+         <file>d.mp3</file>
+      </sound>
+   </list>
+</soundList>
