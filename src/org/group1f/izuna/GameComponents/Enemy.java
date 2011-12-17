@@ -9,8 +9,7 @@ public class Enemy extends AIControllable implements SpaceShip {
     {
             super(currentPos, rest);
     }
-    
-    
+        
     public void checkStateToAnimate()
     {
             

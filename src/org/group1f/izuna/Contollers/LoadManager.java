@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.imageio.ImageIO;
 
+import org.group1f.izuna.GameComponents.*;
 import org.group1f.izuna.GameComponents.SoundEffect;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 
@@ -49,4 +50,19 @@ public class LoadManager {
             return anim;
         }
     }
+    
+    public static Enemy getEnemy(String key){
+        Enemy e = new Enemy(null, null);
+        return e;
+    }
+    
+    public static Weapon getWeapon(String key){
+        Weapon w = new Weapon(null, null);
+        return null;
+    }
+    
+    public static Bonus getBonus(String key){
+        Bonus b = new Bonus(null, null);
+        return null;
+    }    
 }
