@@ -12,7 +12,9 @@ public final class PhysicsHandler {
         return s1.getCollisionRectangle().intersects(s2.getCollisionRectangle());
     }
     
-    
+    /*
+     * need to implement a method to make sure player is always in the screen
+     */
     
 
 }
