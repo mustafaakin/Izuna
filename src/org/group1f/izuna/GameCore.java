@@ -19,7 +19,7 @@ public class GameCore {
 
     private static Preferences prefs = Preferences.userNodeForPackage(GameCore.class);
     public GameState game = new GameState();
-    
+
     public static Preferences preferences() {
         return prefs;
     }
@@ -31,6 +31,14 @@ public class GameCore {
      * initialize then call gameloop
      */
     public static void main(String[] args) throws Exception {
+        SoundEffect deneme = new SoundEffect("data/sounds/laser_blast.mp3");
+        deneme.play();
+        Thread.sleep(500);
+        deneme.play();
+        Thread.sleep(500);
+        deneme.play();
+        Thread.sleep(500);
+        deneme.play();
     }
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
@@ -53,25 +61,21 @@ public class GameCore {
 
     /*
      * In this class the operations below needs to be implemented in this order
-     * 1) if the level is over load next level 
-     * 2) update all gameobjects
-     * (sprites and sounds) 
-     * 3) check neccessary collisions using physics class
+     * 1) if the level is over load next level 2) update all gameobjects
+     * (sprites and sounds) 3) check neccessary collisions using physics class
      * and change states of the gameobjects accordingly
      */
-    public void updateBattlefield() {        
+    public void updateBattlefield() {
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
         // Players - EnemyWeapons
         // Enemies - UserWeapons
         // Players - Bonuses
-        for( Enemy e : game.enemies){
-            if ( PhysicsHandler.checkSpriteCollisions(e, game.p1)){
-                
+        for (Enemy e : game.enemies) {
+            if (PhysicsHandler.checkSpriteCollisions(e, game.p1)) {
             }
-            if ( game.p2 != null && PhysicsHandler.checkSpriteCollisions(e, game.p2)){
-                
-            }            
+            if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(e, game.p2)) {
+            }
         }
     }
 
