@@ -13,5 +13,5 @@ public class LoadManager {
 
 	private LoadManager() {
 		// Making it singleton
-	}
+	}        
 }

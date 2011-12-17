@@ -5,6 +5,7 @@ package org.group1f.izuna;
 
 import org.group1f.izuna.GameComponents.Drawing.*;
 
+import java.awt.Point;
 import java.util.prefs.Preferences;
 import org.group1f.izuna.GameComponents.LinearPath;
 import org.group1f.izuna.GameComponents.QuadraticPath;
@@ -35,7 +36,7 @@ public class GameCore {
         path.setStartTime(1500);
         for (int i = 0; i < 100 ; i++) {
            Point p = path.getPosition(1500+ i * 50);
-            System.out.println(p.getxCor() + "\t" + p.getyCor());
+            System.out.println(p.x+ "\t" + p.y);
         }
         
     }

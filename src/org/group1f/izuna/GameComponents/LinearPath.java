@@ -1,6 +1,6 @@
 package org.group1f.izuna.GameComponents;
 
-import org.group1f.izuna.GameComponents.Drawing.Point;
+import java.awt.Point;
 
 public class LinearPath extends Path {
 
@@ -20,11 +20,11 @@ public class LinearPath extends Path {
         float incrRatio = (float)timeDiff / duration;
 
         Point result = new Point(startPoint);
-        int diffX = endPoint.getxCor() - startPoint.getxCor();
-        int diffY = endPoint.getyCor() - startPoint.getyCor();
+        int diffX = endPoint.x - startPoint.x;
+        int diffY = endPoint.y - startPoint.y;
 
-        result.incrX(diffX * incrRatio);
-        result.incrY(diffY * incrRatio);
+        result.x += (diffX * incrRatio);
+        result.y += (diffY * incrRatio);
 
         return result;
     }

@@ -1,6 +1,7 @@
 package org.group1f.izuna.GameComponents;
 
-import org.group1f.izuna.GameComponents.Drawing.*;
+import java.awt.Point;
+import org.group1f.izuna.GameComponents.Drawing.Animation;
 
 public abstract class AIControllable extends GameObject {
 

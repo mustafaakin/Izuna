@@ -1,6 +1,6 @@
 package org.group1f.izuna.GameComponents;
 
-import org.group1f.izuna.GameComponents.Drawing.Point;
+import java.awt.Point;
 import Jama.Matrix;
 import Jama.LUDecomposition;
 
@@ -27,13 +27,12 @@ public class QuadraticPath extends Path {
         Point result = new Point(startPoint);
 
         float incrRatio = (float) timeDiff / duration;
-        int diffX = endPoint.getxCor() - startPoint.getxCor();
+        int diffX = endPoint.x - startPoint.x;
 
-        float resultingX = diffX * incrRatio + result.getxCor();
+        float resultingX = diffX * incrRatio + result.x;
         float resultingY = coEfficients[0] * resultingX * resultingX + coEfficients[1] * resultingX + coEfficients[2];
 
-        result.setxCor((int) resultingX);
-        result.setyCor((int) resultingY);
+        result.move((int) resultingX,(int) resultingY);
 
         return result;
     }
@@ -42,13 +41,13 @@ public class QuadraticPath extends Path {
         int[] x = new int[3];
         int[] y = new int[3];
 
-        x[0] = startPoint.getxCor();
-        x[1] = middlePoint.getxCor();
-        x[2] = endPoint.getxCor();
+        x[0] = startPoint.x;
+        x[1] = middlePoint.x;
+        x[2] = endPoint.x;
 
-        y[0] = startPoint.getyCor();
-        y[1] = middlePoint.getyCor();
-        y[2] = endPoint.getyCor();
+        y[0] = startPoint.y;
+        y[1] = middlePoint.y;
+        y[2] = endPoint.y;
 
         /*
          * Adapted from Solution:

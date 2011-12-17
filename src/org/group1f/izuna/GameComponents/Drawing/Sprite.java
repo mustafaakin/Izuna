@@ -1,5 +1,6 @@
 package org.group1f.izuna.GameComponents.Drawing;
 
+import java.awt.Point;
 import java.awt.Image;
 import java.awt.Rectangle;
 
@@ -12,15 +13,15 @@ abstract public class Sprite {
 	private Rectangle collisionRectangle;
 
 	public Sprite(){
-		this.position= Point.getOutOfBounds(); 
+		this.position= new Point();
 	}
 	
 	public Sprite(Point position) {
 		this.position = position;
 		vX = 0;
 		vY = 0;
-		setCollisionRectangle(new Rectangle(position.getxCor(),
-				position.getyCor(), 0, 0));
+		setCollisionRectangle(new Rectangle(position.x,
+				position.y, 0, 0));
 	}
 
 	public int getHeight() {
@@ -32,12 +33,12 @@ abstract public class Sprite {
 	}
 
 	public void update(long elapsedTime) {
-		position.incrX(vX * elapsedTime);
-		position.incrY(vY * elapsedTime);
+            	position.x += (vX * elapsedTime);
+		position.y += (vY * elapsedTime);
 		currentAnimation.update(elapsedTime);
 
-		setCollisionRectangle(new Rectangle(position.getxCor(),
-				position.getyCor(), getWidth(), getHeight()));
+		setCollisionRectangle(new Rectangle(position.x,
+				position.y, getWidth(), getHeight()));
 	}
 
 	public Image getCurrentImage() {

@@ -1,5 +1,6 @@
 package org.group1f.izuna.GameComponents;
 
+import java.awt.Point;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Weapon extends AIControllable {
