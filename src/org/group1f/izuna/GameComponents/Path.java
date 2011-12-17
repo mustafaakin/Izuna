@@ -14,4 +14,10 @@ public abstract class Path {
 		this.endPoint = end;
 	}
 	abstract public Point getPosition(long time);
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+        
+        
 }
