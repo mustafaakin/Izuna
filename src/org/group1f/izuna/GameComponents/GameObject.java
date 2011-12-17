@@ -5,8 +5,13 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 public abstract class GameObject extends Sprite{
 	private Animation restAnimation;
 	private boolean isVisible;
+        
 	
-	public GameObject(){
+	public GameObject(Point currentPos, Animation rest){
+            super(currentPos);
+            restAnimation = rest;
+            isVisible = true;
+            checkStateToAnimate();
 	}
 
 	public boolean isVisible() {
@@ -24,4 +29,6 @@ public abstract class GameObject extends Sprite{
 	public void setRestAnimation(Animation restAnimation) {
 		this.restAnimation = restAnimation;
 	}
+        
+        public abstract void checkStateToAnimate();
 }
