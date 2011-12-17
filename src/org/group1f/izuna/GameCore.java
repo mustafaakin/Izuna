@@ -7,6 +7,7 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 import java.awt.Point;
 import java.util.prefs.Preferences;
+import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.GameComponents.LinearPath;
 import org.group1f.izuna.GameComponents.QuadraticPath;
 
@@ -30,18 +31,7 @@ public class GameCore {
      * initialize then call gameloop
      */
     public static void main(String[] args) throws Exception {
-
-        Point start = new Point(100,150);
-        Point middle = new Point(150,250);
-        Point end = new Point(200,500);
-        
-        QuadraticPath path = new QuadraticPath(start, end, middle, 10000);
-        path.setStartTime(1500);
-        for (int i = 0; i < 100 ; i++) {
-           Point p = path.getPosition(1500+ i * 50);
-            System.out.println(p.x+ "\t" + p.y);
-        }
-        
+        LoadManager.init();
     }
     /*
      * in an infinite loop

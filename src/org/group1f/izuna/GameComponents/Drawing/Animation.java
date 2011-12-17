@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import org.group1f.izuna.GameCore;
 
 public class Animation {
-
+        public static final long FRAME_DURATION = 16;
+        
 	protected ArrayList<AnimationFrame> frames;
 
 	protected int currentFrameIndex;
