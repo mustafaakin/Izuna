@@ -7,6 +7,7 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 import java.util.prefs.Preferences;
 import org.group1f.izuna.GameComponents.LinearPath;
+import org.group1f.izuna.GameComponents.QuadraticPath;
 
 /**
  * @author Mustafa
@@ -25,14 +26,16 @@ public class GameCore {
      */
     public static void main(String[] args) throws Exception {
 
-        Point start = new Point(100,300);
+        Point start = new Point(100,150);
+        Point middle = new Point(150,250);
         Point end = new Point(200,500);
-        LinearPath path = new LinearPath(start, end, 15000);
-        path.setStartTime(1000);
-        for (int i = 0; i < 150; i++) {
-            Point p = path.getPosition(1000 + i*100);
+        
+        QuadraticPath path = new QuadraticPath(start, end, middle, 10000);
+        path.setStartTime(1500);
+        for (int i = 0; i < 100 ; i++) {
+           Point p = path.getPosition(1500+ i * 50);
             System.out.println(p.getxCor() + "\t" + p.getyCor());
-        }        
-        System.out.println("It is alive!");
+        }
+        
     }
 }

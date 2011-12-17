@@ -1,18 +1,71 @@
 package org.group1f.izuna.GameComponents;
 
 import org.group1f.izuna.GameComponents.Drawing.Point;
+import Jama.Matrix;
+import Jama.LUDecomposition;
 
 public class QuadraticPath extends Path {
-	private Point middlePoint;
 
-	public QuadraticPath(Point start, Point end, Point middle, long duration) {
-		super(start, end, duration);
-		this.middlePoint = middle;
-	}
+    private float[] coEfficients = new float[3];
+    private Point middlePoint;
 
-	@Override
-	public Point getPosition(long time) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public QuadraticPath(Point start, Point end, Point middle, long duration) {
+        super(start, end, duration);
+        this.middlePoint = middle;
+        setEquation();
+    }
+    
+   
+
+    @Override
+    public Point getPosition(long time) {
+        long timeDiff = time - startTime;
+
+        if (timeDiff > duration || timeDiff < 0) {
+            throw new IllegalArgumentException("Given time should be at most duration times larger than starting time of the path.");
+        }
+        Point result = new Point(startPoint);
+
+        float incrRatio = (float) timeDiff / duration;
+        int diffX = endPoint.getxCor() - startPoint.getxCor();
+
+        float resultingX = diffX * incrRatio + result.getxCor();
+        float resultingY = coEfficients[0] * resultingX * resultingX + coEfficients[1] * resultingX + coEfficients[2];
+
+        result.setxCor((int) resultingX);
+        result.setyCor((int) resultingY);
+
+        return result;
+    }
+
+    private void setEquation() {
+        int[] x = new int[3];
+        int[] y = new int[3];
+
+        x[0] = startPoint.getxCor();
+        x[1] = middlePoint.getxCor();
+        x[2] = endPoint.getxCor();
+
+        y[0] = startPoint.getyCor();
+        y[1] = middlePoint.getyCor();
+        y[2] = endPoint.getyCor();
+
+        /*
+         * Adapted from Solution:
+         * http://stackoverflow.com/questions/1992638/java-inverse-matrix-calculation
+         */
+        double[][] values = {{x[0] * x[0], x[0], 1}, {x[1] * x[1], x[1], 1}, {x[2] * x[2], x[2], 1}};  // each array is a row in the matrix
+        double[] rhs = {y[0], y[1], y[2]}; // rhs vector
+
+        Matrix a = new Matrix(values);
+        LUDecomposition luDecomposition = new LUDecomposition(a);
+
+        Matrix b = new Matrix(rhs, rhs.length);
+        Matrix solved = luDecomposition.solve(b); // solve Ax = b for the unknown vector x
+
+        for (int i = 0; i < 3; i++) {
+            coEfficients[i] = (float) solved.get(i, 0);
+            System.out.println(coEfficients[i]);
+        }
+    }
 }
