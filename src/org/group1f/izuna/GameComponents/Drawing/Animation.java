@@ -6,104 +6,114 @@ import java.util.ArrayList;
 import org.group1f.izuna.GameCore;
 
 public class Animation {
-        public static final long FRAME_DURATION = 16;
+
+    public static final long FRAME_DURATION = 16;
+    protected ArrayList<AnimationFrame> frames;
+    protected int currentFrameIndex;
+    protected long totalDuration;
+    protected long elapsedTime;
+
+    public Animation() {
+        this(new ArrayList<AnimationFrame>(), 0);
+    }
+
+    private Animation(ArrayList<AnimationFrame> frames, long totalDuration) {
+        this.frames = frames;
+        this.totalDuration = totalDuration;
+        startOver();
+    }
+
+    public synchronized void startOver() {
+        elapsedTime = 0;
+        currentFrameIndex = 0;
+    }
+
+    public Animation clone() {
+        return new Animation(frames, totalDuration);
+    }
+
+    public synchronized void update(long passedTime) {
+        if (frames.size() > 1) {
+            elapsedTime += passedTime;
+        }
+
+        if (elapsedTime >= totalDuration) {
+            elapsedTime = elapsedTime % totalDuration;
+            currentFrameIndex = 0;
+        }
+
+        while (!timeCorrespondImage(currentFrameIndex)) {
+            currentFrameIndex++;
+        }
+    }
+
+    protected boolean timeCorrespondImage(int index) {
+        long timeChecked = 0;
+
+        for (int i = 0; i <= index; i++) {
+            timeChecked += frames.get(i).getDurationOfFrame();
+        }
+
+        if (timeChecked < elapsedTime) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public synchronized void addFrame(Image img, Image img3D, long dur) {
+        totalDuration += dur;
+        frames.add(new AnimationFrame(dur, img, img3D));
+    }
+    
+    public synchronized void addFrame3D(Image image, long dur){
+        totalDuration += dur;
         
-	protected ArrayList<AnimationFrame> frames;
+    }
 
-	protected int currentFrameIndex;
-	protected long totalDuration;
-	protected long elapsedTime;
+    public synchronized Image getImage() {
+        if (frames.isEmpty()) {
+            return null;
+        } else {
+            return getFrame(currentFrameIndex).getFrame();
+        }
+    }
 
-	public Animation() {
-		this(new ArrayList<AnimationFrame>(), 0);
-	}
+    private AnimationFrame getFrame(int i) {
+        return frames.get(i);
+    }
 
-	private Animation(ArrayList<AnimationFrame> frames, long totalDuration) {
-		this.frames = frames;
-		this.totalDuration = totalDuration;
-		startOver();
-	}
+    private class AnimationFrame {
 
-	public synchronized void startOver() {
-		elapsedTime = 0;
-		currentFrameIndex = 0;
-	}
+        private Image frame;
+        private Image frame3D;
+        private long durationOfFrame;
 
-	public Animation clone() {
-		return new Animation(frames, totalDuration);
-	}
+        public AnimationFrame(long dur, Image img, Image img3D) {
+            frame = img;
+            durationOfFrame = dur;
+            setFrame3D(img3D);
+        }
 
-	public synchronized void update(long passedTime) {
-		if (frames.size() > 1)
-			elapsedTime += passedTime;
+        public Image getFrame() {
+            boolean is3D = GameCore.preferences().getBoolean("3D", false);
+            if (is3D) {
+                return frame3D;
+            } else {
+                return frame;
+            }
+        }
 
-		if (elapsedTime >= totalDuration) {
-			elapsedTime = elapsedTime % totalDuration;
-			currentFrameIndex = 0;
-		}
+        public long getDurationOfFrame() {
+            return durationOfFrame;
+        }
 
-		while (!timeCorrespondImage(currentFrameIndex))
-			currentFrameIndex++;
-	}
+        public Image getFrame3D() {
+            return frame3D;
+        }
 
-	protected boolean timeCorrespondImage(int index) {
-		long timeChecked = 0;
-
-		for (int i = 0; i <= index; i++) {
-			timeChecked += frames.get(i).getDurationOfFrame();
-		}
-
-		if (timeChecked < elapsedTime)
-			return false;
-		else
-			return true;
-	}
-
-	public synchronized void addFrame(Image image, long dur) {
-		totalDuration += dur;
-		frames.add(new AnimationFrame(dur, image));
-	}
-
-	public synchronized Image getImage() {
-		if (frames.isEmpty())
-			return null;
-		else
-			return getFrame(currentFrameIndex).getFrame();
-	}
-
-	private AnimationFrame getFrame(int i) {
-		return frames.get(i);
-	}
-
-	private class AnimationFrame {
-		private Image frame;
-		private Image frame3D;
-		private long durationOfFrame;
-
-		public AnimationFrame(long dur, Image img) {
-			frame = img;
-			durationOfFrame = dur;
-			setFrame3D(null);
-		}
-
-		public Image getFrame() {
-			boolean is3D = GameCore.preferences().getBoolean("3D", false);
-			if (is3D)
-				return frame3D;
-			else
-				return frame;
-		}
-
-		public long getDurationOfFrame() {
-			return durationOfFrame;
-		}
-
-		public Image getFrame3D() {
-			return frame3D;
-		}
-
-		public void setFrame3D(Image frame3D) {
-			this.frame3D = frame3D;
-		}
-	}
+        public void setFrame3D(Image frame3D) {
+            this.frame3D = frame3D;
+        }
+    }
 }

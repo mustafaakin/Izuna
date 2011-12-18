@@ -40,7 +40,7 @@ public class LoadManager {
                 if (!frame.isDirectory()) {
                     try {
                         Image buffImage = ImageIO.read(frame);
-                        anim.addFrame(buffImage, Animation.FRAME_DURATION);
+//                        anim.addFrame(buffImage, Animation.FRAME_DURATION);
                         System.out.println("Loaded: " + frame.getName());
                     } catch (IOException ioe) {
                         System.err.println("'" + frame.getAbsolutePath() + "' is not a valid image file.");

@@ -7,8 +7,11 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 import java.awt.Point;
 import java.util.prefs.Preferences;
+import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.Contollers.PhysicsHandler;
+import org.group1f.izuna.GUI.Menu;
+import org.group1f.izuna.GUI.MenuElement;
 import org.group1f.izuna.GameComponents.*;
 
 /**
@@ -31,14 +34,7 @@ public class GameCore {
      * initialize then call gameloop
      */
     public static void main(String[] args) throws Exception {
-        SoundEffect deneme = new SoundEffect("data/sounds/laser_blast.mp3");
-        deneme.play();
-        Thread.sleep(500);
-        deneme.play();
-        Thread.sleep(500);
-        deneme.play();
-        Thread.sleep(500);
-        deneme.play();
+        Menu main = new Menu();
     }
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
