@@ -35,6 +35,7 @@ public class GameCore {
      */
     public static void main(String[] args) throws Exception {
         Menu main = new Menu();
+        LoadManager.init();
     }
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
