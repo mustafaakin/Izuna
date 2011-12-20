@@ -87,6 +87,7 @@ public class GameCore {
             } catch (Exception e) {
             }
         }
+        System.out.println("hello..");
     }
 
     // check player inputs for two players
