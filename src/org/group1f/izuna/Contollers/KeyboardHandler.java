@@ -1,9 +1,40 @@
 package org.group1f.izuna.Contollers;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class KeyboardHandler {
+public class KeyboardHandler implements KeyListener {
+
+    private ArrayList<Key> pressed;
+    private ArrayList<Key> released;
+
+    public KeyboardHandler() {
+    }
+
+    public ArrayList<Key> getPressed() {
+        return pressed;
+    }
+
+    public ArrayList<Key> getReleased() {
+        return released;
+    }
+
+    
+    @Override
+    public void keyTyped(KeyEvent e) { // Dont'need
+        released = getKeys(e);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        pressed = getKeys(e);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     public enum Key {
 
@@ -21,6 +52,4 @@ public class KeyboardHandler {
         }
         return keys;
     }
- 
-        
 }

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
@@ -18,9 +19,8 @@ public class LoadManager {
     private static Hashtable<String, Animation> animationBucket;
     private static Hashtable<String, SoundEffect> soundBucket;
     private static Hashtable<String, Image> imageBucket;
-
     private static Hashtable<String, Image> menuBucket;
-    
+
     private LoadManager() {
         // Making it singleton
     }
@@ -34,13 +34,12 @@ public class LoadManager {
             e.printStackTrace();
         }
     }
-    
-    public static Image getMenuImage(String menu, String key){
+
+    public static Image getMenuImage(String menu, String key) {
         return (Image) menuBucket.get(menu + "-" + key);
     }
 
-    private static void initAnimations() {
-        Animation a = getAnimationFromFolder(new File("data/image/animation/enemies/deneme/images"));
+    private static void initAnimation(String key) {
     }
 
     public static Image getImage() {
@@ -60,25 +59,28 @@ public class LoadManager {
         }
     }
 
-    private static Animation getAnimationFromFolder(File folder) {
-        if (!folder.isDirectory()) {
-            throw new IllegalArgumentException("Animations must be in a folder.");
-        } else {
-            Animation anim = new Animation();
-            File[] frames = folder.listFiles();
-            for (File frame : frames) {
-                if (!frame.isDirectory()) {
-                    try {
-                        Image buffImage = ImageIO.read(frame);
-//                        anim.addFrame(buffImage, Animation.FRAME_DURATION);
-                        System.out.println("Loaded: " + frame.getName());
-                    } catch (IOException ioe) {
-                        System.err.println("'" + frame.getAbsolutePath() + "' is not a valid image file.");
-                    }
+    private static Animation getAnimationFromFolder(String folder) {
+        File root = new File(folder);
+        File[] images3D = null;
+        File[] imagesNormal = null;
+        for (File f : root.listFiles()) {
+            if (f.isDirectory()) {
+                if (f.getName().equals("3D")) {
+                    images3D = f.listFiles();
+                } else if (f.getName().equals("normal")) {
+                    imagesNormal = f.listFiles();
                 }
             }
-            return anim;
         }
+        if (imagesNormal.length != images3D.length) {
+            throw new IllegalArgumentException("The folder '" + folder + "' does not consist same amounts of 3D images and Normal images!");
+        }
+        for (int i = 0; i < imagesNormal.length; i++) {
+            if (images3D != null) { // 3D Optional
+            }
+        }
+
+        return null;
     }
 
     public static Enemy getEnemy(String key) {
