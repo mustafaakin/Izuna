@@ -33,7 +33,6 @@ public class QuadraticPath extends Path {
         float resultingY = coEfficients[0] * resultingX * resultingX + coEfficients[1] * resultingX + coEfficients[2];
 
         result.move((int) resultingX,(int) resultingY);
-
         return result;
     }
 

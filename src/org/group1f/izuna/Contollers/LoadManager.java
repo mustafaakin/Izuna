@@ -42,10 +42,6 @@ public class LoadManager {
     private static void initAnimation(String key) {
     }
 
-    public static Image getImage() {
-        return null;
-    }
-
     private static void readMenus() throws IOException {
         File background = new File("data/image/menu/background.png");
         imageBucket.put("menu_background", ImageIO.read(background));
@@ -60,6 +56,7 @@ public class LoadManager {
     }
 
     private static Animation getAnimationFromFolder(String folder) {
+        Animation anim = new Animation();
         File root = new File(folder);
         File[] images3D = null;
         File[] imagesNormal = null;
@@ -72,15 +69,19 @@ public class LoadManager {
                 }
             }
         }
-        if (imagesNormal.length != images3D.length) {
-            throw new IllegalArgumentException("The folder '" + folder + "' does not consist same amounts of 3D images and Normal images!");
-        }
         for (int i = 0; i < imagesNormal.length; i++) {
-            if (images3D != null) { // 3D Optional
-            }
+            try {
+                Image imgNorm = ImageIO.read(imagesNormal[i]);
+                Image img3D = null;
+                if ( images3D != null){
+                     img3D = ImageIO.read(images3D[i]);
+                }
+                anim.addFrame(imgNorm, img3D);
+            } catch (IOException ioe) {
+                System.err.println("Error reading files '" + imagesNormal[i] + "' and " + images3D[i] + "' :" + ioe.getMessage());
+            }            
         }
-
-        return null;
+        return anim;
     }
 
     public static Enemy getEnemy(String key) {
@@ -96,5 +97,9 @@ public class LoadManager {
     public static Bonus getBonus(String key) {
         Bonus b = new Bonus(null, null);
         return null;
+    }
+    
+    public static Image getImage(String key){
+        return imageBucket.get(key);
     }
 }

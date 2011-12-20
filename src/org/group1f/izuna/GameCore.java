@@ -3,10 +3,15 @@
  */
 package org.group1f.izuna;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
 import java.awt.Point;
+import java.io.File;
 import java.util.prefs.Preferences;
+import javax.imageio.ImageIO;
+import org.group1f.izuna.Contollers.FullScreenManager;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.Contollers.PhysicsHandler;
@@ -26,16 +31,18 @@ public class GameCore {
     public static Preferences preferences() {
         return prefs;
     }
-
     /**
      * @param args
      */
     /*
      * initialize then call gameloop
      */
+    Graphics2D g;
+    SoundEffect backMusic;
+
     public static void main(String[] args) throws Exception {
-        Menu main = new Menu();
-        LoadManager.init();
+        GameCore core = new GameCore();
+        core.initialize();
     }
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
@@ -49,7 +56,37 @@ public class GameCore {
      * that will be used in levels
      */
     public void initialize() {
+        FullScreenManager.initGraphics();
         LoadManager.init();
+        g = FullScreenManager.getGraphics();
+        Image i = LoadManager.getImage("menu_background");
+        backMusic = new SoundEffect("data/sounds/main_menu.mp3");
+        backMusic.play();
+
+        Image ship = null;
+        try {
+            ship = ImageIO.read(new File("data/image/animation/enemies/deneme/images/redShip03.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        QuadraticPath path = new QuadraticPath(new Point(100, 100), new Point(520,620), new Point(135, 110), 2500);
+        long start = System.currentTimeMillis();
+        path.setStartTime(start);
+        while (true) {
+            long t = System.currentTimeMillis();
+            if ( t > start + 2500)
+                break;
+            Point p = path.getPosition(t);
+            g = FullScreenManager.getGraphics();
+            g.drawImage(i, 0, 0, null);
+            g.drawImage(ship, p.y, p.x, null);
+            g.dispose();
+            FullScreenManager.update();
+            try {
+                Thread.sleep(1000 / 60);
+            } catch (Exception e) {
+            }
+        }
     }
 
     // check player inputs for two players

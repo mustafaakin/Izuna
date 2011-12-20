@@ -7,17 +7,17 @@ import org.group1f.izuna.GameCore;
 
 public class Animation {
 
-    public static final long FRAME_DURATION = 16;
+    public static final long FRAME_DURATION = 1000 / 24;
     protected ArrayList<AnimationFrame> frames;
     protected int currentFrameIndex;
     protected long totalDuration;
     protected long elapsedTime;
 
     public Animation() {
-        this(new ArrayList<AnimationFrame>(), 0);
+        this(new ArrayList<AnimationFrame>());
     }
 
-    private Animation(ArrayList<AnimationFrame> frames, long totalDuration) {
+    private Animation(ArrayList<AnimationFrame> frames) {
         this.frames = frames;
         this.totalDuration = totalDuration;
         startOver();
@@ -29,7 +29,7 @@ public class Animation {
     }
 
     public Animation clone() {
-        return new Animation(frames, totalDuration);
+        return new Animation(frames);
     }
 
     public synchronized void update(long passedTime) {
@@ -51,7 +51,7 @@ public class Animation {
         long timeChecked = 0;
 
         for (int i = 0; i <= index; i++) {
-            timeChecked += frames.get(i).getDurationOfFrame();
+            timeChecked += FRAME_DURATION;
         }
 
         if (timeChecked < elapsedTime) {
@@ -61,16 +61,11 @@ public class Animation {
         }
     }
 
-    public synchronized void addFrame(Image img, Image img3D, long dur) {
-        totalDuration += dur;
-        frames.add(new AnimationFrame(dur, img, img3D));
+    public synchronized void addFrame(Image img, Image img3D) {
+        totalDuration += FRAME_DURATION;
+        frames.add(new AnimationFrame(img, img3D));
     }
     
-    public synchronized void addFrame3D(Image image, long dur){
-        totalDuration += dur;
-        
-    }
-
     public synchronized Image getImage() {
         if (frames.isEmpty()) {
             return null;
@@ -87,11 +82,9 @@ public class Animation {
 
         private Image frame;
         private Image frame3D;
-        private long durationOfFrame;
 
-        public AnimationFrame(long dur, Image img, Image img3D) {
+        public AnimationFrame(Image img, Image img3D) {
             frame = img;
-            durationOfFrame = dur;
             setFrame3D(img3D);
         }
 
@@ -102,10 +95,6 @@ public class Animation {
             } else {
                 return frame;
             }
-        }
-
-        public long getDurationOfFrame() {
-            return durationOfFrame;
         }
 
         public Image getFrame3D() {
