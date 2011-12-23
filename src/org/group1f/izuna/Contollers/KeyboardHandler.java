@@ -6,38 +6,32 @@ import java.util.ArrayList;
 
 public class KeyboardHandler implements KeyListener {
 
-    private ArrayList<Key> pressed;
-    private ArrayList<Key> released;
+    private ArrayList<Key> keys;
 
     public KeyboardHandler() {
+        keys = new ArrayList<>();
     }
 
-    public ArrayList<Key> getPressed() {
-        return pressed;
+    public ArrayList<Key> getKeys() {
+        return keys;
     }
 
-    public ArrayList<Key> getReleased() {
-        return released;
-    }
-
-    
     @Override
     public void keyTyped(KeyEvent e) { // Dont'need
-        released = getKeys(e);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        pressed = getKeys(e);
+        keys.addAll(getKeys(e));
+        System.out.println(keys);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        keys.removeAll(getKeys(e));
     }
 
     public enum Key {
-
         Player1_Up, Player1_Down, Player1_Left, Player1_Right,
         Player1_Weapon1, Player1_Weapon2, Player1_Weapon3, Player1_Weapon4,
         Player2_Up, Player2_Down, Player2_Left, Player2_Right, Player2_Weapon1,
@@ -49,6 +43,8 @@ public class KeyboardHandler implements KeyListener {
         ArrayList<Key> keys = new ArrayList<Key>();
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             keys.add(Key.Player1_Left);
+        } else if ( e.getKeyCode() == KeyEvent.VK_SPACE){
+            keys.add(Key.Player1_Weapon1);
         }
         return keys;
     }

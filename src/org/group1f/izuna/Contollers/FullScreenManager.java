@@ -18,7 +18,7 @@ public class FullScreenManager {
     }
 
     private static void setFullScreen() {
-        DisplayMode dm = new DisplayMode(1280, 800, 32, 0);
+        DisplayMode dm = new DisplayMode(1280, 720, 32, 0);
         JFrame frame = new JFrame();
         frame.setUndecorated(true);
         frame.setIgnoreRepaint(true);

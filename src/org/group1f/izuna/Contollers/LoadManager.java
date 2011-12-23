@@ -54,7 +54,7 @@ public class LoadManager {
             }
         }
     }
-
+    
     private static Animation getAnimationFromFolder(String folder) {
         Animation anim = new Animation();
         File root = new File(folder);

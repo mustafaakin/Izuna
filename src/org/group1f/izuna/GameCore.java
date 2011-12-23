@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.FullScreenManager;
+import org.group1f.izuna.Contollers.KeyboardHandler;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.Contollers.PhysicsHandler;
@@ -27,71 +28,54 @@ public class GameCore {
 
     private static Preferences prefs = Preferences.userNodeForPackage(GameCore.class);
     public GameState game = new GameState();
+    public boolean inMenu = true;
+    public Menu activeMenu = null;
+    public KeyboardHandler input;
 
     public static Preferences preferences() {
         return prefs;
     }
-    /**
-     * @param args
-     */
-    /*
-     * initialize then call gameloop
-     */
-    Graphics2D g;
-    SoundEffect backMusic;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         GameCore core = new GameCore();
         core.initialize();
+        while (true) {
+            core.gameLoop();
+            try {
+                Thread.sleep(Animation.FRAME_DURATION);
+            } catch (InterruptedException e) {
+            }
+        }
     }
+
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
      */
-
-    public void gameLoop() {
+    private void gameLoop() {
+        checkInput();
+        if (inMenu) {
+        } else {
+            renderBattlefield();
+            updateBattlefield();
+            movePlayer();
+        }
     }
 
     /*
      * initialize full screen window initialize inputs set backround pictures
      * that will be used in levels
      */
-    public void initialize() {
+    private void initialize() {
+        input = new KeyboardHandler();
         FullScreenManager.initGraphics();
+        FullScreenManager.getFullScreenWindow().addKeyListener(input);
         LoadManager.init();
-        g = FullScreenManager.getGraphics();
-        Image i = LoadManager.getImage("menu_background");
-        backMusic = new SoundEffect("data/sounds/main_menu.mp3");
-        backMusic.play();
-
-        Image ship = null;
-        try {
-            ship = ImageIO.read(new File("data/image/animation/enemies/deneme/images/redShip03.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        QuadraticPath path = new QuadraticPath(new Point(100, 100), new Point(520,620), new Point(135, 110), 2500);
-        long start = System.currentTimeMillis();
-        path.setStartTime(start);
-        while (true) {
-            long t = System.currentTimeMillis();
-            if ( t > start + 2500)
-                break;
-            Point p = path.getPosition(t);
-            g = FullScreenManager.getGraphics();
-            g.drawImage(i, 0, 0, null);
-            g.drawImage(ship, p.y, p.x, null);
-            g.dispose();
-            FullScreenManager.update();
-            try {
-                Thread.sleep(1000 / 60);
-            } catch (Exception e) {
-            }
-        }
-        System.out.println("hello..");
     }
 
     // check player inputs for two players
-    public void checkInput() {
+    private void checkInput() {
+        if (input.getKeys().contains(Key.Player1_Down)) {
+        }
     }
 
     /*
@@ -100,20 +84,54 @@ public class GameCore {
      * (sprites and sounds) 3) check neccessary collisions using physics class
      * and change states of the gameobjects accordingly
      */
-    public void updateBattlefield() {
+    private void updateBattlefield() {
+        // Check If wave is finished, load new enemies or new level
+        
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
-        // Players - EnemyWeapons
-        // Enemies - UserWeapons
-        // Players - Bonuses
         for (Enemy e : game.enemies) {
             if (PhysicsHandler.checkSpriteCollisions(e, game.p1)) {
             }
             if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(e, game.p2)) {
             }
+            // Enemies - UserWeapons
+            for (Weapon w : game.userWeapons) {
+                if (PhysicsHandler.checkSpriteCollisions(w, e)) {
+                }
+            }
+        }
+        // Players - EnemyWeapons
+        for (Weapon w : game.enemyWeapons) {
+            if (PhysicsHandler.checkSpriteCollisions(w, game.p1)) {
+            }
+            if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(w, game.p2)) {
+            }
+        }
+        // Players - Bonuses        
+        for (Bonus b : game.bonuses) {
+            if (PhysicsHandler.checkSpriteCollisions(b, game.p1)) {
+            }
+            if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(b, game.p2)) {
+            }
         }
     }
 
-    public void movePlayer() {
+    private void movePlayer() {
+    }
+
+    private void renderBattlefield() {
+        FullScreenManager.getGraphics().dispose();
+        Graphics2D g = FullScreenManager.getGraphics();
+        for (int i = 0; i < game.backgroundLayers.length; i++) {
+            Image background = game.backgroundLayers[i];
+            g.drawImage(background, 0, 0, null);
+        }
+        for (Sprite gameObj : game.getAll()) {
+            Animation currentAnimation = gameObj.getCurrentAnim();
+            Image currentImage = currentAnimation.getImage();
+            int x = gameObj.getPosition().x;
+            int y = gameObj.getPosition().y;
+            g.drawImage(currentImage, x, y, null);
+        }
     }
 }
