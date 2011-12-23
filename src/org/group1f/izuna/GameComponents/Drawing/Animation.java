@@ -19,7 +19,6 @@ public class Animation {
 
     private Animation(ArrayList<AnimationFrame> frames) {
         this.frames = frames;
-        this.totalDuration = totalDuration;
         startOver();
     }
 

@@ -9,10 +9,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-
+import org.group1f.izuna.Contollers.XML.*;
 import org.group1f.izuna.GameComponents.*;
 import org.group1f.izuna.GameComponents.SoundEffect;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 public class LoadManager {
 
@@ -26,6 +28,15 @@ public class LoadManager {
     }
 
     public static void init() {
+        try {
+            Serializer serializer = new Persister();
+            File source = new File("data/levels.xml");
+            LevelList waves = serializer.read(LevelList.class, source);
+            System.out.println(waves.getList());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         menuBucket = new Hashtable<String, Image>();
         imageBucket = new Hashtable<String, Image>();
         try {
@@ -54,7 +65,7 @@ public class LoadManager {
             }
         }
     }
-    
+
     private static Animation getAnimationFromFolder(String folder) {
         Animation anim = new Animation();
         File root = new File(folder);
@@ -73,13 +84,13 @@ public class LoadManager {
             try {
                 Image imgNorm = ImageIO.read(imagesNormal[i]);
                 Image img3D = null;
-                if ( images3D != null){
-                     img3D = ImageIO.read(images3D[i]);
+                if (images3D != null) {
+                    img3D = ImageIO.read(images3D[i]);
                 }
                 anim.addFrame(imgNorm, img3D);
             } catch (IOException ioe) {
                 System.err.println("Error reading files '" + imagesNormal[i] + "' and " + images3D[i] + "' :" + ioe.getMessage());
-            }            
+            }
         }
         return anim;
     }
@@ -98,8 +109,8 @@ public class LoadManager {
         Bonus b = new Bonus(null, null);
         return null;
     }
-    
-    public static Image getImage(String key){
+
+    public static Image getImage(String key) {
         return imageBucket.get(key);
     }
 }

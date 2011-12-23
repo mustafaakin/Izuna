@@ -39,13 +39,14 @@ public class GameCore {
     public static void main(String[] args) {
         GameCore core = new GameCore();
         core.initialize();
+      /*
         while (true) {
             core.gameLoop();
             try {
                 Thread.sleep(Animation.FRAME_DURATION);
             } catch (InterruptedException e) {
             }
-        }
+        } */
     }
 
     /*
@@ -67,8 +68,9 @@ public class GameCore {
      */
     private void initialize() {
         input = new KeyboardHandler();
-        FullScreenManager.initGraphics();
-        FullScreenManager.getFullScreenWindow().addKeyListener(input);
+        
+        //FullScreenManager.initGraphics();
+        //FullScreenManager.getFullScreenWindow().addKeyListener(input);
         LoadManager.init();
     }
 
