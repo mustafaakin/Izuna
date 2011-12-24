@@ -1,24 +1,36 @@
-<Levels>
-	<Level no="1">
-		<Name>A New Hope</Name>
-		<Wave>
-			<Enemy key="abc">
-				<PathList>
-					<Path type="linear">
-						<start>500,300</start>
-						<end>600,800</start>
-						<duration>15000</duration>
-					</Path>
-					<Path type="quadratic">
-						<start>600,800</start>
-						<end>1500,900</start>
-						<duration>1000</duration>
-					</Path>
-					<Path type="stationery">
-						<duration>9000</duration>
-					</Path>
-				</PathList>
-			</Enemy>
-		</Wave>
-	</Level>
-</Levels>
+<LevelList>
+	<List>
+		<Level no="1">
+			<Name>A New Hope</Name>
+			<Waves>
+				<Wave>
+					<Enemies>
+						<Enemy key="abc">
+							<Paths>
+								<Path type="linear">
+									<startX>500</startX>
+									<startY>500</startY>
+									<endX>500</endX>
+									<endY>500</endY>
+									<duration>15000</duration>
+								</Path>
+								<Path type="quadratic">
+									<startX>500</startX>
+									<startY>500</startY>
+									<midX>900</midX>
+									<midY>500</midY>
+									<endX>500</endX>
+									<endY>500</endY>
+									<duration>1000</duration>
+								</Path>
+								<Path type="stationery">
+									<duration>9000</duration>
+								</Path>
+							</Paths>
+						</Enemy>
+					</Enemies>
+				</Wave>
+			</Waves>
+		</Level>
+	</List>
+</LevelList>

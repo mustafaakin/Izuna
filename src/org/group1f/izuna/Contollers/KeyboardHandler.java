@@ -6,29 +6,35 @@ import java.util.ArrayList;
 
 public class KeyboardHandler implements KeyListener {
 
-    private ArrayList<Key> keys;
+    private ArrayList<Key> pressed;
+    private ArrayList<Key> released;
 
     public KeyboardHandler() {
-        keys = new ArrayList<>();
+        pressed = new ArrayList<Key>();
+        released = new ArrayList<Key>();
     }
 
-    public ArrayList<Key> getKeys() {
-        return keys;
+    public ArrayList<Key> getPressed() {
+        return pressed;
     }
 
+    public ArrayList<Key> getReleased() {
+        return released;
+    }
+
+ 
     @Override
     public void keyTyped(KeyEvent e) { // Dont'need
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        keys.addAll(getKeys(e));
-        System.out.println(keys);
+        pressed = resolveKey(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        keys.removeAll(getKeys(e));
+        released = resolveKey(e);
     }
 
     public enum Key {
@@ -39,13 +45,18 @@ public class KeyboardHandler implements KeyListener {
     }
 
     // For both released & pressed keys, this method will be invoked.
-    public static ArrayList<Key> getKeys(KeyEvent e) {
+    public static ArrayList<Key> resolveKey(KeyEvent e) {
         ArrayList<Key> keys = new ArrayList<Key>();
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             keys.add(Key.Player1_Left);
         } else if ( e.getKeyCode() == KeyEvent.VK_SPACE){
             keys.add(Key.Player1_Weapon1);
+        } else if ( e.getKeyCode() == KeyEvent.VK_DOWN){
+            keys.add(Key.Player1_Down);
         }
         return keys;
     }
+
+    
+    
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import org.group1f.izuna.GameComponents.*;
 
 public class GameState {
+    SoundEffect backgroundMusic;
     Image[] backgroundLayers;
     Player p1;
     Player p2;

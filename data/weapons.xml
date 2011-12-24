@@ -1,8 +1,10 @@
 <WeaponList>
-	<Weapon key="laser">
-		<DefaultAmount>150</DefaultAmount>
-		<CausedDamage>100<CauesedDamage>
-		<Sound>diuuuu.mp3</Sound>
-		<RateOfFire>500</RateOfFire>
-	</Weapon>
+	<list>
+		<Weapon key="laser">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<Sound>laser_blast</Sound>
+			<RateOfFire>500</RateOfFire>
+		</Weapon>
+	</list>
 </WeaponList>

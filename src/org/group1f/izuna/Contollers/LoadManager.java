@@ -22,37 +22,45 @@ public class LoadManager {
     private static Hashtable<String, SoundEffect> soundBucket;
     private static Hashtable<String, Image> imageBucket;
     private static Hashtable<String, Image> menuBucket;
-
+    
+    
     private LoadManager() {
         // Making it singleton
     }
 
-    public static void init() {
-        try {
-            Serializer serializer = new Persister();
-            File source = new File("data/levels.xml");
-            LevelList waves = serializer.read(LevelList.class, source);
-            System.out.println(waves.getList());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void init() throws Exception{
+        Serializer serializer = new Persister();
+        File levelsSource = new File("data/levels.xml");
+        File enemiesSource = new File("data/enemies.xml");
+        File weaponsSource = new File("data/weapons.xml");
 
+        LevelList waves = serializer.read(LevelList.class, levelsSource);
+        EnemyList enemies = serializer.read(EnemyList.class, enemiesSource);
+        WeaponList weapons = serializer.read(WeaponList.class, weaponsSource);
+        
         menuBucket = new Hashtable<String, Image>();
         imageBucket = new Hashtable<String, Image>();
-        try {
-            readMenus();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        soundBucket = new Hashtable<String, SoundEffect>();
+        
+        readMenus();
+        readSounds();
+
     }
 
     public static Image getMenuImage(String menu, String key) {
         return (Image) menuBucket.get(menu + "-" + key);
     }
 
+    public static SoundEffect getSoundEffect(String key){
+        return new SoundEffect(soundBucket.get(key));
+    }
+    
     private static void initAnimation(String key) {
+        
     }
 
+    
+   
     private static void readMenus() throws IOException {
         File background = new File("data/image/menu/background.png");
         imageBucket.put("menu_background", ImageIO.read(background));
@@ -60,8 +68,21 @@ public class LoadManager {
         for (File f : root.listFiles()) {
             if (f.isDirectory()) {
                 for (File k : f.listFiles()) {
-                    menuBucket.put(f.getName() + "-" + k.getName(), ImageIO.read(k));
+                    Image img = ImageIO.read(k);
+                    String imageName = k.getName().substring(0,k.getName().indexOf(".png"));
+                    menuBucket.put(f.getName() + "-" + imageName, img);
                 }
+            }
+        }
+    }
+    
+    private static void readSounds() throws IOException{
+        File root = new File("data/sounds");
+        for (File f : root.listFiles()) {
+            if ( f.isFile()){
+                SoundEffect se = new SoundEffect(f.getAbsolutePath());
+                String s = f.getName().substring(0,f.getName().indexOf(".mp3")); // Removing MP3
+                soundBucket.put(s, se);
             }
         }
     }

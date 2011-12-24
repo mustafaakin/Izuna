@@ -11,6 +11,7 @@ import java.awt.Point;
 import java.io.File;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 import org.group1f.izuna.Contollers.FullScreenManager;
 import org.group1f.izuna.Contollers.KeyboardHandler;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
@@ -39,22 +40,57 @@ public class GameCore {
     public static void main(String[] args) {
         GameCore core = new GameCore();
         core.initialize();
-      /*
+
         while (true) {
             core.gameLoop();
             try {
                 Thread.sleep(Animation.FRAME_DURATION);
             } catch (InterruptedException e) {
             }
-        } */
+        }
     }
 
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
      */
+    
+    int active = 0;
     private void gameLoop() {
         checkInput();
         if (inMenu) {
+            Image background = LoadManager.getImage("menu_background");
+            Image a[] = new Image[12];
+            
+            a[0] = LoadManager.getMenuImage("main", "startGame");
+            a[1] = LoadManager.getMenuImage("main", "options");
+            a[2] = LoadManager.getMenuImage("main", "password");
+            a[3] = LoadManager.getMenuImage("main", "help");
+            a[4] = LoadManager.getMenuImage("main", "highScores");
+            a[5] = LoadManager.getMenuImage("main", "exit");
+                        
+            a[6+0] = LoadManager.getMenuImage("main", "startGameR");
+            a[6+1] = LoadManager.getMenuImage("main", "optionsR");
+            a[6+2] = LoadManager.getMenuImage("main", "passwordR");
+            a[6+3] = LoadManager.getMenuImage("main", "helpR");
+            a[6+4] = LoadManager.getMenuImage("main", "highScoresR");
+            a[6+5] = LoadManager.getMenuImage("main", "exitR");
+                        
+            Graphics2D g = FullScreenManager.getGraphics();
+            g.drawImage(background, 0, 0, null);
+            
+            for (int i = 0; i < 6; i++) {
+                if ( i != active){
+                    g.drawImage(a[i], 0, 0, null);
+                } else{
+                    g.drawImage(a[i+6], 0, 0, null);                    
+                }
+            }
+            FullScreenManager.update();
+            g.dispose();
+            
+            if (input.getReleased().contains(Key.Player1_Down)){
+                active = (active + 1) % 6;
+            }
         } else {
             renderBattlefield();
             updateBattlefield();
@@ -68,16 +104,25 @@ public class GameCore {
      */
     private void initialize() {
         input = new KeyboardHandler();
-        
-        //FullScreenManager.initGraphics();
-        //FullScreenManager.getFullScreenWindow().addKeyListener(input);
-        LoadManager.init();
+        try {
+            LoadManager.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "Game files could not be loaded: " + e.getMessage(),
+                    "Error At Loading Files",
+                    JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
+        FullScreenManager.initGraphics();
+        FullScreenManager.getFullScreenWindow().addKeyListener(input);
+        game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
+        game.backgroundMusic.play();
     }
 
     // check player inputs for two players
     private void checkInput() {
-        if (input.getKeys().contains(Key.Player1_Down)) {
-        }
+
     }
 
     /*
@@ -88,7 +133,7 @@ public class GameCore {
      */
     private void updateBattlefield() {
         // Check If wave is finished, load new enemies or new level
-        
+
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
         for (Enemy e : game.enemies) {
@@ -122,7 +167,6 @@ public class GameCore {
     }
 
     private void renderBattlefield() {
-        FullScreenManager.getGraphics().dispose();
         Graphics2D g = FullScreenManager.getGraphics();
         for (int i = 0; i < game.backgroundLayers.length; i++) {
             Image background = game.backgroundLayers[i];
@@ -135,5 +179,7 @@ public class GameCore {
             int y = gameObj.getPosition().y;
             g.drawImage(currentImage, x, y, null);
         }
+        FullScreenManager.update();
+        FullScreenManager.getGraphics().dispose();
     }
 }

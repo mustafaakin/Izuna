@@ -12,7 +12,11 @@ public class SoundEffect {
     public SoundEffect(String filename) {
         this.filename = filename;
     }
-    
+
+    public SoundEffect(SoundEffect get) {
+        this.filename = get.filename;
+    }
+        
     public void close() {
         if (player != null) {
             player.close();
