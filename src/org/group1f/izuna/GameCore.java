@@ -17,8 +17,6 @@ import org.group1f.izuna.Contollers.KeyboardHandler;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.Contollers.PhysicsHandler;
-import org.group1f.izuna.GUI.Menu;
-import org.group1f.izuna.GUI.MenuElement;
 import org.group1f.izuna.GameComponents.*;
 
 /**
@@ -30,7 +28,6 @@ public class GameCore {
     private static Preferences prefs = Preferences.userNodeForPackage(GameCore.class);
     public GameState game = new GameState();
     public boolean inMenu = true;
-    public Menu activeMenu = null;
     public KeyboardHandler input;
 
     public static Preferences preferences() {
@@ -55,8 +52,7 @@ public class GameCore {
      */
     
     int active = 0;
-    private void gameLoop() {
-        checkInput();
+    private void gameLoop() {       
         if (inMenu) {
             Image background = LoadManager.getImage("menu_background");
             Image a[] = new Image[12];
@@ -64,15 +60,15 @@ public class GameCore {
             a[0] = LoadManager.getMenuImage("main", "startGame");
             a[1] = LoadManager.getMenuImage("main", "options");
             a[2] = LoadManager.getMenuImage("main", "password");
-            a[3] = LoadManager.getMenuImage("main", "help");
-            a[4] = LoadManager.getMenuImage("main", "highScores");
+            a[3] = LoadManager.getMenuImage("main", "highScores");
+            a[4] = LoadManager.getMenuImage("main", "help");           
             a[5] = LoadManager.getMenuImage("main", "exit");
                         
             a[6+0] = LoadManager.getMenuImage("main", "startGameR");
             a[6+1] = LoadManager.getMenuImage("main", "optionsR");
             a[6+2] = LoadManager.getMenuImage("main", "passwordR");
-            a[6+3] = LoadManager.getMenuImage("main", "helpR");
-            a[6+4] = LoadManager.getMenuImage("main", "highScoresR");
+            a[6+3] = LoadManager.getMenuImage("main", "highScoresR");
+            a[6+4] = LoadManager.getMenuImage("main", "helpR");           
             a[6+5] = LoadManager.getMenuImage("main", "exitR");
                         
             Graphics2D g = FullScreenManager.getGraphics();
@@ -88,9 +84,6 @@ public class GameCore {
             FullScreenManager.update();
             g.dispose();
             
-            if (input.getReleased().contains(Key.Player1_Down)){
-                active = (active + 1) % 6;
-            }
         } else {
             renderBattlefield();
             updateBattlefield();
@@ -103,7 +96,7 @@ public class GameCore {
      * that will be used in levels
      */
     private void initialize() {
-        input = new KeyboardHandler();
+        input = new KeyboardHandler(this);
         try {
             LoadManager.init();
         } catch (Exception e) {
@@ -121,8 +114,22 @@ public class GameCore {
     }
 
     // check player inputs for two players
-    private void checkInput() {
-
+    public void inputFromKeyboard(Key key, boolean isPressed) {
+        if ( key == null)
+            return;
+        if ( key.equals(Key.Escape))
+            System.exit(0);
+        
+        if ( inMenu && isPressed){
+            if ( key.equals(Key.Player1_Down)){
+                active = (active + 1) % 6;
+            } else if ( key.equals(Key.Player1_Up)){
+                active = (active + 5) % 6;
+                System.out.println(active);
+            }
+        } else{
+            
+        }
     }
 
     /*

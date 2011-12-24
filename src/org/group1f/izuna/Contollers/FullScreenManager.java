@@ -18,7 +18,13 @@ public class FullScreenManager {
     }
 
     private static void setFullScreen() {
-        DisplayMode dm = new DisplayMode(1280, 720, 32, 0);
+        DisplayMode chosenDm = null;
+        for (DisplayMode dm : vc.getDisplayModes()) { // Chooses nearest resolution.
+            if (dm != null && dm.getWidth() >= 1280 && dm.getHeight() >= 720) {
+                chosenDm = new DisplayMode(dm.getWidth(), dm.getHeight(), 32, 0);
+                break;
+            }
+        }
         JFrame frame = new JFrame();
         frame.setUndecorated(true);
         frame.setIgnoreRepaint(true);
@@ -26,9 +32,9 @@ public class FullScreenManager {
         frame.setBackground(Color.BLACK);
         vc.setFullScreenWindow(frame);
 
-        if (dm != null && vc.isDisplayChangeSupported()) {
+        if (chosenDm != null && vc.isDisplayChangeSupported()) {
             try {
-                vc.setDisplayMode(dm);
+                vc.setDisplayMode(chosenDm);
             } catch (Exception e) {
                 e.printStackTrace();
             }
