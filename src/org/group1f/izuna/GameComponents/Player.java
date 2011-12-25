@@ -23,6 +23,9 @@ public class Player extends GameObject implements SpaceShip {
         this.rollRight = rollRight;
         health = 100;
         isDying = false;
+        particleSeparatorCount = 4;
+        darkMatterCount = 2;
+        superDesperationMoveCount = 1;
     }
 
     public void checkStateToAnimate()
