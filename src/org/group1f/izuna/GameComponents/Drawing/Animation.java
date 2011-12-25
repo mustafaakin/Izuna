@@ -72,6 +72,10 @@ public class Animation {
             return getFrame(currentFrameIndex).getFrame();
         }
     }
+    
+    public long getElapsedTime() {
+        return elapsedTime;
+    }
 
     private AnimationFrame getFrame(int i) {
         return frames.get(i);

@@ -9,7 +9,7 @@ abstract public class Sprite {
 	private float vX;
 	private float vY;
 
-	private Animation currentAnimation;
+	protected Animation currentAnimation;
 	private Rectangle collisionRectangle;
 
 	public Sprite(){

@@ -4,14 +4,122 @@ import java.awt.Point;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Player extends GameObject implements SpaceShip {
-	
-	public Player(Point currentPos, Animation rest)
-        {
-            super(currentPos, rest);
-	}
+    private boolean isDying;
+    private Animation rollLeft;
+    private Animation rollRight;
+    private SoundEffect rollSound;
+    private Animation dying;
+    private int health;
+    //proton cannon and plasma cutter is infinite
+    private int particleSeparatorCount;
+    private int darkMatterCount;
+    private int superDesperationMoveCount;
+    
+
+    public Player(Point currentPos, Animation rest, Animation rollLeft, Animation rollRight)
+    {
+        super(currentPos, rest);
+        this.rollLeft = rollLeft;
+        this.rollRight = rollRight;
+        health = 100;
+        isDying = false;
+    }
+
+    public void checkStateToAnimate()
+    {
+        Animation newAnim = currentAnimation;
         
-        public void checkStateToAnimate()
-        {
-            
+        if(getvY() < 0) {
+            newAnim = rollLeft;
+            currentSound = rollSound;
         }
+            
+        if(getvY() > 0) {
+            newAnim = rollRight;
+            currentSound = rollSound;
+        }
+        
+        if(health < 1) {
+            setState();
+            newAnim = dying;
+            currentSound = dieSound;
+            isDying = true;
+        }
+        
+        if(isDying && currentAnimation.getElapsedTime() >= getDieTime()) {
+            setVisible(false);
+        }
+        
+        if(currentAnimation != newAnim) {
+            currentAnimation = newAnim;
+            currentAnimation.startOver();
+        }
+        
+    }
+    
+    public void update(long elapsedTime) {
+        checkStateToAnimate();
+        super.update(elapsedTime);
+    }
+    
+    private void setState() {
+          if(health < 1) {
+               setvX(0.0f);
+               setvY(0.0f);
+          }
+     }
+    
+    public int getPScount()
+    {
+        return particleSeparatorCount;
+    }
+    
+    public int getDMcount()
+    {
+        return darkMatterCount;
+    }
+    
+     public int getSPcount()
+    {
+        return superDesperationMoveCount;
+    }
+     
+     public void setPScount()
+     {
+         particleSeparatorCount--;
+     }
+     
+      public void setSPcount()
+     {
+         superDesperationMoveCount--;
+     }
+      
+     public void setDMcount()
+     {
+         darkMatterCount--;
+     }
+    
+    
+    @Override
+    public int getDieTime() {
+        return 1000;
+    }
+                
+    @Override
+    public void setHealth( int damage ) {
+        health -= damage;
+    }
+    
+    @Override
+    public int getHealth() {
+        return health;
+    }    
+    
+    
+  
+    @Override
+    public float getMaxSpeed()
+    {
+        return 0.8f;
+    }
 }
