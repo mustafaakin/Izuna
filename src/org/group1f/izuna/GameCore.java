@@ -125,7 +125,6 @@ public class GameCore {
                 active = (active + 1) % 6;
             } else if ( key.equals(Key.Player1_Up)){
                 active = (active + 5) % 6;
-                System.out.println(active);
             }
         } else{
             
