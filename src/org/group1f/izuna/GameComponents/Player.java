@@ -84,19 +84,34 @@ public class Player extends GameObject implements SpaceShip {
         return superDesperationMoveCount;
     }
      
-     public void setPScount()
+     public void decrPScount()
      {
          particleSeparatorCount--;
      }
      
-      public void setSPcount()
+      public void decrSPcount()
      {
          superDesperationMoveCount--;
      }
       
-     public void setDMcount()
+     public void decrDMcount()
      {
          darkMatterCount--;
+     }
+     
+      public void incrPScount()
+     {
+         particleSeparatorCount++;
+     }
+     
+      public void incrSPcount()
+     {
+         superDesperationMoveCount++;
+     }
+      
+     public void incrDMcount()
+     {
+         darkMatterCount++;
      }
     
     
