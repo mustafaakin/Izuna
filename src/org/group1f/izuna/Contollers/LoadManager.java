@@ -1,5 +1,6 @@
 package org.group1f.izuna.Contollers;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,13 +23,27 @@ public class LoadManager {
     private static Hashtable<String, SoundEffect> soundBucket;
     private static Hashtable<String, Image> imageBucket;
     private static Hashtable<String, Image> menuBucket;
-    
-    
+
     private LoadManager() {
         // Making it singleton
     }
 
-    public static void init() throws Exception{
+    public static void init() throws Exception {
+        Graphics2D g = FullScreenManager.getGraphics();
+        g.drawString("LOADING GAME FILES", 100, 100);
+        FullScreenManager.update();
+        g.dispose();
+
+        menuBucket = new Hashtable<String, Image>();
+        imageBucket = new Hashtable<String, Image>();
+        soundBucket = new Hashtable<String, SoundEffect>();
+        animationBucket = new Hashtable<String, Animation>();
+
+        readMenus();
+        readSounds();
+        initShipsImages();
+
+        // XML Information files. 
         Serializer serializer = new Persister();
         File levelsSource = new File("data/levels.xml");
         File enemiesSource = new File("data/enemies.xml");
@@ -38,29 +53,16 @@ public class LoadManager {
         EnemyList enemies = serializer.read(EnemyList.class, enemiesSource);
         WeaponList weapons = serializer.read(WeaponList.class, weaponsSource);
         
-        menuBucket = new Hashtable<String, Image>();
-        imageBucket = new Hashtable<String, Image>();
-        soundBucket = new Hashtable<String, SoundEffect>();
-        
-        readMenus();
-        readSounds();
-
     }
 
     public static Image getMenuImage(String menu, String key) {
         return (Image) menuBucket.get(menu + "-" + key);
     }
 
-    public static SoundEffect getSoundEffect(String key){
+    public static SoundEffect getSoundEffect(String key) {
         return new SoundEffect(soundBucket.get(key));
     }
-    
-    private static void initAnimation(String key) {
-        
-    }
 
-    
-   
     private static void readMenus() throws IOException {
         File background = new File("data/image/menu/background.png");
         imageBucket.put("menu_background", ImageIO.read(background));
@@ -69,60 +71,70 @@ public class LoadManager {
             if (f.isDirectory()) {
                 for (File k : f.listFiles()) {
                     Image img = ImageIO.read(k);
-                    String imageName = k.getName().substring(0,k.getName().indexOf(".png"));
+                    String imageName = k.getName().substring(0, k.getName().indexOf(".png"));
                     menuBucket.put(f.getName() + "-" + imageName, img);
                 }
             }
         }
     }
-    
-    private static void readSounds() throws IOException{
+
+    private static void readSounds() throws IOException {
         File root = new File("data/sounds");
         for (File f : root.listFiles()) {
-            if ( f.isFile()){
+            if (f.isFile()) {
                 SoundEffect se = new SoundEffect(f.getAbsolutePath());
-                String s = f.getName().substring(0,f.getName().indexOf(".mp3")); // Removing MP3
+                String s = f.getName().substring(0, f.getName().indexOf(".mp3")); // Removing MP3
                 soundBucket.put(s, se);
             }
         }
     }
 
-    private static Animation getAnimationFromFolder(String folder) {
-        Animation anim = new Animation();
-        File root = new File(folder);
-        File[] images3D = null;
-        File[] imagesNormal = null;
-        for (File f : root.listFiles()) {
-            if (f.isDirectory()) {
-                if (f.getName().equals("3D")) {
-                    images3D = f.listFiles();
-                } else if (f.getName().equals("normal")) {
-                    imagesNormal = f.listFiles();
+    private static void initShipsImages() {
+        File root = new File("data/image/animation/ships");
+        for (File ship : root.listFiles()) {
+            if (ship.isDirectory()) {
+                try {
+                    Animation still = readSingleShip(ship, "default");
+                    Animation left = readSingleShip(ship, "left");
+                    Animation roll = readSingleShip(ship, "roll");
+
+                    String shipName = "ships/" + ship.getName() + "/";
+                    animationBucket.put(shipName + "default", still);
+                    animationBucket.put(shipName + "left", left);
+                    animationBucket.put(shipName + "roll", roll);
+                } catch (IOException ioe) {
+                    System.err.println("Could not load ship: " + ship.getName() + ", because:" + ioe.getMessage());
                 }
             }
         }
-        for (int i = 0; i < imagesNormal.length; i++) {
-            try {
-                Image imgNorm = ImageIO.read(imagesNormal[i]);
-                Image img3D = null;
-                if (images3D != null) {
-                    img3D = ImageIO.read(images3D[i]);
-                }
-                anim.addFrame(imgNorm, img3D);
-            } catch (IOException ioe) {
-                System.err.println("Error reading files '" + imagesNormal[i] + "' and " + images3D[i] + "' :" + ioe.getMessage());
-            }
+    }
+
+    private static Animation readSingleShip(File root, String animation) throws IOException {
+        Animation anim = new Animation();
+
+        File triD_root = new File(root.getAbsolutePath() + "/" + animation + "/3D");
+        File normal_root = new File(root.getAbsolutePath() + "/" + animation + "/normal");
+
+        File[] images3D = triD_root.listFiles();
+        File[] imagesNormal = normal_root.listFiles();
+
+        if (images3D == null || imagesNormal == null) {
+            return anim;
+        }
+
+        for (int i = 0; i < images3D.length; i++) {
+            Image tri = ImageIO.read(images3D[i]);
+            Image norm = ImageIO.read(imagesNormal[i]);
+            anim.addFrame(norm, tri);
         }
         return anim;
     }
 
     public static Enemy getEnemy(String key) {
-        Enemy e = new Enemy(null, null);
-        return e;
+        return null;
     }
 
     public static Weapon getWeapon(String key) {
-        Weapon w = new Weapon(null, null);
         return null;
     }
 

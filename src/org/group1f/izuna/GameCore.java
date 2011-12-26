@@ -81,6 +81,7 @@ public class GameCore {
                     g.drawImage(a[i+6], 0, 0, null);                    
                 }
             }
+            
             FullScreenManager.update();
             g.dispose();
             
@@ -107,7 +108,6 @@ public class GameCore {
                     JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
-        FullScreenManager.initGraphics();
         FullScreenManager.getFullScreenWindow().addKeyListener(input);
         game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
         game.backgroundMusic.play();

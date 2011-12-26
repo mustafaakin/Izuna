@@ -14,7 +14,7 @@ public class EnemyList {
     @ElementList
     private List<EnemyInfo> list;
     
-    public List getList() {
+    public List<EnemyInfo> getList() {
         return list;
     }
 

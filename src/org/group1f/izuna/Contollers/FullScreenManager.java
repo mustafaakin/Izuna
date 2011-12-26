@@ -30,6 +30,7 @@ public class FullScreenManager {
         frame.setIgnoreRepaint(true);
         frame.setResizable(false);
         frame.setBackground(Color.BLACK);
+        frame.setForeground(Color.WHITE);
         vc.setFullScreenWindow(frame);
 
         if (chosenDm != null && vc.isDisplayChangeSupported()) {
@@ -43,6 +44,9 @@ public class FullScreenManager {
     }
 
     public static Graphics2D getGraphics() {
+        if ( vc == null){
+            initGraphics();
+        }
         Window w = vc.getFullScreenWindow();
         if (w != null) {
             BufferStrategy buffer = w.getBufferStrategy();
