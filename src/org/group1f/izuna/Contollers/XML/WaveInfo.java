@@ -15,4 +15,8 @@ public class WaveInfo {
 
     @ElementList
     private List<WaveEnemy> Enemies;
+
+    public List<WaveEnemy> getEnemies() {
+        return Enemies;
+    }    
 }

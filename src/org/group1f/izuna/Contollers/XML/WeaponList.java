@@ -14,7 +14,7 @@ public class WeaponList {
     @ElementList
     private List<WeaponInfo> list;
     
-    public List getList() {
+    public List<WeaponInfo> getList() {
         return list;
     }
 

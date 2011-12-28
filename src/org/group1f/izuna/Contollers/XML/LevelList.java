@@ -14,7 +14,7 @@ public class LevelList {
     @ElementList
     private List<LevelInfo> List;
     
-    public List getList() {
+    public List<LevelInfo> getList() {
         return List;
     }
 

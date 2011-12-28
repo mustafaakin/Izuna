@@ -2,27 +2,25 @@ package org.group1f.izuna.Contollers;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.HashMap;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.XML.*;
-import org.group1f.izuna.GameComponents.*;
-import org.group1f.izuna.GameComponents.SoundEffect;
+import org.group1f.izuna.GameComponents.Bonus;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
+import org.group1f.izuna.GameComponents.Enemy;
+import org.group1f.izuna.GameComponents.SoundEffect;
+import org.group1f.izuna.GameComponents.Weapon;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 public class LoadManager {
 
-    private static Hashtable<String, Animation> animationBucket;
-    private static Hashtable<String, SoundEffect> soundBucket;
-    private static Hashtable<String, Image> imageBucket;
-    private static Hashtable<String, Image> menuBucket;
+    private static HashMap<String, Animation> animationBucket;
+    private static HashMap<String, SoundEffect> soundBucket;
+    private static HashMap<String, Image> imageBucket;
+    private static HashMap<String, Image> menuBucket;
 
     private LoadManager() {
         // Making it singleton
@@ -34,15 +32,15 @@ public class LoadManager {
         FullScreenManager.update();
         g.dispose();
 
-        menuBucket = new Hashtable<String, Image>();
-        imageBucket = new Hashtable<String, Image>();
-        soundBucket = new Hashtable<String, SoundEffect>();
-        animationBucket = new Hashtable<String, Animation>();
+        menuBucket = new HashMap<String, Image>();
+        imageBucket = new HashMap<String, Image>();
+        soundBucket = new HashMap<String, SoundEffect>();
+        animationBucket = new HashMap<String, Animation>();
 
         readMenus();
         readSounds();
         initShipsImages();
-
+       
         // XML Information files. 
         Serializer serializer = new Persister();
         File levelsSource = new File("data/levels.xml");
@@ -53,8 +51,30 @@ public class LoadManager {
         EnemyList enemies = serializer.read(EnemyList.class, enemiesSource);
         WeaponList weapons = serializer.read(WeaponList.class, weaponsSource);
         
+        validateSources(waves,enemies,weapons);
     }
 
+    private static void validateSources(LevelList waves, EnemyList enemies, WeaponList weapons){
+        for ( WeaponInfo weapon : weapons.getList()){
+            weapon.getKey();
+        }
+
+        for ( EnemyInfo enemy : enemies.getList()){
+            if ( !soundBucket.containsKey(enemy.getEnterSound())){
+                System.err.println("No entering sound for enemy '" + enemy.getKey()  + "' could be found.");
+            }
+        }
+        
+        for ( LevelInfo level : waves.getList()){
+            for ( WaveInfo wave : level.getWaves()){
+                for ( WaveEnemy enemy : wave.getEnemies()){
+//                    enemy.getKey()
+                }
+            }
+        }
+        
+    }
+    
     public static Image getMenuImage(String menu, String key) {
         return (Image) menuBucket.get(menu + "-" + key);
     }

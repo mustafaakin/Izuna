@@ -1,23 +1,19 @@
-/**
- *
- */
 package org.group1f.izuna;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
-import org.group1f.izuna.GameComponents.Drawing.*;
-
-import java.awt.Point;
-import java.io.File;
 import java.util.prefs.Preferences;
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import org.group1f.izuna.Contollers.FullScreenManager;
 import org.group1f.izuna.Contollers.KeyboardHandler;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.Contollers.PhysicsHandler;
-import org.group1f.izuna.GameComponents.*;
+import org.group1f.izuna.GameComponents.Bonus;
+import org.group1f.izuna.GameComponents.Drawing.Animation;
+import org.group1f.izuna.GameComponents.Drawing.Sprite;
+import org.group1f.izuna.GameComponents.Enemy;
+import org.group1f.izuna.GameComponents.Weapon;
 
 /**
  * @author Mustafa
@@ -83,8 +79,7 @@ public class GameCore {
             }
             
             FullScreenManager.update();
-            g.dispose();
-            
+            g.dispose();            
         } else {
             renderBattlefield();
             updateBattlefield();

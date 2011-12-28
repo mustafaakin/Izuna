@@ -18,4 +18,18 @@ public class LevelInfo {
     private String Name;
     @ElementList()
     private List<WaveInfo> Waves;
+
+    public String getName() {
+        return Name;
+    }
+
+    public int getNo() {
+        return no;
+    }
+
+    public List<WaveInfo> getWaves() {
+        return Waves;
+    }
+    
+    
 }

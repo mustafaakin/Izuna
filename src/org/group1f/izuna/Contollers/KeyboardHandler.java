@@ -28,7 +28,6 @@ public class KeyboardHandler implements KeyListener {
     }
 
     public enum Key {
-
         Player1_Up, Player1_Down, Player1_Left, Player1_Right,
         Player1_Weapon1, Player1_Weapon2, Player1_Weapon3, Player1_Weapon4,
         Player2_Up, Player2_Down, Player2_Left, Player2_Right, Player2_Weapon1,

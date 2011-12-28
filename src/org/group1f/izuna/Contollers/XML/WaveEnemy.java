@@ -12,4 +12,12 @@ public class WaveEnemy {
     private String key;
     @ElementList
     private List<WavePath> Paths;
+
+    public String getKey() {
+        return key;
+    }
+
+    public List<WavePath> getPaths() {
+        return Paths;
+    }
 }
