@@ -5,6 +5,8 @@ import org.group1f.izuna.GameComponents.Drawing.Animation;
 
 public abstract class AIControllable extends GameObject {
 
+        public Path defaultPath;
+    
         public AIControllable(Point currentPos, Animation rest)
         {
             super(currentPos, rest);
@@ -14,8 +16,5 @@ public abstract class AIControllable extends GameObject {
 		return getPosition();
 	}
 
-        public void checkStateToAnimate()
-        {
-            
-        }
+        public void checkStateToAnimate(){ }
 }

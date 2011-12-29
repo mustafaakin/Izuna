@@ -8,7 +8,6 @@ public class Enemy extends AIControllable implements SpaceShip {
     private Animation rollLeft;
     private Animation rollRight;
     private SoundEffect rollSound;
-    private Animation dying;
     private int health;
     
     public Enemy(Point currentPos, Animation rest, Animation rollLeft, Animation rollRight, int health)
@@ -19,7 +18,8 @@ public class Enemy extends AIControllable implements SpaceShip {
         this.health = health;
         isDying = false;
     }
-        
+    
+    // will be fixed // for now its broken
     public void checkStateToAnimate()
     {
         Animation newAnim = currentAnimation;
@@ -36,7 +36,6 @@ public class Enemy extends AIControllable implements SpaceShip {
         
         if(health < 1) {
             setState();
-            newAnim = dying;
             currentSound = dieSound;
             isDying = true;
         }
@@ -69,8 +68,11 @@ public class Enemy extends AIControllable implements SpaceShip {
     }
                 
     @Override
-    public void setHealth( int damage ) {
-        health -= damage;
+     public void setHealth( int newValue ) {
+        if(newValue > 100 )
+            health = 100;
+        else
+            health = newValue;
     }
     
     @Override

@@ -6,6 +6,7 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 public abstract class GameObject extends Sprite{
 
 	private Animation restAnimation;
+       // private Animation dieAnimation;
 	private boolean isVisible;
         SoundEffect currentSound;
         SoundEffect dieSound;
@@ -35,6 +36,7 @@ public abstract class GameObject extends Sprite{
 		this.restAnimation = restAnimation;
 	}
         
+        @Override
         public void update(long elapsedTime) {
                 playSound();
 		super.update(elapsedTime);

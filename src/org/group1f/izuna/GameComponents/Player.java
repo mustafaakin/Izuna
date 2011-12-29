@@ -8,43 +8,51 @@ public class Player extends GameObject implements SpaceShip {
     private Animation rollLeft;
     private Animation rollRight;
     private SoundEffect rollSound;
-    private Animation dying;
     private int health;
     //proton cannon and plasma cutter is infinite
     private int particleSeparatorCount;
     private int darkMatterCount;
     private int superDesperationMoveCount;
+    private float oldvY = 0.0f;
     
 
-    public Player(Point currentPos, Animation rest, Animation rollLeft, Animation rollRight)
+    public Player(Point currentPos, Animation rest, Animation rollLeft, Animation rollRight, int w1, int w2, int w3)
     {
         super(currentPos, rest);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
+        rollRight.setAnimType(Animation.SMOOTH);
+        rollLeft.setAnimType(Animation.SMOOTH);
         health = 100;
         isDying = false;
-        particleSeparatorCount = 4;
-        darkMatterCount = 2;
-        superDesperationMoveCount = 1;
+        particleSeparatorCount = w1;
+        darkMatterCount = w2;
+        superDesperationMoveCount = w3;
     }
 
+    // will be fixed // for now its broken
     public void checkStateToAnimate()
     {
         Animation newAnim = currentAnimation;
+        boolean tmp = false;
         
-        if(getvY() < 0) {
+        if( getvY() < 0) {
+            if(oldvY > 0) { //
+                
+            } else //
+                tmp = currentAnimation.refine();
+                
+                
             newAnim = rollLeft;
             currentSound = rollSound;
-        }
-            
-        if(getvY() > 0) {
+        } else if(getvY() > 0) {
             newAnim = rollRight;
             currentSound = rollSound;
-        }
+        } else // vY = 0
+            newAnim = getRestAnimation();
         
         if(health < 1) {
             setState();
-            newAnim = dying;
             currentSound = dieSound;
             isDying = true;
         }
@@ -58,6 +66,7 @@ public class Player extends GameObject implements SpaceShip {
             currentAnimation.startOver();
         }
         
+        oldvY = getvY();
     }
     
     public void update(long elapsedTime) {
@@ -124,8 +133,11 @@ public class Player extends GameObject implements SpaceShip {
     }
                 
     @Override
-    public void setHealth( int damage ) {
-        health -= damage;
+    public void setHealth( int newValue ) {
+        if(newValue > 100 )
+            health = 100;
+        else
+            health = newValue;
     }
     
     @Override
@@ -133,8 +145,6 @@ public class Player extends GameObject implements SpaceShip {
         return health;
     }    
     
-    
-  
     @Override
     public float getMaxSpeed()
     {
