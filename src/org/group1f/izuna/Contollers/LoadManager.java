@@ -159,7 +159,6 @@ public class LoadManager {
     }
 
     public static Bonus getBonus(String key) {
-        Bonus b = new Bonus(null, null);
         return null;
     }
 
