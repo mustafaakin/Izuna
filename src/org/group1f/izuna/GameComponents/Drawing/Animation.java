@@ -8,11 +8,19 @@ import org.group1f.izuna.GameCore;
 public class Animation {
 
     public static final long FRAME_DURATION = 1000 / 24;
+    public static final boolean REPEAT = false;
+    public static final boolean SMOOTH = true;
+    
+    private boolean animType = false;
+    public boolean ended = false;
+    private boolean isFinished = false;
     protected ArrayList<AnimationFrame> frames;
     protected int currentFrameIndex;
     protected long totalDuration;
     protected long elapsedTime;
-
+    protected long oldElapsedTime;
+    
+    
     public Animation() {
         this(new ArrayList<AnimationFrame>());
     }
@@ -31,21 +39,67 @@ public class Animation {
         return new Animation(frames);
     }
 
+
+    
     public synchronized void update(long passedTime) {
         if (frames.size() > 1) {
             elapsedTime += passedTime;
         }
-
-        if (elapsedTime >= totalDuration) {
-            elapsedTime = elapsedTime % totalDuration;
-            currentFrameIndex = 0;
+        if(!animType) // repeat
+        {
+            if (elapsedTime >= totalDuration) {
+                elapsedTime = elapsedTime % totalDuration;
+                currentFrameIndex = 0;
+            }
+        } else { //smooth
+            if ( !ended && elapsedTime >= totalDuration) {
+                currentFrameIndex = frames.size()-1;
+            } else  if (ended){
+                elapsedTime = elapsedTime % totalDuration;
+            }
         }
-
+       
         while (!timeCorrespondImage(currentFrameIndex)) {
             currentFrameIndex++;
+        } 
+        if(animType) { //smooth
+            while ( ended && !timeCorrespondImage2(currentFrameIndex))
+            currentFrameIndex--;
+        
+        if(ended && currentFrameIndex == 0)
+            isFinished = true;
         }
     }
+    
+    
+    public synchronized boolean refine() {
+        if(!ended){
+            ended = true;
+        }
+        if(isFinished) {
+            ended = false;
+            isFinished = false;
+            return true;
+        }
+        else return false;
+    }
+    
+    //eğer bi saçmalık olursa ilk buraya bak
+    protected boolean timeCorrespondImage2(int index) {
+        long timeChecked = 0;
 
+        for (int i = 0; i <= index; i++) {
+            timeChecked += FRAME_DURATION;
+        }
+        
+        //özellikle ilk bu ife bak
+        if ((totalDuration - timeChecked) < elapsedTime && !(timeChecked == FRAME_DURATION)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
     protected boolean timeCorrespondImage(int index) {
         long timeChecked = 0;
 
@@ -53,11 +107,19 @@ public class Animation {
             timeChecked += FRAME_DURATION;
         }
 
-        if (timeChecked < elapsedTime) {
+        if (timeChecked < elapsedTime && !(elapsedTime >= totalDuration)) {
             return false;
         } else {
             return true;
         }
+    }
+    
+    public void setAnimType (boolean value) {
+       animType = value;
+    }
+    
+    public boolean getAnimType () {
+        return animType;
     }
 
     public synchronized void addFrame(Image img, Image img3D) {
@@ -80,6 +142,44 @@ public class Animation {
     private AnimationFrame getFrame(int i) {
         return frames.get(i);
     }
+    
+      /* public synchronized void oldupdate(long passedTime) {
+        if (frames.size() > 1) {
+            elapsedTime += passedTime;
+        }
+
+        if (elapsedTime >= totalDuration) {
+            elapsedTime = elapsedTime % totalDuration;
+            currentFrameIndex = 0;
+        }
+
+        while (!timeCorrespondImage(currentFrameIndex)) {
+            currentFrameIndex++;
+        }
+    }*/
+/*
+    public synchronized void oldupdate2(long passedTime) {
+        if (!ended && frames.size() > 1) {
+            elapsedTime += passedTime;
+        }
+            
+
+        if ( !ended && elapsedTime >= totalDuration) {
+            currentFrameIndex = frames.size()-1;
+        }   else  if (ended){
+            elapsedTime = elapsedTime % totalDuration;
+        }
+        
+
+        while (!timeCorrespondImage(currentFrameIndex)) {
+            currentFrameIndex++;
+        }
+        while ( ended && !timeCorrespondImage2(currentFrameIndex))
+            currentFrameIndex--;
+        
+        if(ended && currentFrameIndex == 0)
+            isFinished = true;
+    }*/
 
     private class AnimationFrame {
 
