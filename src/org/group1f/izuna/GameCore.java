@@ -81,6 +81,8 @@ public class GameCore {
             FullScreenManager.update();
             g.dispose();            
         } else {
+            
+            // system time is needed
             renderBattlefield();
             updateBattlefield();
             movePlayer();
