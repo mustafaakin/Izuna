@@ -9,34 +9,59 @@ public class Enemy extends AIControllable implements SpaceShip {
     private Animation rollRight;
     private SoundEffect rollSound;
     private int health;
+    private float oldvY = 0.0f;
+    private boolean isRFinished = true;
     
-    public Enemy(Point currentPos, Animation rest, Animation rollLeft, Animation rollRight, int health)
+    public Enemy(Point currentPos, Animation rest, SoundEffect dieSound, Path path, Animation rollLeft, Animation rollRight, SoundEffect roll)
     {
-        super(currentPos, rest);
+        super(currentPos, rest, dieSound, path);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
         this.health = health;
+        rollSound = roll;
         isDying = false;
     }
     
+     public Enemy clone()
+    {
+        return new Enemy(getPosition(), getRestAnimation().clone(), dieSound, defaultPath, rollLeft.clone(),
+                rollRight.clone(), rollSound);
+    }
+    
     // will be fixed // for now its broken
+    @Override
     public void checkStateToAnimate()
     {
-        Animation newAnim = currentAnimation;
-
-        if(getvY() < 0) {
-            newAnim = rollLeft;
-            currentSound = rollSound;
-        }
-            
-        if(getvY() > 0) {
-            newAnim = rollRight;
-            currentSound = rollSound;
+         Animation newAnim = currentAnimation;
+        if(!isRFinished)
+            isRFinished = currentAnimation.finished();
+        
+        if( getvY() < 0) {
+            if(oldvY > 0) { //
+                isRFinished = currentAnimation.refine();
+            } else {
+                newAnim = rollLeft;
+                currentSound = rollSound;
+            }        
+        } else if(getvY() > 0) {
+             if(oldvY < 0) { //
+                isRFinished = currentAnimation.refine();
+            } else {
+                newAnim = rollRight;
+                currentSound = rollSound;
+            } 
+        } else { // vy = 0
+            if(getvY() != 0) {
+                isRFinished = currentAnimation.refine();
+            } else
+                newAnim = getRestAnimation();
         }
         
         if(health < 1) {
             setState();
             currentSound = dieSound;
+            if(!isDying)
+                currentSound.play();
             isDying = true;
         }
         
@@ -44,12 +69,15 @@ public class Enemy extends AIControllable implements SpaceShip {
             setVisible(false);
         }
         
-        if(currentAnimation != newAnim) {
+        if(isRFinished && currentAnimation != newAnim) {
             currentAnimation = newAnim;
             currentAnimation.startOver();
+            currentSound.play();
         }
+        oldvY = getvY();
     }
     
+    @Override
     public void update(long elapsedTime) {
         checkStateToAnimate();
         super.update(elapsedTime);
@@ -85,6 +113,4 @@ public class Enemy extends AIControllable implements SpaceShip {
     {
         return 1.0f;
     }
-    
-    
 }

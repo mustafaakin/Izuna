@@ -6,17 +6,17 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 public abstract class GameObject extends Sprite{
 
 	private Animation restAnimation;
-       // private Animation dieAnimation;
 	private boolean isVisible;
         SoundEffect currentSound;
         SoundEffect dieSound;
         
 	
-	public GameObject(Point currentPos, Animation rest){
+	public GameObject(Point currentPos, Animation rest, SoundEffect dieSound){
             super(currentPos);
             restAnimation = rest;
             currentAnimation = rest;
             isVisible = true;
+            this.dieSound = dieSound;
             checkStateToAnimate();
 	}
 
@@ -38,14 +38,15 @@ public abstract class GameObject extends Sprite{
         
         @Override
         public void update(long elapsedTime) {
-                playSound();
+                //playSound();
 		super.update(elapsedTime);
 	}
         
-        public void playSound() {
-                if(currentSound != null)
+       /* public void playSound() {
+                if(currentSound != null && currentSound)
                     currentSound.play();
-        }
+        }*/
         
         public abstract void checkStateToAnimate();
+        //public abstract GameObject clone();
 }

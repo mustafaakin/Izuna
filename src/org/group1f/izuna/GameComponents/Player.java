@@ -14,46 +14,63 @@ public class Player extends GameObject implements SpaceShip {
     private int darkMatterCount;
     private int superDesperationMoveCount;
     private float oldvY = 0.0f;
-    
+    private boolean isRFinished = true;
 
-    public Player(Point currentPos, Animation rest, Animation rollLeft, Animation rollRight, int w1, int w2, int w3)
+
+    public Player(Point currentPos, Animation rest, SoundEffect dieSound, Animation rollLeft, Animation rollRight, int w1, int w2, int w3, SoundEffect roll)
     {
-        super(currentPos, rest);
+        super(currentPos, rest, dieSound);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
-        rollRight.setAnimType(Animation.SMOOTH);
-        rollLeft.setAnimType(Animation.SMOOTH);
+        rollRight.setAnimType(Animation.Type.SMOOTH);
+        rollLeft.setAnimType(Animation.Type.SMOOTH);
+        rollSound = roll;
         health = 100;
         isDying = false;
         particleSeparatorCount = w1;
         darkMatterCount = w2;
         superDesperationMoveCount = w3;
     }
-
+    
+    public Player clone()
+    {
+        return new Player(getPosition(), getRestAnimation().clone(), dieSound, rollLeft.clone(),
+                rollRight.clone(), particleSeparatorCount, darkMatterCount, superDesperationMoveCount, rollSound);
+    }
     // will be fixed // for now its broken
+    @Override
     public void checkStateToAnimate()
     {
         Animation newAnim = currentAnimation;
-        boolean tmp = false;
+        if(!isRFinished)
+            isRFinished = currentAnimation.finished();
         
         if( getvY() < 0) {
             if(oldvY > 0) { //
-                
-            } else //
-                tmp = currentAnimation.refine();
-                
-                
-            newAnim = rollLeft;
-            currentSound = rollSound;
+                isRFinished = currentAnimation.refine();
+            } else {
+                newAnim = rollLeft;
+                currentSound = rollSound;
+            }        
         } else if(getvY() > 0) {
-            newAnim = rollRight;
-            currentSound = rollSound;
-        } else // vY = 0
-            newAnim = getRestAnimation();
+             if(oldvY < 0) { //
+                isRFinished = currentAnimation.refine();
+            } else {
+                newAnim = rollRight;
+                currentSound = rollSound;
+            } 
+        } else { // vy = 0
+            if(getvY() != 0) {
+                isRFinished = currentAnimation.refine();
+            } else
+                newAnim = getRestAnimation();
+        }
         
         if(health < 1) {
             setState();
             currentSound = dieSound;
+            if(!isDying)
+                currentSound.play();
             isDying = true;
         }
         
@@ -61,14 +78,15 @@ public class Player extends GameObject implements SpaceShip {
             setVisible(false);
         }
         
-        if(currentAnimation != newAnim) {
+        if(isRFinished && currentAnimation != newAnim) {
             currentAnimation = newAnim;
             currentAnimation.startOver();
+            currentSound.play();
         }
-        
         oldvY = getvY();
     }
     
+    @Override
     public void update(long elapsedTime) {
         checkStateToAnimate();
         super.update(elapsedTime);

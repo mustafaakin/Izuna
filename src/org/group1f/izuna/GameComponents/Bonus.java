@@ -5,24 +5,25 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Bonus extends AIControllable {
     
-    public static final int STATE_FIRED = 0;
-    public static final int STATE_HIT = 1;
+    enum State {
+        STATE_FIRED, STATE_HIT
+    }
     
-    private int state;
+    private State state;
     private boolean bonusType; // default = health, 1 = weapon
     private int bonusValue;
 	
-    public Bonus(Point currentPos, Animation rest, int value, boolean type)
+    public Bonus(Point currentPos, Animation rest, SoundEffect dieSound,Path path, int value, boolean type)
     {
-        super(currentPos, rest);
+        super(currentPos, rest, dieSound,path);
         bonusValue = value;
         bonusType = type;
-        state = STATE_FIRED;
+        state = State.STATE_FIRED;
     }
     
-    public Bonus clone()
+    public Bonus clone() // ses sorunu varsa clone methodundandır
     {
-        return new Bonus(getPosition(), getRestAnimation().clone(), bonusValue, bonusType);
+        return new Bonus(getPosition(), getRestAnimation().clone(), dieSound, defaultPath, bonusValue, bonusType);
     }
     
     public void checkStateToAnimate()
@@ -36,12 +37,12 @@ public class Bonus extends AIControllable {
         super.update( elapsedTime);
     }
      
-    public void setState(int state) 
+    public void setState(State state) 
     {
         if (this.state != state) 
         {
             this.state = state;
-            if (state == STATE_HIT) 
+            if (state == State.STATE_HIT) 
             {
                 setvX(0);
                 setvY(0);
