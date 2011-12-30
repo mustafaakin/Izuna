@@ -2,7 +2,6 @@ package org.group1f.izuna.GameComponents;
 
 import java.awt.Point;
 import org.group1f.izuna.GameComponents.Drawing.*;
-import org.group1f.izuna.GameComponents.Drawing.Animation.AnimationType;
 
 public class Player extends GameObject implements SpaceShip {
     private boolean isDying;
@@ -23,8 +22,8 @@ public class Player extends GameObject implements SpaceShip {
         super(currentPos, rest, dieSound);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
-        rollRight.setAnimType(AnimationType.SMOOTH);
-        rollLeft.setAnimType(AnimationType.SMOOTH);
+        rollRight.setAnimType(Animation.Type.SMOOTH);
+        rollLeft.setAnimType(Animation.Type.SMOOTH);
         rollSound = roll;
         health = 100;
         isDying = false;
@@ -44,7 +43,7 @@ public class Player extends GameObject implements SpaceShip {
     {
         Animation newAnim = currentAnimation;
         if(!isRFinished)
-            isRFinished = currentAnimation.ended; // TODO Method a çevirmeliyiz.
+            isRFinished = currentAnimation.finished();
         
         if( getvY() < 0) {
             if(oldvY > 0) { //
@@ -145,7 +144,7 @@ public class Player extends GameObject implements SpaceShip {
          darkMatterCount++;
      }
     
-    
+     
     @Override
     public int getDieTime() {
         return 1000;

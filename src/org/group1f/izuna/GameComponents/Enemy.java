@@ -21,7 +21,7 @@ public class Enemy extends AIControllable implements SpaceShip {
         rollSound = roll;
         isDying = false;
     }
-    
+     
      public Enemy clone()
     {
         return new Enemy(getPosition(), getRestAnimation().clone(), dieSound, defaultPath, rollLeft.clone(),
@@ -34,7 +34,7 @@ public class Enemy extends AIControllable implements SpaceShip {
     {
          Animation newAnim = currentAnimation;
         if(!isRFinished)
-            isRFinished = currentAnimation.ended; // TODO Method haline çevirmeliyiz.
+            isRFinished = currentAnimation.finished();
         
         if( getvY() < 0) {
             if(oldvY > 0) { //
