@@ -36,7 +36,7 @@ public class Player extends GameObject implements SpaceShip {
     {
         return new Player(getPosition(), getRestAnimation().clone(), dieSound, rollLeft.clone(),
                 rollRight.clone(), particleSeparatorCount, darkMatterCount, superDesperationMoveCount, rollSound);
-    } //asd
+    } 
     // will be fixed // for now its broken
     @Override
     public void checkStateToAnimate()

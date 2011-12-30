@@ -61,6 +61,7 @@ public class Animation {
             } else  if (ended){
                 elapsedTime = elapsedTime % totalDuration;
             }
+            
         }
        
         while (!timeCorrespondImage(currentFrameIndex)) {

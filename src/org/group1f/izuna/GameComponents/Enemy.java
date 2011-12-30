@@ -20,7 +20,7 @@ public class Enemy extends AIControllable implements SpaceShip {
         this.health = health;
         rollSound = roll;
         isDying = false;
-    }//
+    }
     
      public Enemy clone()
     {
