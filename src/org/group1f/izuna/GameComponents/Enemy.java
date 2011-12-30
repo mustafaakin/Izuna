@@ -34,7 +34,7 @@ public class Enemy extends AIControllable implements SpaceShip {
     {
          Animation newAnim = currentAnimation;
         if(!isRFinished)
-            isRFinished = currentAnimation.finished();
+            isRFinished = currentAnimation.ended; // TODO Method haline çevirmeliyiz.
         
         if( getvY() < 0) {
             if(oldvY > 0) { //

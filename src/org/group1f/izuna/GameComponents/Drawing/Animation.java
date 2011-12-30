@@ -8,10 +8,12 @@ import org.group1f.izuna.GameCore;
 public class Animation {
 
     public static final long FRAME_DURATION = 1000 / 24;
-    public static final boolean REPEAT = false;
-    public static final boolean SMOOTH = true;
     
-    private boolean animType = false;
+    public enum AnimationType {
+        REPEAT, SMOOTH
+    }
+    
+    private AnimationType animType = AnimationType.REPEAT;
     public boolean ended = false;
     private boolean isFinished = false;
     protected ArrayList<AnimationFrame> frames;
@@ -45,7 +47,7 @@ public class Animation {
         if (frames.size() > 1) {
             elapsedTime += passedTime;
         }
-        if(!animType) // repeat
+        if( animType == AnimationType.REPEAT ) // repeat
         {
             if (elapsedTime >= totalDuration) {
                 elapsedTime = elapsedTime % totalDuration;
@@ -62,7 +64,7 @@ public class Animation {
         while (!timeCorrespondImage(currentFrameIndex)) {
             currentFrameIndex++;
         } 
-        if(animType) { //smooth
+        if(animType == AnimationType.SMOOTH ) { //smooth
             while ( ended && !timeCorrespondImage2(currentFrameIndex))
             currentFrameIndex--;
         
@@ -114,11 +116,11 @@ public class Animation {
         }
     }
     
-    public void setAnimType (boolean value) {
-       animType = value;
+    public void setAnimType (AnimationType type) {
+       animType = type;
     }
     
-    public boolean getAnimType () {
+    public AnimationType getAnimType () {
         return animType;
     }
 
