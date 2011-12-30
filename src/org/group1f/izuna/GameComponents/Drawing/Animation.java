@@ -6,12 +6,17 @@ import java.util.ArrayList;
 import org.group1f.izuna.GameCore;
 
 public class Animation {
+    
+    public enum Type {
+        REPEAT, SMOOTH
+    }
 
     public static final long FRAME_DURATION = 1000 / 24;
-    public static final boolean REPEAT = false;
-    public static final boolean SMOOTH = true;
+    //public static final boolean REPEAT = false;
+  //  public static final boolean SMOOTH = true;
     
-    private boolean animType = false;
+    Type animType = Type.REPEAT;
+   // private boolean animType = false;
     public boolean ended = false;
     private boolean isFinished = false;
     protected ArrayList<AnimationFrame> frames;
@@ -38,14 +43,13 @@ public class Animation {
     public Animation clone() {
         return new Animation(frames);
     }
-
-
+    
     
     public synchronized void update(long passedTime) {
         if (frames.size() > 1) {
             elapsedTime += passedTime;
         }
-        if(!animType) // repeat
+        if(animType == Type.REPEAT) // repeat
         {
             if (elapsedTime >= totalDuration) {
                 elapsedTime = elapsedTime % totalDuration;
@@ -62,7 +66,7 @@ public class Animation {
         while (!timeCorrespondImage(currentFrameIndex)) {
             currentFrameIndex++;
         } 
-        if(animType) { //smooth
+        if(animType == Type.SMOOTH) { //smooth
             while ( ended && !timeCorrespondImage2(currentFrameIndex))
             currentFrameIndex--;
         
@@ -76,6 +80,15 @@ public class Animation {
         if(!ended){
             ended = true;
         }
+        if(isFinished) {
+            ended = false;
+            isFinished = false;
+            return true;
+        }
+        else return false;
+    }
+    
+    public synchronized boolean finished() {
         if(isFinished) {
             ended = false;
             isFinished = false;
@@ -114,11 +127,11 @@ public class Animation {
         }
     }
     
-    public void setAnimType (boolean value) {
+    public void setAnimType (Type value) {
        animType = value;
     }
     
-    public boolean getAnimType () {
+    public Type getAnimType () {
         return animType;
     }
 
