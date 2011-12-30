@@ -25,6 +25,8 @@ public class GameCore {
     public GameState game = new GameState();
     public boolean inMenu = true;
     public KeyboardHandler input;
+    long startTime;
+    long currentTime;
 
     public static Preferences preferences() {
         return prefs;
@@ -48,7 +50,9 @@ public class GameCore {
      */
     
     int active = 0;
-    private void gameLoop() {       
+    private void gameLoop() {  
+       
+        
         if (inMenu) {
             Image background = LoadManager.getImage("menu_background");
             Image a[] = new Image[12];
@@ -81,10 +85,15 @@ public class GameCore {
             FullScreenManager.update();
             g.dispose();            
         } else {
+             
+            
+            long elapsedTime = System.currentTimeMillis() - currentTime;
+            currentTime += elapsedTime;
             
             // system time is needed
+            updateBattlefield(elapsedTime);
+            
             renderBattlefield();
-            updateBattlefield();
             movePlayer();
         }
     }
@@ -108,6 +117,9 @@ public class GameCore {
         FullScreenManager.getFullScreenWindow().addKeyListener(input);
         game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
         game.backgroundMusic.play();
+        //////////////////////////////////////////
+        startTime = System.currentTimeMillis();
+        currentTime = startTime;
     }
 
     // check player inputs for two players
@@ -134,9 +146,11 @@ public class GameCore {
      * (sprites and sounds) 3) check neccessary collisions using physics class
      * and change states of the gameobjects accordingly
      */
-    private void updateBattlefield() {
+    private void updateBattlefield(long elapsedTime ) {
         // Check If wave is finished, load new enemies or new level
 
+        
+        
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
         for (Enemy e : game.enemies) {
@@ -164,6 +178,8 @@ public class GameCore {
             if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(b, game.p2)) {
             }
         }
+        
+        
     }
 
     private void movePlayer() {
