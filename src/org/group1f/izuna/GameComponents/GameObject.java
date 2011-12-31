@@ -19,7 +19,8 @@ public abstract class GameObject extends Sprite {
         stillAnimation = still;
         currentAnimation = still;
         isVisible = true;
-        checkStateToAnimate(); // Bu napıyor hala anlamadım
+        //checkStateToAnimate(); // m:Bu napıyor hala anlamadım n:bende neden koyduğumu hatırlayamadım:D, 
+        //gereksiz geldi şimdilik ama silmeyelim, böyle dursun
     }
 
     public boolean isVisible() {

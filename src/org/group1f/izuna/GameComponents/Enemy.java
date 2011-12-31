@@ -25,8 +25,7 @@ public class Enemy extends AIControllable implements SpaceShip {
     public Enemy clone() {
         return null;
     }
-
-    // will be fixed // for now its broken
+ 
     @Override
     public void checkStateToAnimate() {
         Animation newAnim = currentAnimation;
@@ -39,12 +38,14 @@ public class Enemy extends AIControllable implements SpaceShip {
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = rollLeft;
+          //      rollSound.play();
             }
         } else if (getvY() > 0) {
             if (oldvY < 0) { //
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = rollRight;
+       //         rollSound.play();
             }
         } else { // vy = 0
             if (getvY() != 0) {
