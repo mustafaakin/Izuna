@@ -40,10 +40,6 @@ public class LoadManager {
     }
 
     public static void init() throws Exception {
-        Graphics2D g = FullScreenManager.getGraphics();
-        g.drawString("LOADING GAME FILES", 100, 100);
-        FullScreenManager.update();
-        g.dispose();
 
         menuBucket = new HashMap<String, Image>();
         imageBucket = new HashMap<String, Image>();

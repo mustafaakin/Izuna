@@ -38,7 +38,7 @@ public class GameCore {
         while (true) {
             core.gameLoop();
             try {
-                Thread.sleep(Animation.FRAME_DURATION);
+                Thread.sleep(1000 / 60);
             } catch (InterruptedException e) {
             }
         }
@@ -53,7 +53,6 @@ public class GameCore {
     private void gameLoop() {
         if (inMenu) {
         } else {
-            System.out.println("hi, game loop in fight mode.");
             long elapsedTime = System.currentTimeMillis() - currentTime;
             currentTime += elapsedTime;
 
@@ -84,7 +83,8 @@ public class GameCore {
      * that will be used in levels
      */
     private void initialize() {
-        input = new KeyboardHandler(this);
+        FullScreenManager.initGraphics();
+        input = new KeyboardHandler(this);        
         try {
             LoadManager.init();
         } catch (Exception e) {
@@ -165,19 +165,20 @@ public class GameCore {
 
     private void renderBattlefield() {
         Graphics2D g = FullScreenManager.getGraphics();
+        g.clearRect(0, 0, 2500, 1600);
         for (int i = 0; i < game.backgroundLayers.length; i++) {
             Image background = game.backgroundLayers[i];
             g.drawImage(background, 0, 0, null);
         }
         for (Enemy e : game.enemies) {
+            e.update(Animation.FRAME_DURATION);
             Animation currentAnimation = e.getCurrentAnim();
             Image currentImage = currentAnimation.getImage();
             int x = e.getPosition().x;
             int y = e.getPosition().y;
-            System.out.println(x + " - " + y);
             g.drawImage(currentImage, x, y, null);
         }
+        g.dispose();
         FullScreenManager.update();
-        FullScreenManager.getGraphics().dispose();
     }
 }

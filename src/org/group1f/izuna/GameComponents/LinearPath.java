@@ -28,4 +28,5 @@ public class LinearPath extends Path {
 
         return result;
     }
+
 }

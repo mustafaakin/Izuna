@@ -44,7 +44,7 @@ public class FullScreenManager {
     }
 
     public static Graphics2D getGraphics() {
-        if ( vc == null){
+        if (vc == null) {
             initGraphics();
         }
         Window w = vc.getFullScreenWindow();
@@ -63,6 +63,7 @@ public class FullScreenManager {
             if (!strategy.contentsLost()) {
                 strategy.show();
             }
+
         }
     }
 

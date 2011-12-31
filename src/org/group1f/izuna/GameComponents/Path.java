@@ -16,11 +16,9 @@ public abstract class Path {
         this.endPoint = end;
     }
 
-    public boolean isValidTime() {
-        long difference = System.currentTimeMillis() - startTime;
-        System.out.println("DIFF:" + difference);
-        System.out.println("DURAT" + duration);
-        return difference > duration;
+    public boolean isValidTime(long time) {
+        long limit = duration + startTime;
+        return limit > time;
     }
 
     abstract public Point getPosition(long time);
@@ -43,5 +41,10 @@ public abstract class Path {
 
     public long getStartTime() {
         return startTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Starts @" + getStartTime() + "\tlasts:" + getDuration();
     }
 }

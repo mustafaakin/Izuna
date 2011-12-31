@@ -14,6 +14,7 @@ public abstract class AIControllable extends GameObject {
         this.paths = new ArrayList<Path>();
     }
 
+
     public void setPosition() {
         setPosition(this.paths.get(0).getStartPoint());
     }
@@ -26,7 +27,6 @@ public abstract class AIControllable extends GameObject {
     public void setPathActivationTime(long startTime) {
         if (!paths.isEmpty()) {
             paths.get(0).setStartTime(startTime);
-            System.out.println("SETTING 0 -" + startTime);
             for (int i = 1; i < paths.size(); i++) {
                 Path current = paths.get(i);
                 Path before = paths.get(i - 1);
@@ -38,10 +38,11 @@ public abstract class AIControllable extends GameObject {
     // AIControllable lar PathList te hangisnin sırası geldiyse onun getPositionunu çağırılarak getirilecek
     @Override
     public Point getPosition() {
+        long time = System.currentTimeMillis();
         for (int i = 0; i < paths.size(); i++) {
             Path p = paths.get(i);
-            if (p.isValidTime()) {
-                return p.getPosition(System.currentTimeMillis());
+            if (p.isValidTime(time)) {
+                return p.getPosition(time);
             }
         }
         return null;
