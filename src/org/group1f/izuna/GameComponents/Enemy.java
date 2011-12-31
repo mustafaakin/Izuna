@@ -5,7 +5,7 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Enemy extends AIControllable implements SpaceShip {
 
-    private String weaponKey; 
+    private String weaponKey;
     private boolean isDying;
     private Animation rollLeft;
     private Animation rollRight;
@@ -25,7 +25,7 @@ public class Enemy extends AIControllable implements SpaceShip {
     public Enemy clone() {
         return null;
     }
- 
+
     @Override
     public void checkStateToAnimate() {
         Animation newAnim = currentAnimation;
@@ -38,14 +38,12 @@ public class Enemy extends AIControllable implements SpaceShip {
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = rollLeft;
-                rollSound.play();
             }
         } else if (getvY() > 0) {
             if (oldvY < 0) { //
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = rollRight;
-                rollSound.play();
             }
         } else { // vy = 0
             if (getvY() != 0) {
@@ -58,7 +56,7 @@ public class Enemy extends AIControllable implements SpaceShip {
         if (health < 1) {
             setState();
             if (!isDying) {
-                getDieSound().play();
+                //      getDieSound().play();
             }
             isDying = true;
         }
