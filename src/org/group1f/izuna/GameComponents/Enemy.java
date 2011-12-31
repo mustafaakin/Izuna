@@ -13,18 +13,16 @@ public class Enemy extends AIControllable implements SpaceShip {
     private float oldvY = 0.0f;
     private boolean isRFinished = true;
 
-    public Enemy(Point currentPos, Animation rest, SoundEffect dieSound, Path path, Animation rollLeft, Animation rollRight, SoundEffect roll) {
-        super(currentPos, rest, dieSound, path);
+    public Enemy(Point currentPos, Animation rest, SoundEffect dieSound, Animation rollLeft, Animation rollRight, SoundEffect roll) {
+        super(currentPos, rest);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
-        this.health = health;
         rollSound = roll;
         isDying = false;
     }
 
     public Enemy clone() {
-        return new Enemy(getPosition(), getRestAnimation().clone(), dieSound, defaultPath, rollLeft.clone(),
-                rollRight.clone(), rollSound);
+        return null;
     }
 
     // will be fixed // for now its broken
@@ -40,28 +38,25 @@ public class Enemy extends AIControllable implements SpaceShip {
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = rollLeft;
-                currentSound = rollSound;
             }
         } else if (getvY() > 0) {
             if (oldvY < 0) { //
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = rollRight;
-                currentSound = rollSound;
             }
         } else { // vy = 0
             if (getvY() != 0) {
                 isRFinished = currentAnimation.refine();
             } else {
-                newAnim = getRestAnimation();
+                newAnim = getStillAnimation();
             }
         }
 
         if (health < 1) {
             setState();
-            currentSound = dieSound;
             if (!isDying) {
-                currentSound.play();
+                super.getDieSound().play(); // Current sound a bunu eşitleyip çalmanın pek farkı yok 
             }
             isDying = true;
         }
@@ -72,8 +67,7 @@ public class Enemy extends AIControllable implements SpaceShip {
 
         if (isRFinished && currentAnimation != newAnim) {
             currentAnimation = newAnim;
-            currentAnimation.startOver();
-            currentSound.play();
+            currentAnimation.startOver();            
         }
         oldvY = getvY();
     }

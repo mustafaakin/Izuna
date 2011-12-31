@@ -18,8 +18,13 @@ public class Weapon extends AIControllable {
     private SoundEffect fireSound;
     private SoundEffect explodeSound;
 
-    public Weapon(Point currentPos, Animation rest, SoundEffect dieSound, Path path, Animation die, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound) {
-        super(currentPos, rest, dieSound, path);
+    // Weapon un die sound u olması garip
+    public Weapon(Point currentPos, int duration, Animation rest, Animation die, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound) {
+        super(currentPos, rest);
+        Point endPosition = new Point(currentPos);
+        endPosition.x = 1280 + 150; // Outside the Canvas
+        LinearPath path = new LinearPath(currentPos, endPosition, duration);
+
         this.die = die;
         this.explode = explode;
         this.fireSound = fireSound;
@@ -27,12 +32,6 @@ public class Weapon extends AIControllable {
         state = WeaponState.STATE_FIRED;
         this.damageAmount = damageAmount;
         this.rateOfFire = rateOfFire;
-    }
-
-    @Override
-    public Weapon clone() {
-        return new Weapon(getPosition(), getRestAnimation().clone(), dieSound, defaultPath,
-                die.clone(), explode.clone(), damageAmount, rateOfFire, fireSound, explodeSound);
     }
 
     @Override

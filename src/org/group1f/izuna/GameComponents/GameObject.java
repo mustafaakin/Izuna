@@ -5,18 +5,21 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 public abstract class GameObject extends Sprite {
 
-    private Animation restAnimation;
+    private Animation stillAnimation;
     private boolean isVisible;
-    SoundEffect currentSound;
-    SoundEffect dieSound;
+    private SoundEffect dieSound;
 
-    public GameObject(Point currentPos, Animation rest, SoundEffect dieSound) {
+    /*
+     * Her Game objesi genel bir ses çıkarmıyor, yani currentSound a gerek yok,
+     * dieSound da yok olduklarında çıkacak ses fakat o da null olabilir o
+     * yüzden constructora koymadım
+     */
+    public GameObject(Point currentPos, Animation rest) {
         super(currentPos);
-        restAnimation = rest;
+        stillAnimation = rest;
         currentAnimation = rest;
         isVisible = true;
-        this.dieSound = dieSound;
-        checkStateToAnimate();
+        checkStateToAnimate(); // Bu napıyor hala anlamadım
     }
 
     public boolean isVisible() {
@@ -27,25 +30,28 @@ public abstract class GameObject extends Sprite {
         this.isVisible = isVisible;
     }
 
-    public Animation getRestAnimation() {
-        return restAnimation;
+    public Animation getStillAnimation() {
+        return stillAnimation;
     }
 
-    public void setRestAnimation(Animation restAnimation) {
-        this.restAnimation = restAnimation;
+    public void setStillAnimation(Animation stillAnimation) {
+        this.stillAnimation = stillAnimation;
     }
 
+    public void setDieSound(SoundEffect dieSound) {
+        this.dieSound = dieSound;
+    }
+
+    public SoundEffect getDieSound() {
+        return dieSound;
+    }
+
+    
     @Override
     public void update(long elapsedTime) {
         //playSound();
         super.update(elapsedTime);
     }
 
-    /*
-     * public void playSound() { if(currentSound != null && currentSound)
-     * currentSound.play();
-        }
-     */
     public abstract void checkStateToAnimate();
-    //public abstract GameObject clone();
 }

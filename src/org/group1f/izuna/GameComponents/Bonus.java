@@ -5,17 +5,23 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Bonus extends AIControllable {
     
-    enum BonusState {
+    public enum BonusState {
         STATE_FIRED, STATE_HIT
     }
     
+    private final static long DEFAULT_BONUS_FALL_DURATION = 750;
     private BonusState state;
+    
     private boolean bonusType; // default = health, 1 = weapon
     private int bonusValue;
 	
-    public Bonus(Point currentPos, Animation rest, SoundEffect dieSound,Path path, int value, boolean type)
+    public Bonus(Point currentPos, Animation rest, SoundEffect dieSound, Point spawnPosition, int value, boolean type)
     {
-        super(currentPos, rest, dieSound,path);
+        super(currentPos, rest);
+        Point endPosition = new Point(spawnPosition);
+        endPosition.x = 1280 + 50; // Outside the Canvas
+        LinearPath path = new LinearPath(spawnPosition, endPosition, DEFAULT_BONUS_FALL_DURATION);
+        
         bonusValue = value;
         bonusType = type;
         state = BonusState.STATE_FIRED;
@@ -23,12 +29,14 @@ public class Bonus extends AIControllable {
     
     public Bonus clone() // ses sorunu varsa clone methodundandır
     {
-        return new Bonus(getPosition(), getRestAnimation().clone(), dieSound, defaultPath, bonusValue, bonusType);
+        return null;
+// TODO Will be fixed.      
+        //return new Bonus(getPosition(), getStillAnimation().clone(), dieSound, defaultPath, bonusValue, bonusType);
     }
     
     public void checkStateToAnimate()
     {
-        currentAnimation = getRestAnimation();
+        currentAnimation = getStillAnimation();
     }
      
     public void update( long elapsedTime )
