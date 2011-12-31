@@ -35,7 +35,6 @@ public class GameCore {
     public static void main(String[] args) {
         GameCore core = new GameCore();
         core.initialize();
-
         while (true) {
             core.gameLoop();
             try {
@@ -49,6 +48,7 @@ public class GameCore {
      * in an infinite loop calculate time in miliseconds call updateBattlefield
      */
     int active = 0;
+    long counter = 0;
 
     private void gameLoop() {
 
@@ -73,7 +73,19 @@ public class GameCore {
 
             Graphics2D g = FullScreenManager.getGraphics();
             g.drawImage(background, 0, 0, null);
-
+            GameCore.preferences().putBoolean("3D", true);
+            
+            counter++;
+            Enemy e = LoadManager.getEnemy("");
+            if ( counter == 30){
+                e.setvX(15.0f);
+                e.setvY(15.0f);
+            }
+            
+            e.update(Animation.FRAME_DURATION);            
+            g.drawImage(e.getCurrentImage(), 400, 600, null);
+            
+            
             for (int i = 0; i < 6; i++) {
                 if (i != active) {
                     g.drawImage(a[i], 0, 0, null);

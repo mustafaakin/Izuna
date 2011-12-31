@@ -8,18 +8,17 @@ import org.group1f.izuna.GameCore;
 public class Animation {
 
     public enum AnimationType {
-
         REPEAT, SMOOTH
     }
+    
+    private AnimationType animType = AnimationType.REPEAT;
     public static final long FRAME_DURATION = 1000 / 24;
-    AnimationType animType = AnimationType.REPEAT;
     public boolean ended = false;
     private boolean isFinished = false;
-    protected ArrayList<AnimationFrame> frames;
+    public ArrayList<AnimationFrame> frames;
     protected int currentFrameIndex;
     protected long totalDuration;
     protected long elapsedTime;
-    protected long oldElapsedTime;
 
     public Animation() {
         this(new ArrayList<AnimationFrame>());
@@ -55,14 +54,14 @@ public class Animation {
             } else if (ended) {
                 elapsedTime = elapsedTime % totalDuration;
             }
-
+            System.out.println(elapsedTime);
         }
 
         while (!timeCorrespondImage(currentFrameIndex)) {
             currentFrameIndex++;
         }
         if (animType == AnimationType.SMOOTH) { //smooth
-            while (ended && !timeCorrespondImage2(currentFrameIndex)) {
+            while (ended && !timeCorrespondImage(currentFrameIndex)) {
                 currentFrameIndex--;
             }
 
@@ -162,7 +161,7 @@ public class Animation {
      * totalDuration; currentFrameIndex = 0; }
      *
      * while (!timeCorrespondImage(currentFrameIndex)) { currentFrameIndex++; }
-    }
+     * }
      */
     /*
      * public synchronized void oldupdate2(long passedTime) { if (!ended &&
@@ -178,8 +177,7 @@ public class Animation {
      * while ( ended && !timeCorrespondImage2(currentFrameIndex))
      * currentFrameIndex--;
      *
-     * if(ended && currentFrameIndex == 0) isFinished = true;
-    }
+     * if(ended && currentFrameIndex == 0) isFinished = true; }
      */
     private class AnimationFrame {
 

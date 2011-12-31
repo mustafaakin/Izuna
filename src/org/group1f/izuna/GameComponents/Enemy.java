@@ -5,19 +5,20 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Enemy extends AIControllable implements SpaceShip {
 
+    private String weaponKey; 
     private boolean isDying;
     private Animation rollLeft;
     private Animation rollRight;
-    private SoundEffect rollSound;
+    private SoundEffect enteringSound;
     private int health;
     private float oldvY = 0.0f;
     private boolean isRFinished = true;
 
-    public Enemy(Point currentPos, Animation rest, SoundEffect dieSound, Animation rollLeft, Animation rollRight, SoundEffect roll) {
-        super(currentPos, rest);
+    public Enemy(Animation still, Animation rollLeft, Animation rollRight, SoundEffect enteringSound) {
+        super(null, still);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
-        rollSound = roll;
+        this.enteringSound = enteringSound;
         isDying = false;
     }
 
@@ -56,7 +57,7 @@ public class Enemy extends AIControllable implements SpaceShip {
         if (health < 1) {
             setState();
             if (!isDying) {
-                super.getDieSound().play(); // Current sound a bunu eşitleyip çalmanın pek farkı yok 
+                // super.getDieSound().play(); // Current sound a bunu eşitleyip çalmanın pek farkı yok 
             }
             isDying = true;
         }
@@ -67,7 +68,7 @@ public class Enemy extends AIControllable implements SpaceShip {
 
         if (isRFinished && currentAnimation != newAnim) {
             currentAnimation = newAnim;
-            currentAnimation.startOver();            
+            currentAnimation.startOver();
         }
         oldvY = getvY();
     }

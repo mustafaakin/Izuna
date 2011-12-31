@@ -19,7 +19,7 @@ public class FullScreenManager {
 
     private static void setFullScreen() {
         DisplayMode chosenDm = null;
-        for (DisplayMode dm : vc.getDisplayModes()) { // Chooses nearest resolution.
+        for (DisplayMode dm : vc.getDisplayModes()) { // Chooses neastill resolution.
             if (dm != null && dm.getWidth() >= 1280 && dm.getHeight() >= 720) {
                 chosenDm = new DisplayMode(dm.getWidth(), dm.getHeight(), 32, 0);
                 break;

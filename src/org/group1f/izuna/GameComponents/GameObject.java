@@ -14,10 +14,10 @@ public abstract class GameObject extends Sprite {
      * dieSound da yok olduklarında çıkacak ses fakat o da null olabilir o
      * yüzden constructora koymadım
      */
-    public GameObject(Point currentPos, Animation rest) {
+    public GameObject(Point currentPos, Animation still) {
         super(currentPos);
-        stillAnimation = rest;
-        currentAnimation = rest;
+        stillAnimation = still;
+        currentAnimation = still;
         isVisible = true;
         checkStateToAnimate(); // Bu napıyor hala anlamadım
     }

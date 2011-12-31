@@ -5,11 +5,13 @@ import org.group1f.izuna.GameComponents.Drawing.Animation;
 
 public class Weapon extends AIControllable {
 
+    private static long DEFAULT_WEAPON_DURATION = 500;
+
     public enum WeaponState {
 
         STATE_FIRED, STATE_HIT, STATE_EXPLODE
     }
-    WeaponState state;
+    private WeaponState state;
     private int damageAmount;
     private int rateOfFire;
     private Animation die; //this animation shows up when it damages to spaceship
@@ -19,19 +21,21 @@ public class Weapon extends AIControllable {
     private SoundEffect explodeSound;
 
     // Weapon un die sound u olması garip
-    public Weapon(Point currentPos, int duration, Animation rest, Animation die, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound) {
-        super(currentPos, rest);
-        Point endPosition = new Point(currentPos);
-        endPosition.x = 1280 + 150; // Outside the Canvas
-        LinearPath path = new LinearPath(currentPos, endPosition, duration);
-
-        this.die = die;
+    public Weapon(Animation still, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound) {
+        super(null, still);
         this.explode = explode;
         this.fireSound = fireSound;
         this.explodeSound = explodeSound;
-        state = WeaponState.STATE_FIRED;
         this.damageAmount = damageAmount;
         this.rateOfFire = rateOfFire;
+    }
+
+    public void startFiring(Point position, long time) {
+        Point end = new Point(position);
+        end.y = 1280 + 50; // The position that the weapon will disappear        
+        LinearPath path = new LinearPath(position, end, DEFAULT_WEAPON_DURATION);
+        this.addPath(path);
+        this.setPathActivationTime(time);
     }
 
     @Override
@@ -39,11 +43,11 @@ public class Weapon extends AIControllable {
         Animation newAnim = currentAnimation;
 
         if (state == WeaponState.STATE_HIT) {
-            newAnim = die;
+            newAnim = explode;
             setvX(0);
             setvY(0);
         } else if (state == WeaponState.STATE_EXPLODE) {
-            newAnim = die;
+            newAnim = null;
             setvX(0);
             setvY(0);
         }

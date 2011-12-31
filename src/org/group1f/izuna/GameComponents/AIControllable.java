@@ -9,8 +9,8 @@ public abstract class AIControllable extends GameObject {
     
     private ArrayList<Path> paths; // Tek bir path değil, path listesi olması gerekiyor
 
-    public AIControllable(Point currentPos, Animation rest) {
-        super(currentPos, rest);
+    public AIControllable(Point currentPos, Animation still) {
+        super(currentPos, still);
         this.paths = new ArrayList<Path>();
     }
 

@@ -2,6 +2,7 @@ package org.group1f.izuna.Contollers;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,12 +19,17 @@ import org.simpleframework.xml.core.Persister;
 public class LoadManager {
 
     private static HashMap<String, Animation> animationBucket;
+    private static HashMap<String, Weapon> weaponBucket;
     private static HashMap<String, SoundEffect> soundBucket;
     private static HashMap<String, Image> imageBucket;
     private static HashMap<String, Image> menuBucket;
 
     private LoadManager() {
         // Making it singleton
+    }
+
+    public static Animation getAnim(String key) {
+        return animationBucket.get(key);
     }
 
     public static void init() throws Exception {
@@ -36,11 +42,11 @@ public class LoadManager {
         imageBucket = new HashMap<String, Image>();
         soundBucket = new HashMap<String, SoundEffect>();
         animationBucket = new HashMap<String, Animation>();
+        weaponBucket = new HashMap<String, Weapon>();
 
         readMenus();
         readSounds();
         initShipsImages();
-       
         // XML Information files. 
         Serializer serializer = new Persister();
         File levelsSource = new File("data/levels.xml");
@@ -50,31 +56,45 @@ public class LoadManager {
         LevelList waves = serializer.read(LevelList.class, levelsSource);
         EnemyList enemies = serializer.read(EnemyList.class, enemiesSource);
         WeaponList weapons = serializer.read(WeaponList.class, weaponsSource);
-        
-        validateSources(waves,enemies,weapons);
+
+        initilazieSources(waves, enemies, weapons);
     }
 
-    private static void validateSources(LevelList waves, EnemyList enemies, WeaponList weapons){
-        for ( WeaponInfo weapon : weapons.getList()){
-            weapon.getKey();
+    private static void initilazieSources(LevelList waves, EnemyList enemies, WeaponList weapons) {
+        for (WeaponInfo weapon : weapons.getList()) {
+            String key = weapon.getKey();
+            
+            Animation still = LoadManager.getAnim("weapon/" + key + "/still");
+            Animation explode = LoadManager.getAnim("weapon/" + key + "/explode");
+            SoundEffect fire = LoadManager.getSoundEffect(weapon.getFireSound());
+            SoundEffect explosion = LoadManager.getSoundEffect(weapon.getExplodeSound());
+            
+            Weapon w = new Weapon(still, explode, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, explosion);
+            weaponBucket.put(key, w);
         }
 
-        for ( EnemyInfo enemy : enemies.getList()){
-            if ( !soundBucket.containsKey(enemy.getEnterSound())){
-                System.err.println("No entering sound for enemy '" + enemy.getKey()  + "' could be found.");
-            }
+        for (EnemyInfo enemy : enemies.getList()) {
+            String key = enemy.getKey();
+            
+            Animation still = LoadManager.getAnim("ships/" + key + "/still");
+            Animation rollLeft = LoadManager.getAnim("ships/" + key + "/left");
+            Animation rollRight = LoadManager.getAnim("ships/" + key + "/right");
+            SoundEffect enteringSound = LoadManager.getSoundEffect(key);
+
+            Enemy e = new Enemy(still, rollLeft, rollRight, enteringSound);
+            e.setHealth(enemy.getHealth());
         }
-        
-        for ( LevelInfo level : waves.getList()){
-            for ( WaveInfo wave : level.getWaves()){
-                for ( WaveEnemy enemy : wave.getEnemies()){
+
+        for (LevelInfo level : waves.getList()) {
+            for (WaveInfo wave : level.getWaves()) {
+                for (WaveEnemy enemy : wave.getEnemies()) {
 //                    enemy.getKey()
                 }
             }
         }
-        
+
     }
-    
+
     public static Image getMenuImage(String menu, String key) {
         return (Image) menuBucket.get(menu + "-" + key);
     }
@@ -116,12 +136,12 @@ public class LoadManager {
                 try {
                     Animation still = readSingleShip(ship, "default");
                     Animation left = readSingleShip(ship, "left");
-                    Animation roll = readSingleShip(ship, "roll");
+                    Animation right = readSingleShip(ship, "right");
 
                     String shipName = "ships/" + ship.getName() + "/";
                     animationBucket.put(shipName + "default", still);
                     animationBucket.put(shipName + "left", left);
-                    animationBucket.put(shipName + "roll", roll);
+                    animationBucket.put(shipName + "right", right);
                 } catch (IOException ioe) {
                     System.err.println("Could not load ship: " + ship.getName() + ", because:" + ioe.getMessage());
                 }
@@ -151,7 +171,8 @@ public class LoadManager {
     }
 
     public static Enemy getEnemy(String key) {
-        return null;
+        Enemy e = null;
+        return e;
     }
 
     public static Weapon getWeapon(String key) {

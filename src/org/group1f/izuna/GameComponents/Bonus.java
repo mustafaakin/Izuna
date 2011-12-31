@@ -15,9 +15,9 @@ public class Bonus extends AIControllable {
     private boolean bonusType; // default = health, 1 = weapon
     private int bonusValue;
 	
-    public Bonus(Point currentPos, Animation rest, SoundEffect dieSound, Point spawnPosition, int value, boolean type)
+    public Bonus(Point currentPos, Animation still, SoundEffect dieSound, Point spawnPosition, int value, boolean type)
     {
-        super(currentPos, rest);
+        super(currentPos, still);
         Point endPosition = new Point(spawnPosition);
         endPosition.x = 1280 + 50; // Outside the Canvas
         LinearPath path = new LinearPath(spawnPosition, endPosition, DEFAULT_BONUS_FALL_DURATION);

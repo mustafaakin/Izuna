@@ -18,7 +18,9 @@ public class WeaponInfo {
     @Element
     private int CausedDamage;
     @Element
-    private String Sound;
+    private String FireSound;
+    @Element
+    private String ExplodeSound;
     @Element
     private int RateOfFire;
 
@@ -43,8 +45,12 @@ public class WeaponInfo {
         return RateOfFire;
     }
 
-    public String getSound() {
-        return Sound;
+    public String getExplodeSound() {
+        return ExplodeSound;
+    }
+
+    public String getFireSound() {
+        return FireSound;
     }
 
     public void setCausedDamage(int CausedDamage) {
@@ -62,8 +68,12 @@ public class WeaponInfo {
     public void setRateOfFire(int RateOfFire) {
         this.RateOfFire = RateOfFire;
     }
+ 
+    public void setExplodeSound(String ExplodeSound) {
+        this.ExplodeSound = ExplodeSound;
+    }
 
-    public void setSound(String Sound) {
-        this.Sound = Sound;
+    public void setFireSound(String FireSound) {
+        this.FireSound = FireSound;
     }
 }
