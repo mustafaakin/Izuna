@@ -31,7 +31,6 @@ public class Player extends GameObject implements SpaceShip {
         superDesperationMoveCount = 0;
     }
 
-    // will be fixed // for now its broken
     @Override
     public void checkStateToAnimate() {
         Animation newAnim = currentAnimation;
