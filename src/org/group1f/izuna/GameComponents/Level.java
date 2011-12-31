@@ -6,6 +6,7 @@ import java.util.Queue;
 public class Level {
 
     Queue<AttackWave> waves;
+    public AttackWave currentWave;
 
     public Level() {
         waves = new ArrayDeque<AttackWave>();
@@ -15,7 +16,26 @@ public class Level {
         waves.add(wave);
     }
 
-    public AttackWave getWave() {
-        return waves.poll();
+    public void startLevel() {
+        swapNextWave();
+    }
+
+    public boolean swapNextWave() {
+        if (currentWave.isFinished()) {
+            AttackWave wave = waves.poll();
+            if (wave != null) {
+                currentWave = wave;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isFinished() {
+        return waves.isEmpty() && currentWave.isFinished();
+    }
+
+    public void killEnemy(Enemy e) {
+        currentWave.removeEnemy(e);
     }
 }

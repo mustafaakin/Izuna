@@ -1,15 +1,29 @@
 package org.group1f.izuna.GameComponents;
 
+import java.util.ArrayList;
 import java.util.List;
-import org.group1f.izuna.Contollers.LoadManager;
-import org.group1f.izuna.Contollers.XML.EnemyInfo;
 
 public class AttackWave {
 
-    List<Enemy> enemies;
+    private List<Enemy> enemies = new ArrayList<Enemy>();
 
-    public void addEnemy(EnemyInfo info) {
-        Enemy e = LoadManager.getEnemy(info.getKey());
-        e.setHealth(info.getHealth());
+    public void addEnemy(Enemy enemy) {
+        enemies.add(enemy);
+    }
+
+    public boolean isFinished() {
+        return enemies.isEmpty();
+    }
+
+    public void removeEnemy(Enemy e) {
+        enemies.remove(e);
+    }
+
+    public List<Enemy> startWave(long time) {
+        for (Enemy enemy : enemies) {
+            enemy.setVisible(true);
+            enemy.setPathActivationTime(time);
+        }
+        return enemies;
     }
 }

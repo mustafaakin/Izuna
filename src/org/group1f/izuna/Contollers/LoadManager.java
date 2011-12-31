@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import org.group1f.izuna.GameComponents.*;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.XML.*;
 import org.group1f.izuna.GameComponents.Bonus;
@@ -19,6 +20,7 @@ import org.simpleframework.xml.core.Persister;
 public class LoadManager {
 
     private static HashMap<String, Animation> animationBucket;
+    private static HashMap<String, Enemy> enemyBucket;
     private static HashMap<String, Weapon> weaponBucket;
     private static HashMap<String, SoundEffect> soundBucket;
     private static HashMap<String, Image> imageBucket;
@@ -43,6 +45,7 @@ public class LoadManager {
         soundBucket = new HashMap<String, SoundEffect>();
         animationBucket = new HashMap<String, Animation>();
         weaponBucket = new HashMap<String, Weapon>();
+        enemyBucket = new HashMap<String, Enemy>();
 
         readMenus();
         readSounds();
@@ -63,32 +66,55 @@ public class LoadManager {
     private static void initilazieSources(LevelList waves, EnemyList enemies, WeaponList weapons) {
         for (WeaponInfo weapon : weapons.getList()) {
             String key = weapon.getKey();
-            
+
             Animation still = LoadManager.getAnim("weapon/" + key + "/still");
             Animation explode = LoadManager.getAnim("weapon/" + key + "/explode");
             SoundEffect fire = LoadManager.getSoundEffect(weapon.getFireSound());
             SoundEffect explosion = LoadManager.getSoundEffect(weapon.getExplodeSound());
-            
+
             Weapon w = new Weapon(still, explode, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, explosion);
+            w.setVisible(false);
             weaponBucket.put(key, w);
         }
 
         for (EnemyInfo enemy : enemies.getList()) {
             String key = enemy.getKey();
-            
+
             Animation still = LoadManager.getAnim("ships/" + key + "/still");
             Animation rollLeft = LoadManager.getAnim("ships/" + key + "/left");
             Animation rollRight = LoadManager.getAnim("ships/" + key + "/right");
             SoundEffect enteringSound = LoadManager.getSoundEffect(key);
 
             Enemy e = new Enemy(still, rollLeft, rollRight, enteringSound);
+            e.setVisible(false);
             e.setHealth(enemy.getHealth());
+            enemyBucket.put(key, e);
         }
 
-        for (LevelInfo level : waves.getList()) {
-            for (WaveInfo wave : level.getWaves()) {
-                for (WaveEnemy enemy : wave.getEnemies()) {
-//                    enemy.getKey()
+        for (LevelInfo levelData : waves.getList()) {
+            Level level = new Level();
+            for (WaveInfo waveData : levelData.getWaves()) {
+                AttackWave wave = new AttackWave();
+                for (WaveEnemy enemyData : waveData.getEnemies()) {
+                    Enemy enemy = LoadManager.getEnemy(enemyData.getKey());
+                    for (WavePath pathData : enemyData.getPaths()) {
+                        String pathType = pathData.getType();
+                        if (pathType.equals("linear")) {
+                            Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
+                            Point endPoint = new Point(pathData.getEndX(), pathData.getEndY());
+                            
+                            LinearPath path = new LinearPath(startPoint, endPoint, pathData.getDuration());
+                            enemy.addPath(path);
+                        } else if (pathType.equals("quadratic")) {
+                            Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
+                            Point middlePoint = new Point(pathData.getMidX(), pathData.getMidY());
+                            Point endPoint = new Point(pathData.getEndX(), pathData.getEndY());
+                            
+                            QuadraticPath path = new QuadraticPath(startPoint, endPoint, middlePoint, pathData.getDuration());
+                            enemy.addPath(path);
+                        }
+                    }
+                    wave.addEnemy(enemy);
                 }
             }
         }
