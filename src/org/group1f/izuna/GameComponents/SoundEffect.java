@@ -16,23 +16,24 @@ public class SoundEffect {
     public SoundEffect(SoundEffect get) {
         this.filename = get.filename;
     }
-        
+
     public void close() {
         if (player != null) {
             player.close();
-        }       
+        }
     }
-    
+
     public void play() {
         try {
             FileInputStream fis = new FileInputStream(filename);
             BufferedInputStream bis = new BufferedInputStream(fis);
-            player = new Player(bis);       
+            player = new Player(bis);
         } catch (Exception e) {
             System.out.println("Problem playing file: " + filename);
             System.out.println(e);
         }
         new Thread() {
+
             @Override
             public void run() {
                 try {

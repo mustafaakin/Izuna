@@ -11,17 +11,17 @@ public class LinearPath extends Path {
     @Override
     public Point getPosition(long time) {
 
-        long timeDiff = time - startTime;
+        long timeDiff = time - super.getStartTime();
 
-        if (timeDiff > duration || timeDiff < 0) {
+        if (timeDiff > super.getDuration() || timeDiff < 0) {
             throw new IllegalArgumentException("Given time should be at most duration times larger than starting time of the path.");
         }
 
-        float incrRatio = (float)timeDiff / duration;
+        float incrRatio = (float) timeDiff / super.getDuration();
 
-        Point result = new Point(startPoint);
-        int diffX = endPoint.x - startPoint.x;
-        int diffY = endPoint.y - startPoint.y;
+        Point result = new Point(super.getStartPoint());
+        int diffX = super.getEndPoint().x - super.getStartPoint().x;
+        int diffY = super.getEndPoint().y - super.getStartPoint().y;
 
         result.x += (diffX * incrRatio);
         result.y += (diffY * incrRatio);

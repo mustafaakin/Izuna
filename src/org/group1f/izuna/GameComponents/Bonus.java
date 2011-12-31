@@ -5,11 +5,11 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Bonus extends AIControllable {
     
-    enum State {
+    enum BonusState {
         STATE_FIRED, STATE_HIT
     }
     
-    private State state;
+    private BonusState state;
     private boolean bonusType; // default = health, 1 = weapon
     private int bonusValue;
 	
@@ -18,7 +18,7 @@ public class Bonus extends AIControllable {
         super(currentPos, rest, dieSound,path);
         bonusValue = value;
         bonusType = type;
-        state = State.STATE_FIRED;
+        state = BonusState.STATE_FIRED;
     }
     
     public Bonus clone() // ses sorunu varsa clone methodundandır
@@ -37,12 +37,12 @@ public class Bonus extends AIControllable {
         super.update( elapsedTime);
     }
      
-    public void setState(State state) 
+    public void setState(BonusState state) 
     {
         if (this.state != state) 
         {
             this.state = state;
-            if (state == State.STATE_HIT) 
+            if (state == BonusState.STATE_HIT) 
             {
                 setvX(0);
                 setvY(0);

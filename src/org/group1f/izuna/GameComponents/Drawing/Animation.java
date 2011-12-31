@@ -6,17 +6,13 @@ import java.util.ArrayList;
 import org.group1f.izuna.GameCore;
 
 public class Animation {
-    
-    public enum Type {
+
+    public enum AnimationType {
+
         REPEAT, SMOOTH
     }
-
     public static final long FRAME_DURATION = 1000 / 24;
-    //public static final boolean REPEAT = false;
-  //  public static final boolean SMOOTH = true;
-    
-    Type animType = Type.REPEAT;
-   // private boolean animType = false;
+    AnimationType animType = AnimationType.REPEAT;
     public boolean ended = false;
     private boolean isFinished = false;
     protected ArrayList<AnimationFrame> frames;
@@ -24,8 +20,7 @@ public class Animation {
     protected long totalDuration;
     protected long elapsedTime;
     protected long oldElapsedTime;
-    
-    
+
     public Animation() {
         this(new ArrayList<AnimationFrame>());
     }
@@ -43,61 +38,63 @@ public class Animation {
     public Animation clone() {
         return new Animation(frames);
     }
-    
-    
+
     public synchronized void update(long passedTime) {
         if (frames.size() > 1) {
             elapsedTime += passedTime;
         }
-        if(animType == Type.REPEAT) // repeat
+        if (animType == AnimationType.REPEAT) // repeat
         {
             if (elapsedTime >= totalDuration) {
                 elapsedTime = elapsedTime % totalDuration;
                 currentFrameIndex = 0;
             }
         } else { //smooth
-            if ( !ended && elapsedTime >= totalDuration) {
-                currentFrameIndex = frames.size()-1;
-            } else  if (ended){
+            if (!ended && elapsedTime >= totalDuration) {
+                currentFrameIndex = frames.size() - 1;
+            } else if (ended) {
                 elapsedTime = elapsedTime % totalDuration;
             }
-            
+
         }
-       
+
         while (!timeCorrespondImage(currentFrameIndex)) {
             currentFrameIndex++;
-        } 
-        if(animType == Type.SMOOTH) { //smooth
-            while ( ended && !timeCorrespondImage2(currentFrameIndex))
-            currentFrameIndex--;
-        
-        if(ended && currentFrameIndex == 0)
-            isFinished = true;
+        }
+        if (animType == AnimationType.SMOOTH) { //smooth
+            while (ended && !timeCorrespondImage2(currentFrameIndex)) {
+                currentFrameIndex--;
+            }
+
+            if (ended && currentFrameIndex == 0) {
+                isFinished = true;
+            }
         }
     }
-    
-    
+
     public synchronized boolean refine() {
-        if(!ended){
+        if (!ended) {
             ended = true;
         }
-        if(isFinished) {
+        if (isFinished) {
             ended = false;
             isFinished = false;
             return true;
+        } else {
+            return false;
         }
-        else return false;
     }
-    
+
     public synchronized boolean finished() {
-        if(isFinished) {
+        if (isFinished) {
             ended = false;
             isFinished = false;
             return true;
+        } else {
+            return false;
         }
-        else return false;
     }
-    
+
     //eğer bi saçmalık olursa ilk buraya bak
     protected boolean timeCorrespondImage2(int index) {
         long timeChecked = 0;
@@ -105,7 +102,7 @@ public class Animation {
         for (int i = 0; i <= index; i++) {
             timeChecked += FRAME_DURATION;
         }
-        
+
         //özellikle ilk bu ife bak
         if ((totalDuration - timeChecked) < elapsedTime && !(timeChecked == FRAME_DURATION)) {
             return false;
@@ -113,7 +110,7 @@ public class Animation {
             return true;
         }
     }
-    
+
     protected boolean timeCorrespondImage(int index) {
         long timeChecked = 0;
 
@@ -127,12 +124,12 @@ public class Animation {
             return true;
         }
     }
-    
-    public void setAnimType (Type value) {
-       animType = value;
+
+    public void setAnimType(AnimationType value) {
+        animType = value;
     }
-    
-    public Type getAnimType () {
+
+    public AnimationType getAnimType() {
         return animType;
     }
 
@@ -140,7 +137,7 @@ public class Animation {
         totalDuration += FRAME_DURATION;
         frames.add(new AnimationFrame(img, img3D));
     }
-    
+
     public synchronized Image getImage() {
         if (frames.isEmpty()) {
             return null;
@@ -148,7 +145,7 @@ public class Animation {
             return getFrame(currentFrameIndex).getFrame();
         }
     }
-    
+
     public long getElapsedTime() {
         return elapsedTime;
     }
@@ -156,45 +153,34 @@ public class Animation {
     private AnimationFrame getFrame(int i) {
         return frames.get(i);
     }
-    
-      /* public synchronized void oldupdate(long passedTime) {
-        if (frames.size() > 1) {
-            elapsedTime += passedTime;
-        }
 
-        if (elapsedTime >= totalDuration) {
-            elapsedTime = elapsedTime % totalDuration;
-            currentFrameIndex = 0;
-        }
-
-        while (!timeCorrespondImage(currentFrameIndex)) {
-            currentFrameIndex++;
-        }
-    }*/
-/*
-    public synchronized void oldupdate2(long passedTime) {
-        if (!ended && frames.size() > 1) {
-            elapsedTime += passedTime;
-        }
-            
-
-        if ( !ended && elapsedTime >= totalDuration) {
-            currentFrameIndex = frames.size()-1;
-        }   else  if (ended){
-            elapsedTime = elapsedTime % totalDuration;
-        }
-        
-
-        while (!timeCorrespondImage(currentFrameIndex)) {
-            currentFrameIndex++;
-        }
-        while ( ended && !timeCorrespondImage2(currentFrameIndex))
-            currentFrameIndex--;
-        
-        if(ended && currentFrameIndex == 0)
-            isFinished = true;
-    }*/
-
+    /*
+     * public synchronized void oldupdate(long passedTime) { if (frames.size() >
+     * 1) { elapsedTime += passedTime; }
+     *
+     * if (elapsedTime >= totalDuration) { elapsedTime = elapsedTime %
+     * totalDuration; currentFrameIndex = 0; }
+     *
+     * while (!timeCorrespondImage(currentFrameIndex)) { currentFrameIndex++; }
+    }
+     */
+    /*
+     * public synchronized void oldupdate2(long passedTime) { if (!ended &&
+     * frames.size() > 1) { elapsedTime += passedTime; }
+     *
+     *
+     * if ( !ended && elapsedTime >= totalDuration) { currentFrameIndex =
+     * frames.size()-1; } else if (ended){ elapsedTime = elapsedTime %
+     * totalDuration; }
+     *
+     *
+     * while (!timeCorrespondImage(currentFrameIndex)) { currentFrameIndex++; }
+     * while ( ended && !timeCorrespondImage2(currentFrameIndex))
+     * currentFrameIndex--;
+     *
+     * if(ended && currentFrameIndex == 0) isFinished = true;
+    }
+     */
     private class AnimationFrame {
 
         private Image frame;
