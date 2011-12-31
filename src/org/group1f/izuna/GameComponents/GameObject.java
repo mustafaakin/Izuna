@@ -14,13 +14,11 @@ public abstract class GameObject extends Sprite {
      * dieSound da yok olduklarında çıkacak ses fakat o da null olabilir o
      * yüzden constructora koymadım
      */
-    public GameObject(Point currentPos, Animation still) {
-        super(currentPos);
+    public GameObject(Animation still) {
+        setPosition(new Point(0, 0));
         stillAnimation = still;
         currentAnimation = still;
-        isVisible = true;
-        //checkStateToAnimate(); // m:Bu napıyor hala anlamadım n:bende neden koyduğumu hatırlayamadım:D, 
-        //gereksiz geldi şimdilik ama silmeyelim, böyle dursun
+        isVisible = false;
     }
 
     public boolean isVisible() {
@@ -45,13 +43,6 @@ public abstract class GameObject extends Sprite {
 
     public SoundEffect getDieSound() {
         return dieSound;
-    }
-
-    
-    @Override
-    public void update(long elapsedTime) {
-        //playSound();
-        super.update(elapsedTime);
     }
 
     public abstract void checkStateToAnimate();

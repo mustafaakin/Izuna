@@ -5,29 +5,47 @@
 			<Waves>
 				<Wave>
 					<Enemies>
-						<Enemy key="abc">
+						<Enemy key="blackShip">
 							<Paths>
 								<Path type="linear">
 									<startX>500</startX>
-									<startY>500</startY>
-									<endX>500</endX>
-									<endY>500</endY>
-									<duration>15000</duration>
+									<startY>600</startY>
+									<endX>800</endX>
+									<endY>300</endY>
+									<duration>1500500</duration>
 								</Path>
 								<Path type="quadratic">
-									<startX>500</startX>
-									<startY>500</startY>
+									<startX>800</startX>
+									<startY>300</startY>
 									<midX>900</midX>
-									<midY>500</midY>
-									<endX>500</endX>
-									<endY>500</endY>
+									<midY>100</midY>
+									<endX>600</endX>
+									<endY>800</endY>
 									<duration>1000</duration>
-								</Path>
-								<Path type="stationery">
-									<duration>9000</duration>
 								</Path>
 							</Paths>
 						</Enemy>
+						<Enemy key="blueShip">
+							<Paths>
+								<Path type="linear">
+									<startX>500</startX>
+									<startY>600</startY>
+									<endX>300</endX>
+									<endY>200</endY>
+									<duration>2500</duration>
+								</Path>
+								<Path type="quadratic">
+									<startX>300</startX>
+									<startY>200</startY>
+									<midX>900</midX>
+									<midY>100</midY>
+									<endX>500</endX>
+									<endY>100</endY>
+									<duration>1500000</duration>
+								</Path>
+							</Paths>
+						</Enemy>						
+						
 					</Enemies>
 				</Wave>
 			</Waves>

@@ -1,8 +1,8 @@
 <EnemyList>
 	<list>
-		<Enemy key="tie-fighter">
+		<Enemy key="blackShip">
 			<Health>100</Health>
-			<EnterSound>abc.mp3</EnterSound>
+			<EnterSound>enter</EnterSound>
 			<Weapon>missile</Weapon>
 		</Enemy>
 	</list>

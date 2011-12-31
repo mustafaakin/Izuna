@@ -11,6 +11,7 @@ public class WavePath {
 
     @Attribute
     private String type;
+
     @Element(required = false)
     private int startX;
     @Element(required = false)
@@ -25,6 +26,7 @@ public class WavePath {
     private int endY;
     @Element
     private int duration;
+
 
     public int getDuration() {
         return duration;

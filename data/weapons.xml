@@ -3,7 +3,8 @@
 		<Weapon key="laser">
 			<DefaultAmount>150</DefaultAmount>
 			<CausedDamage>100</CausedDamage>
-			<Sound>laser_blast</Sound>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
 			<RateOfFire>500</RateOfFire>
 		</Weapon>
 	</list>

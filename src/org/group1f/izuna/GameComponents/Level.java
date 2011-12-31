@@ -5,8 +5,12 @@ import java.util.Queue;
 
 public class Level {
 
-    Queue<AttackWave> waves;
-    public AttackWave currentWave;
+    private Queue<AttackWave> waves;
+    private AttackWave currentWave;
+
+    public AttackWave getCurrentWave() {
+        return currentWave;
+    }
 
     public Level() {
         waves = new ArrayDeque<AttackWave>();
@@ -16,19 +20,21 @@ public class Level {
         waves.add(wave);
     }
 
-    public void startLevel() {
-        swapNextWave();
+    public AttackWave startLevel() {
+        currentWave = waves.poll();
+        return currentWave;
     }
 
-    public boolean swapNextWave() {
+    public AttackWave swapNextWave() {
         if (currentWave.isFinished()) {
             AttackWave wave = waves.poll();
             if (wave != null) {
                 currentWave = wave;
             }
-            return true;
+            return currentWave;
         }
-        return false;
+        currentWave = null;
+        return currentWave;
     }
 
     public boolean isFinished() {
@@ -37,5 +43,5 @@ public class Level {
 
     public void killEnemy(Enemy e) {
         currentWave.removeEnemy(e);
-    }
+    }    
 }

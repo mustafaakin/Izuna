@@ -6,12 +6,16 @@ import java.util.LinkedList;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 
 public abstract class AIControllable extends GameObject {
-    
+
     private ArrayList<Path> paths; // Tek bir path değil, path listesi olması gerekiyor
 
-    public AIControllable(Point currentPos, Animation still) {
-        super(currentPos, still);
+    public AIControllable(Animation still) {
+        super(still);
         this.paths = new ArrayList<Path>();
+    }
+
+    public void setPosition() {
+        setPosition(this.paths.get(0).getStartPoint());
     }
 
     public void addPath(Path p) {
@@ -22,6 +26,7 @@ public abstract class AIControllable extends GameObject {
     public void setPathActivationTime(long startTime) {
         if (!paths.isEmpty()) {
             paths.get(0).setStartTime(startTime);
+            System.out.println("SETTING 0 -" + startTime);
             for (int i = 1; i < paths.size(); i++) {
                 Path current = paths.get(i);
                 Path before = paths.get(i - 1);

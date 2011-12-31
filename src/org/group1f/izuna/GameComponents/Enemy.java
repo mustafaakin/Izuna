@@ -15,16 +15,14 @@ public class Enemy extends AIControllable implements SpaceShip {
     private boolean isRFinished = true;
 
     public Enemy(Animation still, Animation rollLeft, Animation rollRight, SoundEffect enteringSound) {
-        super(null, still);
+        super(still);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
         this.enteringSound = enteringSound;
         isDying = false;
     }
 
-    public Enemy clone() {
-        return null;
-    }
+
 
     @Override
     public void checkStateToAnimate() {

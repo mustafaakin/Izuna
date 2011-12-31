@@ -22,8 +22,13 @@ public class AttackWave {
     public List<Enemy> startWave(long time) {
         for (Enemy enemy : enemies) {
             enemy.setVisible(true);
-            enemy.setPathActivationTime(time);
         }
         return enemies;
     }
+
+    @Override
+    public String toString() {
+        return "Enemy Size: " + enemies.size();
+    }
+    
 }

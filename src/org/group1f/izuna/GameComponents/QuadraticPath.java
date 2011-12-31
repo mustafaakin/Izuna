@@ -63,7 +63,6 @@ public class QuadraticPath extends Path {
 
         for (int i = 0; i < 3; i++) {
             coEfficients[i] = (float) solved.get(i, 0);
-            System.out.println(coEfficients[i]);
         }
     }
 }

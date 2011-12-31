@@ -18,7 +18,7 @@ public class Player extends GameObject implements SpaceShip {
     private boolean isRFinished = true;
 
     public Player(Point currentPos, Animation still, SoundEffect dieSound, Animation rollLeft, Animation rollRight, SoundEffect roll) {
-        super(currentPos, still);
+        super(still);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
         rollRight.setAnimType(Animation.AnimationType.SMOOTH);

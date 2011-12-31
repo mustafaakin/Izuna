@@ -32,14 +32,4 @@ public class GameState {
         startTime = System.currentTimeMillis();
         difficulty = Difficulty.Easy;
     }        
-    
-    public List<GameObject> getAll(){
-        List<GameObject> gameObjs = new ArrayList<GameObject>();
-        gameObjs.addAll(enemies);
-        gameObjs.addAll(bonuses);
-        gameObjs.addAll(userWeapons);
-        gameObjs.add(p1);
-        gameObjs.add(p2);        
-        return gameObjs;
-    }
 }

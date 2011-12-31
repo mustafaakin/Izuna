@@ -18,6 +18,8 @@ public abstract class Path {
 
     public boolean isValidTime() {
         long difference = System.currentTimeMillis() - startTime;
+        System.out.println("DIFF:" + difference);
+        System.out.println("DURAT" + duration);
         return difference > duration;
     }
 

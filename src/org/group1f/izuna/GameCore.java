@@ -2,6 +2,7 @@ package org.group1f.izuna;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.util.List;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import org.group1f.izuna.Contollers.FullScreenManager;
@@ -9,11 +10,9 @@ import org.group1f.izuna.Contollers.KeyboardHandler;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.Contollers.PhysicsHandler;
-import org.group1f.izuna.GameComponents.Bonus;
+import org.group1f.izuna.GameComponents.*;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 import org.group1f.izuna.GameComponents.Drawing.Sprite;
-import org.group1f.izuna.GameComponents.Enemy;
-import org.group1f.izuna.GameComponents.Weapon;
 
 /**
  * @author Mustafa
@@ -25,6 +24,7 @@ public class GameCore {
     public GameState game = new GameState();
     public boolean inMenu = true;
     public KeyboardHandler input;
+    public Level currentLevel;
     long startTime;
     long currentTime;
 
@@ -51,63 +51,32 @@ public class GameCore {
     long counter = 0;
 
     private void gameLoop() {
-
-
         if (inMenu) {
-            Image background = LoadManager.getImage("menu_background");
-            Image a[] = new Image[12];
-
-            a[0] = LoadManager.getMenuImage("main", "startGame");
-            a[1] = LoadManager.getMenuImage("main", "options");
-            a[2] = LoadManager.getMenuImage("main", "password");
-            a[3] = LoadManager.getMenuImage("main", "highScores");
-            a[4] = LoadManager.getMenuImage("main", "help");
-            a[5] = LoadManager.getMenuImage("main", "exit");
-
-            a[6 + 0] = LoadManager.getMenuImage("main", "startGameR");
-            a[6 + 1] = LoadManager.getMenuImage("main", "optionsR");
-            a[6 + 2] = LoadManager.getMenuImage("main", "passwordR");
-            a[6 + 3] = LoadManager.getMenuImage("main", "highScoresR");
-            a[6 + 4] = LoadManager.getMenuImage("main", "helpR");
-            a[6 + 5] = LoadManager.getMenuImage("main", "exitR");
-
-            Graphics2D g = FullScreenManager.getGraphics();
-            g.drawImage(background, 0, 0, null);
-            GameCore.preferences().putBoolean("3D", true);
-            
-            counter++;
-            Enemy e = LoadManager.getEnemy("");
-            if ( counter == 30){
-                e.setvX(15.0f);
-                e.setvY(15.0f);
-            }
-            
-            e.update(Animation.FRAME_DURATION);            
-            g.drawImage(e.getCurrentImage(), 400, 600, null);
-            
-            
-            for (int i = 0; i < 6; i++) {
-                if (i != active) {
-                    g.drawImage(a[i], 0, 0, null);
-                } else {
-                    g.drawImage(a[i + 6], 0, 0, null);
-                }
-            }
-
-            FullScreenManager.update();
-            g.dispose();
         } else {
-
-
+            System.out.println("hi, game loop in fight mode.");
             long elapsedTime = System.currentTimeMillis() - currentTime;
             currentTime += elapsedTime;
 
             // system time is needed
-            updateBattlefield(elapsedTime);
+//            updateBattlefield(elapsedTime);
 
             renderBattlefield();
-            movePlayer();
+            //          movePlayer();
         }
+    }
+
+    private void startGame(boolean isSinglePlayer) {
+        currentLevel = LoadManager.getNextLevel();
+        AttackWave wave = currentLevel.startLevel();
+        List<Enemy> enemies = wave.startWave(System.currentTimeMillis());
+        for (Enemy enemy : enemies) {
+            enemy.setPathActivationTime(System.currentTimeMillis());
+            enemy.setPosition();
+            game.enemies.add(enemy);
+            System.out.println(game.enemies);
+        }
+        System.out.println("FOUND ENEMIES: " + game.enemies.size());
+        inMenu = false;
     }
 
     /*
@@ -129,7 +98,6 @@ public class GameCore {
         FullScreenManager.getFullScreenWindow().addKeyListener(input);
         game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
         game.backgroundMusic.play();
-        //////////////////////////////////////////
         startTime = System.currentTimeMillis();
         currentTime = startTime;
     }
@@ -145,11 +113,8 @@ public class GameCore {
 
         if (inMenu && isPressed) {
             if (key.equals(Key.Player1_Down)) {
-                active = (active + 1) % 6;
-            } else if (key.equals(Key.Player1_Up)) {
-                active = (active + 5) % 6;
+                startGame(true);
             }
-        } else {
         }
     }
 
@@ -204,11 +169,12 @@ public class GameCore {
             Image background = game.backgroundLayers[i];
             g.drawImage(background, 0, 0, null);
         }
-        for (Sprite gameObj : game.getAll()) {
-            Animation currentAnimation = gameObj.getCurrentAnim();
+        for (Enemy e : game.enemies) {
+            Animation currentAnimation = e.getCurrentAnim();
             Image currentImage = currentAnimation.getImage();
-            int x = gameObj.getPosition().x;
-            int y = gameObj.getPosition().y;
+            int x = e.getPosition().x;
+            int y = e.getPosition().y;
+            System.out.println(x + " - " + y);
             g.drawImage(currentImage, x, y, null);
         }
         FullScreenManager.update();

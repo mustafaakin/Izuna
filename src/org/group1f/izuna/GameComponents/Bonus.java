@@ -17,7 +17,7 @@ public class Bonus extends AIControllable {
 	
     public Bonus(Point currentPos, Animation still, SoundEffect dieSound, Point spawnPosition, int value, boolean type)
     {
-        super(currentPos, still);
+        super(still);
         Point endPosition = new Point(spawnPosition);
         endPosition.x = 1280 + 50; // Outside the Canvas
         LinearPath path = new LinearPath(spawnPosition, endPosition, DEFAULT_BONUS_FALL_DURATION);

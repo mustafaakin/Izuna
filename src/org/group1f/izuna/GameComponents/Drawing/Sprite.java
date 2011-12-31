@@ -13,15 +13,14 @@ abstract public class Sprite {
     private Rectangle collisionRectangle;
 
     public Sprite() {
-        this.position = new Point();
+        this(new Point(0,0));
     }
 
     public Sprite(Point position) {
         this.position = position;
         vX = 0;
         vY = 0;
-        setCollisionRectangle(new Rectangle(position.x,
-                position.y, 0, 0));
+        this.collisionRectangle = new Rectangle(position.x, position.y, 0, 0);
     }
 
     public int getHeight() {

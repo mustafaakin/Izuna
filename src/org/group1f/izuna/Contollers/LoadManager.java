@@ -5,7 +5,11 @@ import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import org.group1f.izuna.GameComponents.*;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.XML.*;
@@ -25,6 +29,7 @@ public class LoadManager {
     private static HashMap<String, SoundEffect> soundBucket;
     private static HashMap<String, Image> imageBucket;
     private static HashMap<String, Image> menuBucket;
+    private static Queue<Level> levelBucket;
 
     private LoadManager() {
         // Making it singleton
@@ -46,6 +51,7 @@ public class LoadManager {
         animationBucket = new HashMap<String, Animation>();
         weaponBucket = new HashMap<String, Weapon>();
         enemyBucket = new HashMap<String, Enemy>();
+        levelBucket = new ArrayDeque<Level>();
 
         readMenus();
         readSounds();
@@ -69,10 +75,12 @@ public class LoadManager {
 
             Animation still = LoadManager.getAnim("weapon/" + key + "/still");
             Animation explode = LoadManager.getAnim("weapon/" + key + "/explode");
+            Animation die = LoadManager.getAnim("weapon/" + key + "/die");
+
             SoundEffect fire = LoadManager.getSoundEffect(weapon.getFireSound());
             SoundEffect explosion = LoadManager.getSoundEffect(weapon.getExplodeSound());
 
-            Weapon w = new Weapon(still, explode, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, explosion);
+            Weapon w = new Weapon(still, die, explode, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, explosion);
             w.setVisible(false);
             weaponBucket.put(key, w);
         }
@@ -96,29 +104,39 @@ public class LoadManager {
             for (WaveInfo waveData : levelData.getWaves()) {
                 AttackWave wave = new AttackWave();
                 for (WaveEnemy enemyData : waveData.getEnemies()) {
+                    System.out.println(enemyData.getKey());
                     Enemy enemy = LoadManager.getEnemy(enemyData.getKey());
                     for (WavePath pathData : enemyData.getPaths()) {
                         String pathType = pathData.getType();
                         if (pathType.equals("linear")) {
                             Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
                             Point endPoint = new Point(pathData.getEndX(), pathData.getEndY());
-                            
+
                             LinearPath path = new LinearPath(startPoint, endPoint, pathData.getDuration());
                             enemy.addPath(path);
+                            enemy.setPosition(startPoint);
                         } else if (pathType.equals("quadratic")) {
                             Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
                             Point middlePoint = new Point(pathData.getMidX(), pathData.getMidY());
                             Point endPoint = new Point(pathData.getEndX(), pathData.getEndY());
-                            
+
                             QuadraticPath path = new QuadraticPath(startPoint, endPoint, middlePoint, pathData.getDuration());
                             enemy.addPath(path);
+                            enemy.setPosition(startPoint); // Yanlış aslında da.
+                        } else {
+                            System.out.println("WTF PATH");
                         }
                     }
                     wave.addEnemy(enemy);
                 }
+                level.addWave(wave);
             }
+            levelBucket.add(level);
         }
+    }
 
+    public static Level getNextLevel() {
+        return levelBucket.poll();
     }
 
     public static Image getMenuImage(String menu, String key) {
@@ -126,7 +144,11 @@ public class LoadManager {
     }
 
     public static SoundEffect getSoundEffect(String key) {
-        return new SoundEffect(soundBucket.get(key));
+        SoundEffect effect = soundBucket.get(key);
+        if (effect == null) {
+            return null;
+        }
+        return new SoundEffect(effect);
     }
 
     private static void readMenus() throws IOException {
@@ -197,7 +219,11 @@ public class LoadManager {
     }
 
     public static Enemy getEnemy(String key) {
-        Enemy e = null;
+        Animation still = LoadManager.getAnim("ships/" + key + "/default");
+        Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
+        Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
+        SoundEffect enteringSound = LoadManager.getSoundEffect("enterance/" + key);
+        Enemy e = new Enemy(still, leftRoll, rightRoll, enteringSound);
         return e;
     }
 

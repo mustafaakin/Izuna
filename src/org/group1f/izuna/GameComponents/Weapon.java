@@ -14,16 +14,17 @@ public class Weapon extends AIControllable {
     private WeaponState state;
     private int damageAmount;
     private int rateOfFire;
-    private Animation die; //this animation shows up when it damages to spaceship
-    private Animation explode; // this animation shows up when it cause spaceship explode,
+    private Animation spaceShipDies; //this animation shows up when it damages to spaceship
+    private Animation weaponExplode;// this animation shows up when it cause spaceship explode,
     //so there wont be needed extra sprites for other spaceships
     private SoundEffect fireSound;
     private SoundEffect explodeSound;
 
     // Weapon un die sound u olması garip
-    public Weapon(Animation still, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound) {
-        super(null, still);
-        this.explode = explode;
+    public Weapon(Animation still, Animation die, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound) {
+        super(still);
+        this.weaponExplode = explode;
+        this.spaceShipDies = die;
         this.fireSound = fireSound;
         this.explodeSound = explodeSound;
         this.damageAmount = damageAmount;
@@ -43,7 +44,7 @@ public class Weapon extends AIControllable {
         Animation newAnim = currentAnimation;
 
         if (state == WeaponState.STATE_HIT) {
-            newAnim = explode;
+            newAnim = weaponExplode;
             setvX(0);
             setvY(0);
         } else if (state == WeaponState.STATE_EXPLODE) {
