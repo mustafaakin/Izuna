@@ -146,6 +146,10 @@ public class LoadManager {
             if (f.isDirectory()) {
                 for (File k : f.listFiles()) {
                     Image img = ImageIO.read(k);
+                    if ( !k.getName().contains(".png")){
+                        System.err.println(k.getAbsolutePath() + " is not a PNG image.");
+                        continue;
+                    }
                     String imageName = k.getName().substring(0, k.getName().indexOf(".png"));
                     menuBucket.put(f.getName() + "-" + imageName, img);
                 }

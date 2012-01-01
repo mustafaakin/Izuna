@@ -10,7 +10,7 @@ public class GameState {
     Image[] backgroundLayers;
     Player p1;
     Player p2;
-    ArrayList<Enemy> enemies;
+    private ArrayList<Enemy> enemies;
     ArrayList<Bonus> bonuses;
     ArrayList<Weapon> userWeapons;
     ArrayList<Weapon> enemyWeapons;
@@ -22,6 +22,11 @@ public class GameState {
         Easy, Medium, Hard
     }
 
+    public synchronized ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    
     public GameState() {
         backgroundLayers = new Image[3];
         enemies = new ArrayList<Enemy>();

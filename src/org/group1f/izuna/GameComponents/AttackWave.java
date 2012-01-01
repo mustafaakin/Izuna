@@ -16,7 +16,9 @@ public class AttackWave {
     }
 
     public void removeEnemy(Enemy e) {
-        enemies.remove(e);
+        synchronized (enemies) {
+            enemies.remove(e);
+        }
     }
 
     public List<Enemy> startWave(long time) {
@@ -30,5 +32,4 @@ public class AttackWave {
     public String toString() {
         return "Enemy Size: " + enemies.size();
     }
-    
 }

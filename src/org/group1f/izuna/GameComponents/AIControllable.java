@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 
 public abstract class AIControllable extends GameObject {
-
+    private Point prevPosition;
     private ArrayList<Path> paths; // Tek bir path değil, path listesi olması gerekiyor
 
     public AIControllable(Animation still) {
@@ -42,10 +42,11 @@ public abstract class AIControllable extends GameObject {
         for (int i = 0; i < paths.size(); i++) {
             Path p = paths.get(i);
             if (p.isValidTime(time)) {
-                return p.getPosition(time);
+                prevPosition = p.getPosition(time);
+                return prevPosition;
             }
         }
-        return null;
+        return prevPosition;
     }
 
     @Override

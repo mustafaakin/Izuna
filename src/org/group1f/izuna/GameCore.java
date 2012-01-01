@@ -60,7 +60,7 @@ public class GameCore {
             // system time is needed
 //            updateBattlefield(elapsedTime);
 
-            renderBattlefield();
+            renderBattlefield(elapsedTime);
             //          movePlayer();
         }
     }
@@ -72,10 +72,9 @@ public class GameCore {
         for (Enemy enemy : enemies) {
             enemy.setPathActivationTime(System.currentTimeMillis());
             enemy.setPosition();
-            game.enemies.add(enemy);
-            System.out.println(game.enemies);
+            game.getEnemies().add(enemy);
         }
-        System.out.println("FOUND ENEMIES: " + game.enemies.size());
+        System.out.println("FOUND ENEMIES: " + game.getEnemies().size());
         inMenu = false;
     }
 
@@ -103,6 +102,14 @@ public class GameCore {
         currentTime = startTime;
     }
 
+    public void killEnemy(Enemy e) {
+        List<Enemy> enemies = game.getEnemies();
+        synchronized (enemies) {
+            enemies.remove(e);
+        }
+        this.currentLevel.killEnemy(e);
+    }
+
     // check player inputs for two players
     public void inputFromKeyboard(Key key, boolean isPressed) {
         if (key == null) {
@@ -111,7 +118,14 @@ public class GameCore {
         if (key.equals(Key.Escape)) {
             System.exit(0);
         }
-
+        if (!inMenu && isPressed) {
+            if (key.equals(Key.Player1_Up)) {
+                if (!game.getEnemies().isEmpty()) {
+                    Enemy e = game.getEnemies().get(0);
+                    killEnemy(e);
+                }
+            }
+        }
         if (inMenu && isPressed) {
             if (key.equals(Key.Player1_Down)) {
                 startGame(true);
@@ -132,7 +146,7 @@ public class GameCore {
 
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
-        for (Enemy e : game.enemies) {
+        for (Enemy e : game.getEnemies()) {
             if (PhysicsHandler.checkSpriteCollisions(e, game.p1)) {
             }
             if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(e, game.p2)) {
@@ -164,7 +178,7 @@ public class GameCore {
     private void movePlayer() {
     }
 
-    private void renderBattlefield() {
+    private void renderBattlefield(long elapsedTime) {
         Graphics2D g = FullScreenManager.getGraphics();
         g.clearRect(0, 0, 2560, 1600);
         g.drawImage(LoadManager.getImage("menu_background"), 0, 0, null);
@@ -172,13 +186,16 @@ public class GameCore {
             Image background = game.backgroundLayers[i];
             g.drawImage(background, 0, 0, null);
         }
-        for (Enemy e : game.enemies) {
-            e.update(Animation.FRAME_DURATION);
-            Animation currentAnimation = e.getCurrentAnim();
-            Image currentImage = currentAnimation.getImage();
-            int x = e.getPosition().x;
-            int y = e.getPosition().y;
-            g.drawImage(currentImage, x, y, null);
+        List<Enemy> enemies = game.getEnemies();
+        synchronized (enemies) {
+            for (Enemy e : enemies) {
+                e.update(elapsedTime);
+                Animation currentAnimation = e.getCurrentAnim();
+                Image currentImage = currentAnimation.getImage();
+                int x = e.getPosition().x;
+                int y = e.getPosition().y;
+                g.drawImage(currentImage, x, y, null);
+            }
         }
         g.dispose();
         FullScreenManager.update();
