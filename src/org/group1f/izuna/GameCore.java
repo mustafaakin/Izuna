@@ -38,10 +38,6 @@ public class GameCore {
         core.initialize();
         while (true) {
             core.gameLoop();
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-            }
         }
     }
 
@@ -108,6 +104,27 @@ public class GameCore {
             enemies.remove(e);
         }
         this.currentLevel.killEnemy(e);
+        if (currentLevel.isFinished()) {
+            currentLevel = LoadManager.getNextLevel();
+            if (currentLevel == null) {
+                System.exit(0);
+            } else {
+                AttackWave wave = this.currentLevel.startLevel();
+                addWaveToGame(wave);
+            }
+        } else if (this.currentLevel.getCurrentWave().isFinished()) {
+            AttackWave wave = this.currentLevel.swapNextWave();
+            addWaveToGame(wave);
+        }
+    }
+
+    private void addWaveToGame(AttackWave wave) {
+        List<Enemy> newEnemies = wave.startWave(System.currentTimeMillis());
+        for (Enemy enemy : newEnemies) {
+            enemy.setPathActivationTime(System.currentTimeMillis());
+            enemy.setPosition();
+            game.getEnemies().add(enemy);
+        }
     }
 
     // check player inputs for two players
