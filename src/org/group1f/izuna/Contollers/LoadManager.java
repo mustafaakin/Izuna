@@ -1,23 +1,16 @@
 package org.group1f.izuna.Contollers;
 
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-import org.group1f.izuna.GameComponents.*;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.XML.*;
-import org.group1f.izuna.GameComponents.Bonus;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
-import org.group1f.izuna.GameComponents.Enemy;
-import org.group1f.izuna.GameComponents.SoundEffect;
-import org.group1f.izuna.GameComponents.Weapon;
+import org.group1f.izuna.GameComponents.*;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -110,7 +103,6 @@ public class LoadManager {
 
                             LinearPath path = new LinearPath(startPoint, endPoint, pathData.getDuration());
                             enemy.addPath(path);
-                            enemy.setPosition(startPoint);
                         } else if (pathType.equals("quadratic")) {
                             Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
                             Point middlePoint = new Point(pathData.getMidX(), pathData.getMidY());
@@ -118,7 +110,6 @@ public class LoadManager {
 
                             QuadraticPath path = new QuadraticPath(startPoint, endPoint, middlePoint, pathData.getDuration());
                             enemy.addPath(path);
-                            enemy.setPosition(startPoint); // Yanlış aslında da.
                         } else {
                             System.out.println("WTF PATH");
                         }
@@ -144,7 +135,7 @@ public class LoadManager {
         if (effect == null) {
             return null;
         }
-        return new SoundEffect(effect);
+        return effect.clone();
     }
 
     private static void readMenus() throws IOException {

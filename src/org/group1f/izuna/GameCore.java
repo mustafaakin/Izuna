@@ -2,6 +2,7 @@ package org.group1f.izuna;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.util.List;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
@@ -38,7 +39,7 @@ public class GameCore {
         while (true) {
             core.gameLoop();
             try {
-                Thread.sleep(1000 / 60);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
             }
         }
@@ -84,7 +85,7 @@ public class GameCore {
      */
     private void initialize() {
         FullScreenManager.initGraphics();
-        input = new KeyboardHandler(this);        
+        input = new KeyboardHandler(this);
         try {
             LoadManager.init();
         } catch (Exception e) {
@@ -165,7 +166,8 @@ public class GameCore {
 
     private void renderBattlefield() {
         Graphics2D g = FullScreenManager.getGraphics();
-        g.clearRect(0, 0, 2500, 1600);
+        g.clearRect(0, 0, 2560, 1600);
+        g.drawImage(LoadManager.getImage("menu_background"), 0, 0, null);
         for (int i = 0; i < game.backgroundLayers.length; i++) {
             Image background = game.backgroundLayers[i];
             g.drawImage(background, 0, 0, null);

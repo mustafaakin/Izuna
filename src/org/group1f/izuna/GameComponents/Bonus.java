@@ -4,63 +4,51 @@ import java.awt.Point;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Bonus extends AIControllable {
-    
+
     public enum BonusState {
+
         STATE_FIRED, STATE_HIT
     }
-    
     private final static long DEFAULT_BONUS_FALL_DURATION = 750;
     private BonusState state;
-    
     private boolean bonusType; // default = health, 1 = weapon
     private int bonusValue;
-	
-    public Bonus(Point currentPos, Animation still, SoundEffect dieSound, Point spawnPosition, int value, boolean type)
-    {
+
+    public Bonus(Animation still, int value, boolean type) {
         super(still);
-        Point endPosition = new Point(spawnPosition);
-        endPosition.x = 1280 + 50; // Outside the Canvas
-        LinearPath path = new LinearPath(spawnPosition, endPosition, DEFAULT_BONUS_FALL_DURATION);
-        
         bonusValue = value;
         bonusType = type;
         state = BonusState.STATE_FIRED;
     }
-    
+
+    @Override
     public Bonus clone() // ses sorunu varsa clone methodundandır
     {
-        return null;
-// TODO Will be fixed.      
-        //return new Bonus(getPosition(), getStillAnimation().clone(), dieSound, defaultPath, bonusValue, bonusType);
+        return new Bonus(getStillAnimation().clone(), bonusValue, bonusType);
     }
-    
-    public void checkStateToAnimate()
-    {
+
+    @Override
+    public void checkStateToAnimate() {
         currentAnimation = getStillAnimation();
     }
-     
-    public void update( long elapsedTime )
-    {
+
+    public void update(long elapsedTime) {
         checkStateToAnimate();
-        super.update( elapsedTime);
+        super.update(elapsedTime);
     }
-     
-    public void setState(BonusState state) 
-    {
-        if (this.state != state) 
-        {
+
+    public void setState(BonusState state) {
+        if (this.state != state) {
             this.state = state;
-            if (state == BonusState.STATE_HIT) 
-            {
+            if (state == BonusState.STATE_HIT) {
                 setvX(0);
                 setvY(0);
             }
         }
     }
-     
-    public void applyBonus(Player p)
-    {
-        if(bonusType) {
+
+    public void applyBonus(Player p) {
+        if (bonusType) {
             p.setHealth(p.getHealth() + bonusValue);
         } else { // later on add random generator
             p.incrDMcount();
@@ -68,10 +56,8 @@ public class Bonus extends AIControllable {
             p.incrSPcount();
         }
     }
-    
-    public float getMaxSpeed()
-    {
+
+    public float getMaxSpeed() {
         return 0.5f;
     }
-
 }

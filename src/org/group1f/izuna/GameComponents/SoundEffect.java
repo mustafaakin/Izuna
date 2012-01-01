@@ -13,8 +13,9 @@ public class SoundEffect {
         this.filename = filename;
     }
 
-    public SoundEffect(SoundEffect get) {
-        this.filename = get.filename;
+    @Override
+    public SoundEffect clone() {
+        return new SoundEffect(filename);
     }
 
     public void close() {

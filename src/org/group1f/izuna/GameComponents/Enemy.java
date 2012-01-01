@@ -22,7 +22,10 @@ public class Enemy extends AIControllable implements SpaceShip {
         isDying = false;
     }
 
-
+    @Override
+    public Enemy clone() {
+        return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), enteringSound.clone());
+    }
 
     @Override
     public void checkStateToAnimate() {
