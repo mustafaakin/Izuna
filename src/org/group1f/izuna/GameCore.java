@@ -11,6 +11,8 @@ import org.group1f.izuna.Contollers.KeyboardHandler;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.Contollers.PhysicsHandler;
+import org.group1f.izuna.GUI.MainMenu;
+import org.group1f.izuna.GUI.Menu;
 import org.group1f.izuna.GameComponents.*;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 import org.group1f.izuna.GameComponents.Drawing.Sprite;
@@ -26,6 +28,7 @@ public class GameCore {
     public boolean inMenu = true;
     public KeyboardHandler input;
     public Level currentLevel;
+    public Menu currentMenu;
     long startTime;
     long currentTime;
 
@@ -49,6 +52,17 @@ public class GameCore {
 
     private void gameLoop() {
         if (inMenu) {
+            List<Image> images = currentMenu.getImagesToDraw();
+            Graphics2D g = FullScreenManager.getGraphics();
+            g.clearRect(0, 0, 2560, 1600);
+            Image background = LoadManager.getImage("menu_background");
+            g.drawImage(background, 0, 0, null);
+            for (Image i : images) {
+                System.out.println(i);
+                g.drawImage(i, 0, 0, null);
+            }
+            g.dispose();
+            FullScreenManager.update();
         } else {
             long elapsedTime = System.currentTimeMillis() - currentTime;
             currentTime += elapsedTime;
@@ -95,6 +109,7 @@ public class GameCore {
         game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
         game.backgroundMusic.play();
         startTime = System.currentTimeMillis();
+        currentMenu = new MainMenu(this);
         currentTime = startTime;
     }
 

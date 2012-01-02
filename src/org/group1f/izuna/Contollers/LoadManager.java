@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Queue;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.XML.*;
+import org.group1f.izuna.GUI.MenuElement;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 import org.group1f.izuna.GameComponents.*;
 import org.simpleframework.xml.Serializer;
@@ -130,6 +131,12 @@ public class LoadManager {
         return (Image) menuBucket.get(menu + "-" + key);
     }
 
+    public static MenuElement getMenuElement(String menu, String key) {
+        Image normal = LoadManager.getMenuImage(menu, key);
+        Image roll = LoadManager.getMenuImage(menu, key + "R");
+        return new MenuElement(roll, normal);
+    }
+
     public static SoundEffect getSoundEffect(String key) {
         SoundEffect effect = soundBucket.get(key);
         if (effect == null) {
@@ -146,7 +153,7 @@ public class LoadManager {
             if (f.isDirectory()) {
                 for (File k : f.listFiles()) {
                     Image img = ImageIO.read(k);
-                    if ( !k.getName().contains(".png")){
+                    if (!k.getName().contains(".png")) {
                         System.err.println(k.getAbsolutePath() + " is not a PNG image.");
                         continue;
                     }
