@@ -61,7 +61,7 @@ public class Animation {
             currentFrameIndex++;
         }
         if (animType == AnimationType.SMOOTH) { //smooth
-            while (ended && !timeCorrespondImage(currentFrameIndex)) {
+            while (ended && !timeCorrespondImage2(currentFrameIndex)) {
                 currentFrameIndex--;
             }
 

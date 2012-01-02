@@ -9,6 +9,8 @@ abstract public class Sprite {
     private Point position;
     private float vX;
     private float vY;
+    private float oldvY = 0.0f;
+    
     protected Animation currentAnimation;
     private Rectangle collisionRectangle;
 
@@ -83,10 +85,20 @@ abstract public class Sprite {
         return vY;
     }
 
+    public float getOldvY() {
+        return oldvY;
+    }
+
+    public void setOldvY(float oldvY) {
+        this.oldvY = oldvY;
+    }
+
+    
     /**
      * @param vY the vY to set
      */
-    public void setvY(float vY) {
+    public void setvY(float vY) {    
+        oldvY = this.vY;
         this.vY = vY;
     }
 

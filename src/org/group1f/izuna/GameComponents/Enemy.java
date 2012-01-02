@@ -11,7 +11,6 @@ public class Enemy extends AIControllable implements SpaceShip {
     private Animation rollRight;
     private SoundEffect enteringSound;
     private int health;
-    private float oldvY = 0.0f;
     private boolean isRFinished = true;
 
     public Enemy(Animation still, Animation rollLeft, Animation rollRight, SoundEffect enteringSound) {
@@ -35,15 +34,18 @@ public class Enemy extends AIControllable implements SpaceShip {
         }
 
         if (getvY() < 0) {
-            if (oldvY > 0) { //
+            if (getOldvY() > 0) { //
                 isRFinished = currentAnimation.refine();
             } else {
+                System.out.println("ROLL LEFT INITIATED");
+
                 newAnim = rollLeft;
             }
         } else if (getvY() > 0) {
-            if (oldvY < 0) { //
+            if (getOldvY() < 0) { //
                 isRFinished = currentAnimation.refine();
             } else {
+                System.out.println("ROLL RIGHT INITIATED");
                 newAnim = rollRight;
             }
         } else { // vy = 0
@@ -70,7 +72,7 @@ public class Enemy extends AIControllable implements SpaceShip {
             currentAnimation = newAnim;
             currentAnimation.startOver();
         }
-        oldvY = getvY();
+        // oldvY = getvY();
     }
 
     @Override
