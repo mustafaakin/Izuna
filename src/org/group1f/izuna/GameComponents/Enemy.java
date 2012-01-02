@@ -34,7 +34,6 @@ public class Enemy extends AIControllable implements SpaceShip {
             abc = -200;
         setvY(abc);
 
-        System.out.println("Animation vY\t" + getvY());
         Animation newAnim = currentAnimation;
         if (!isRFinished) {
             isRFinished = currentAnimation.finished();
@@ -44,15 +43,12 @@ public class Enemy extends AIControllable implements SpaceShip {
             if (getOldvY() > 0) { //
                 isRFinished = currentAnimation.refine();
             } else {
-                System.out.println("ROLL LEFT INITIATED");
-
                 newAnim = rollLeft;
             }
         } else if (getvY() > 0) {
             if (getOldvY() < 0) { //
                 isRFinished = currentAnimation.refine();
             } else {
-                System.out.println("ROLL RIGHT INITIATED");
                 newAnim = rollRight;
             }
         } else { // vy = 0

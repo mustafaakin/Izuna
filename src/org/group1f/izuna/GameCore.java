@@ -58,7 +58,6 @@ public class GameCore {
             Image background = LoadManager.getImage("menu_background");
             g.drawImage(background, 0, 0, null);
             for (Image i : images) {
-                System.out.println(i);
                 g.drawImage(i, 0, 0, null);
             }
             g.dispose();
@@ -75,7 +74,8 @@ public class GameCore {
         }
     }
 
-    private void startGame(boolean isSinglePlayer) {
+    public void startGame(boolean isSinglePlayer) {
+        LoadManager.loadLevels();
         currentLevel = LoadManager.getNextLevel();
         AttackWave wave = currentLevel.startLevel();
         List<Enemy> enemies = wave.startWave(System.currentTimeMillis());
@@ -84,8 +84,8 @@ public class GameCore {
             enemy.setPosition();
             game.getEnemies().add(enemy);
         }
-        System.out.println("FOUND ENEMIES: " + game.getEnemies().size());
         inMenu = false;
+        game.backgroundMusic.close();
     }
 
     /*
@@ -100,17 +100,22 @@ public class GameCore {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null,
-                    "Game files could not be loaded: " + e.getMessage(),
+                    "Unrecovarable error has just happened. Please see the log for details. ",
                     "Error At Loading Files",
                     JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
+            System.exit(-1);
         }
         FullScreenManager.getFullScreenWindow().addKeyListener(input);
+        enterMainMenuState();
+    }
+
+    public void enterMainMenuState() {
         game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
         game.backgroundMusic.play();
         startTime = System.currentTimeMillis();
         currentMenu = new MainMenu(this);
         currentTime = startTime;
+        inMenu = true;
     }
 
     public void killEnemy(Enemy e) {
@@ -122,7 +127,7 @@ public class GameCore {
         if (currentLevel.isFinished()) {
             currentLevel = LoadManager.getNextLevel();
             if (currentLevel == null) {
-                System.exit(0);
+                enterMainMenuState();
             } else {
                 AttackWave wave = this.currentLevel.startLevel();
                 addWaveToGame(wave);
@@ -151,7 +156,7 @@ public class GameCore {
             System.exit(0);
         }
         if (!inMenu && isPressed) {
-            if (key.equals(Key.Player1_Up)) {
+            if (key.equals(Key.Player1_Weapon1)) {
                 if (!game.getEnemies().isEmpty()) {
                     Enemy e = game.getEnemies().get(0);
                     killEnemy(e);
@@ -159,9 +164,7 @@ public class GameCore {
             }
         }
         if (inMenu && isPressed) {
-            if (key.equals(Key.Player1_Down)) {
-                startGame(true);
-            }
+            currentMenu.onClicked(key);
         }
     }
 
@@ -173,9 +176,6 @@ public class GameCore {
      */
     private void updateBattlefield(long elapsedTime) {
         // Check If wave is finished, load new enemies or new level
-
-
-
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
         for (Enemy e : game.getEnemies()) {

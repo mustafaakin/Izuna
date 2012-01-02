@@ -54,7 +54,6 @@ public class Animation {
             } else if (ended) {
                 elapsedTime = elapsedTime % totalDuration;
             }
-            System.out.println(elapsedTime);
         }
 
         while (!timeCorrespondImage(currentFrameIndex)) {

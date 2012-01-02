@@ -22,10 +22,12 @@ abstract public class MenuButton {
     }
 
     public void onClick(Key key) {
-        if (key.equals(Key.Player1_Right)) {
-            active = (active + 1) % elements.size();
-        } else if (key.equals(Key.Player1_Left)) {
-            active = (active - 1 + elements.size()) % elements.size();
+        if (!elements.isEmpty()) {
+            if (key.equals(Key.Player1_Right)) {
+                active = (active + 1) % elements.size();
+            } else if (key.equals(Key.Player1_Left)) {
+                active = (active - 1 + elements.size()) % elements.size();
+            }
         }
         onInteracted(key);
     }
@@ -41,4 +43,12 @@ abstract public class MenuButton {
         }
         return result;
     }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }        
 }

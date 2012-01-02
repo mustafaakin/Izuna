@@ -41,25 +41,66 @@ public class LoadManager {
         animationBucket = new HashMap<String, Animation>();
         weaponBucket = new HashMap<String, Weapon>();
         enemyBucket = new HashMap<String, Enemy>();
-        levelBucket = new ArrayDeque<Level>();
+
 
         readMenus();
         readSounds();
         initShipsImages();
         // XML Information files. 
         Serializer serializer = new Persister();
-        File levelsSource = new File("data/levels.xml");
         File enemiesSource = new File("data/enemies.xml");
         File weaponsSource = new File("data/weapons.xml");
 
-        LevelList waves = serializer.read(LevelList.class, levelsSource);
         EnemyList enemies = serializer.read(EnemyList.class, enemiesSource);
         WeaponList weapons = serializer.read(WeaponList.class, weaponsSource);
 
-        initilazieSources(waves, enemies, weapons);
+        initilazieSources(enemies, weapons);
+        loadLevels();
     }
 
-    private static void initilazieSources(LevelList waves, EnemyList enemies, WeaponList weapons) {
+    public static void loadLevels() {
+        try {
+            levelBucket = new ArrayDeque<Level>();
+            Serializer serializer = new Persister();
+            File levelsSource = new File("data/levels.xml");
+            LevelList waves = serializer.read(LevelList.class, levelsSource);
+            for (LevelInfo levelData : waves.getList()) {
+                Level level = new Level();
+                for (WaveInfo waveData : levelData.getWaves()) {
+                    AttackWave wave = new AttackWave();
+                    for (WaveEnemy enemyData : waveData.getEnemies()) {
+                        System.out.println(enemyData.getKey());
+                        Enemy enemy = LoadManager.getEnemy(enemyData.getKey());
+                        for (WavePath pathData : enemyData.getPaths()) {
+                            String pathType = pathData.getType();
+                            if (pathType.equals("linear")) {
+                                Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
+                                Point endPoint = new Point(pathData.getEndX(), pathData.getEndY());
+
+                                LinearPath path = new LinearPath(startPoint, endPoint, pathData.getDuration());
+                                enemy.addPath(path);
+                            } else if (pathType.equals("quadratic")) {
+                                Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
+                                Point middlePoint = new Point(pathData.getMidX(), pathData.getMidY());
+                                Point endPoint = new Point(pathData.getEndX(), pathData.getEndY());
+
+                                QuadraticPath path = new QuadraticPath(startPoint, endPoint, middlePoint, pathData.getDuration());
+                                enemy.addPath(path);
+                            } else {
+                                System.out.println("WTF PATH");
+                            }
+                        }
+                        wave.addEnemy(enemy);
+                    }
+                    level.addWave(wave);
+                }
+                levelBucket.add(level);
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    private static void initilazieSources(EnemyList enemies, WeaponList weapons) {
         for (WeaponInfo weapon : weapons.getList()) {
             String key = weapon.getKey();
 
@@ -89,38 +130,6 @@ public class LoadManager {
             enemyBucket.put(key, e);
         }
 
-        for (LevelInfo levelData : waves.getList()) {
-            Level level = new Level();
-            for (WaveInfo waveData : levelData.getWaves()) {
-                AttackWave wave = new AttackWave();
-                for (WaveEnemy enemyData : waveData.getEnemies()) {
-                    System.out.println(enemyData.getKey());
-                    Enemy enemy = LoadManager.getEnemy(enemyData.getKey());
-                    for (WavePath pathData : enemyData.getPaths()) {
-                        String pathType = pathData.getType();
-                        if (pathType.equals("linear")) {
-                            Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
-                            Point endPoint = new Point(pathData.getEndX(), pathData.getEndY());
-
-                            LinearPath path = new LinearPath(startPoint, endPoint, pathData.getDuration());
-                            enemy.addPath(path);
-                        } else if (pathType.equals("quadratic")) {
-                            Point startPoint = new Point(pathData.getStartX(), pathData.getStartY());
-                            Point middlePoint = new Point(pathData.getMidX(), pathData.getMidY());
-                            Point endPoint = new Point(pathData.getEndX(), pathData.getEndY());
-
-                            QuadraticPath path = new QuadraticPath(startPoint, endPoint, middlePoint, pathData.getDuration());
-                            enemy.addPath(path);
-                        } else {
-                            System.out.println("WTF PATH");
-                        }
-                    }
-                    wave.addEnemy(enemy);
-                }
-                level.addWave(wave);
-            }
-            levelBucket.add(level);
-        }
     }
 
     public static Level getNextLevel() {
