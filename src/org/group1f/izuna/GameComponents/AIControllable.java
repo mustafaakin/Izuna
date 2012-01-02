@@ -50,15 +50,9 @@ public abstract class AIControllable extends GameObject {
                     this.setvY((float) (diffY));
                 }
                 prevPosition = nextPosition;
-                break;
+                return nextPosition;
             }
         }
-        this.setvX(0f);
-        this.setvY(0f);
         return prevPosition;
-    }
-
-    @Override
-    public void checkStateToAnimate() {
     }
 }

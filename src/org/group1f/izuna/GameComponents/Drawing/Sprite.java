@@ -10,12 +10,11 @@ abstract public class Sprite {
     private float vX;
     private float vY;
     private float oldvY = 0.0f;
-    
     protected Animation currentAnimation;
     private Rectangle collisionRectangle;
 
     public Sprite() {
-        this(new Point(0,0));
+        this(new Point(0, 0));
     }
 
     public Sprite(Point position) {
@@ -93,11 +92,10 @@ abstract public class Sprite {
         this.oldvY = oldvY;
     }
 
-    
     /**
      * @param vY the vY to set
      */
-    public void setvY(float vY) {    
+    public void setvY(float vY) {
         oldvY = this.vY;
         this.vY = vY;
     }

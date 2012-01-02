@@ -28,6 +28,7 @@ public class Enemy extends AIControllable implements SpaceShip {
 
     @Override
     public void checkStateToAnimate() {
+        System.out.println("Animation vY\t" + getvY());
         Animation newAnim = currentAnimation;
         if (!isRFinished) {
             isRFinished = currentAnimation.finished();
@@ -83,8 +84,8 @@ public class Enemy extends AIControllable implements SpaceShip {
 
     private void setState() {
         if (health < 1) {
-            setvX(0.0f);
-            setvY(0.0f);
+            //setvX(0.0f);
+           // setvY(0.0f);
         }
     }
 
