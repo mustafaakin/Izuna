@@ -33,10 +33,7 @@ abstract public class Sprite {
     }
 
     public void update(long elapsedTime) {
-        position.x += (vX * elapsedTime);
-        position.y += (vY * elapsedTime);
         currentAnimation.update(elapsedTime);
-
         setCollisionRectangle(new Rectangle(position.x,
                 position.y, getWidth(), getHeight()));
     }
