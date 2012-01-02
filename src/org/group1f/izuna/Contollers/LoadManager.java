@@ -176,6 +176,8 @@ public class LoadManager {
                     Animation still = readSingleShip(ship, "default");
                     Animation left = readSingleShip(ship, "left");
                     Animation right = readSingleShip(ship, "right");
+                    left.setAnimType(Animation.AnimationType.SMOOTH);
+                    right.setAnimType(Animation.AnimationType.SMOOTH);
 
                     String shipName = "ships/" + ship.getName() + "/";
                     animationBucket.put(shipName + "default", still);

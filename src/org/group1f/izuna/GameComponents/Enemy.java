@@ -25,10 +25,14 @@ public class Enemy extends AIControllable implements SpaceShip {
     public Enemy clone() {
         return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), enteringSound.clone());
     }
-
+    
+    float abc = 0;
     @Override
     public void checkStateToAnimate() {
-        setvY(12.0f);
+        abc++;
+        if ( abc > 200)
+            abc = -200;
+        setvY(abc);
 
         System.out.println("Animation vY\t" + getvY());
         Animation newAnim = currentAnimation;

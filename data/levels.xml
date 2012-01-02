@@ -8,9 +8,9 @@
 						<Enemy key="blackShip">
 							<Paths>
 								<Path type="linear">
-									<startX>-200</startX>
+									<startX>100</startX>
 									<startY>100</startY>
-									<endX>500</endX>
+									<endX>700</endX>
 									<endY>100</endY>
 									<duration>5500</duration>
 								</Path>
@@ -23,7 +23,7 @@
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>100</startX>
 									<startY>100</startY>
 									<endX>200</endX>
 									<endY>300</endY>
@@ -34,10 +34,10 @@
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>100</startX>
 									<startY>250</startY>
 									<endX>150</endX>
-									<endY>150</endY>
+									<endY>550</endY>
 									<duration>5500</duration>
 								</Path>
 							</Paths>
@@ -54,7 +54,7 @@
 						<Enemy key="redShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>100</startX>
 									<startY>100</startY>
 									<endX>200</endX>
 									<endY>300</endY>
@@ -65,10 +65,10 @@
 						<Enemy key="redShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>100</startX>
 									<startY>250</startY>
 									<endX>150</endX>
-									<endY>150</endY>
+									<endY>350</endY>
 									<duration>5500</duration>
 								</Path>
 							</Paths>
