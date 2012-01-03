@@ -6,7 +6,7 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Enemy extends AIControllable implements SpaceShip {
 
-    private String weaponKey;
+    private Weapon defaultWeapon;
     private boolean isDying;
     private Animation rollLeft;
     private Animation rollRight;
@@ -25,17 +25,9 @@ public class Enemy extends AIControllable implements SpaceShip {
     public Enemy clone() {
         return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), enteringSound);
     }
-    float abc = 0;
 
     @Override
     public void checkStateToAnimate() {
-        abc++;
-        Random a = new Random();
-        if (abc > a.nextInt(200)) {
-            abc = -100;
-        }
-        setvY(abc);
-
         Animation newAnim = currentAnimation;
         if (!isRFinished) {
             isRFinished = currentAnimation.finished();
@@ -54,7 +46,7 @@ public class Enemy extends AIControllable implements SpaceShip {
                 newAnim = rollRight;
             }
         } else { // vy = 0
-            if (getvY() != 0) {
+            if (getOldvY() != 0) {
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = getStillAnimation();
@@ -115,5 +107,10 @@ public class Enemy extends AIControllable implements SpaceShip {
     @Override
     public float getMaxSpeed() {
         return 1.0f;
+    }
+
+    @Override
+    public Weapon fire(String key, long time) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

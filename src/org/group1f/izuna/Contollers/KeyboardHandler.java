@@ -2,20 +2,19 @@ package org.group1f.izuna.Contollers;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 import org.group1f.izuna.GameCore;
 
 public class KeyboardHandler implements KeyListener {
 
+    private Hashtable<Key, Boolean> active;
     private GameCore owner;
     private Hashtable<Integer, Key> map;
 
     public KeyboardHandler(GameCore owner) {
         this.owner = owner;
         map = new Hashtable<Integer, Key>();
+        active = new Hashtable<Key, Boolean>();
         map.put(KeyEvent.VK_DOWN, Key.Player1_Down);
         map.put(KeyEvent.VK_RIGHT, Key.Player1_Right);
         map.put(KeyEvent.VK_UP, Key.Player1_Up);
@@ -23,7 +22,13 @@ public class KeyboardHandler implements KeyListener {
         map.put(KeyEvent.VK_ESCAPE, Key.Escape);
         map.put(KeyEvent.VK_ENTER, Key.Enter);
         map.put(KeyEvent.VK_B, Key.Player1_Weapon1);
+        map.put(KeyEvent.VK_F, Key.Player1_Weapon2);
+        map.put(KeyEvent.VK_G, Key.Player1_Weapon3);
+        map.put(KeyEvent.VK_H, Key.Player1_Weapon4);
+    }
 
+    public Set<Key> getActive() {
+        return active.keySet();
     }
 
     @Override
@@ -32,11 +37,13 @@ public class KeyboardHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        active.put(resolveKey(e), true);
         owner.inputFromKeyboard(resolveKey(e), true);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        active.remove(resolveKey(e));
         owner.inputFromKeyboard(resolveKey(e), false);
     }
 

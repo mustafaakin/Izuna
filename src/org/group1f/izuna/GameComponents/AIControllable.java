@@ -53,6 +53,8 @@ public abstract class AIControllable extends GameObject {
                 return nextPosition;
             }
         }
+        this.setvX(0.0f);
+        this.setvY(0.0f);
         return prevPosition;
     }
 }

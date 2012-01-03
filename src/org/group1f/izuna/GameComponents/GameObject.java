@@ -16,8 +16,8 @@ public abstract class GameObject extends Sprite {
      */
     public GameObject(Animation still) {
         setPosition(new Point(0, 0));
-        stillAnimation = still;
-        currentAnimation = still;
+        stillAnimation = still == null ? null : still.clone();
+        currentAnimation = still == null ? null : still.clone();
         isVisible = false;
     }
 
@@ -43,6 +43,12 @@ public abstract class GameObject extends Sprite {
 
     public SoundEffect getDieSound() {
         return dieSound;
+    }
+
+    @Override
+    public Point getPosition() {
+        super.getPosition().translate((int) getvX(), (int) getvY());
+        return super.getPosition();
     }
 
     public abstract void checkStateToAnimate();

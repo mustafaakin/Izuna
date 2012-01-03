@@ -51,9 +51,7 @@ public class Bonus extends AIControllable {
         if (bonusType) {
             p.setHealth(p.getHealth() + bonusValue);
         } else { // later on add random generator
-            p.incrDMcount();
-            p.incrPScount();
-            p.incrSPcount();
+            
         }
     }
 

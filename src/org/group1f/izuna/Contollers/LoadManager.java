@@ -2,6 +2,9 @@ package org.group1f.izuna.Contollers;
 
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -19,10 +22,12 @@ public class LoadManager {
 
     private static HashMap<String, Animation> animationBucket;
     private static HashMap<String, Weapon> weaponBucket;
+    private static HashMap<String, Enemy> enemyBucket;
     private static HashMap<String, SoundEffect> soundBucket;
     private static HashMap<String, Image> imageBucket;
     private static HashMap<String, Image> menuBucket;
     private static Queue<Level> levelBucket;
+    private static HashMap<String, Integer> weaponDefaultCountBucket;
 
     private LoadManager() {
         // Making it singleton
@@ -42,10 +47,14 @@ public class LoadManager {
         soundBucket = new HashMap<String, SoundEffect>();
         animationBucket = new HashMap<String, Animation>();
         weaponBucket = new HashMap<String, Weapon>();
+        enemyBucket = new HashMap<String, Enemy>();
+        weaponDefaultCountBucket = new HashMap<String, Integer>();
 
         readMenus();
         readSounds();
         initShipsImages();
+        readWeaponAnims();
+
         // XML Information files. 
         Serializer serializer = new Persister();
         File enemiesSource = new File("data/enemies.xml");
@@ -69,7 +78,7 @@ public class LoadManager {
                 for (WaveInfo waveData : levelData.getWaves()) {
                     AttackWave wave = new AttackWave();
                     for (WaveEnemy enemyData : waveData.getEnemies()) {
-                        System.out.println(enemyData.getKey());
+                        System.out.println("Adding Enemy:" + enemyData.getKey());
                         Enemy enemy = LoadManager.getEnemy(enemyData.getKey());
                         for (WavePath pathData : enemyData.getPaths()) {
                             String pathType = pathData.getType();
@@ -101,21 +110,95 @@ public class LoadManager {
         }
     }
 
+    private static void readWeaponAnims() {
+        File dieSmall = new File("data/image/animation/weapon_die/small");
+        File dieBig = new File("data/image/animation/weapon_die/big");
+
+        Animation dieSmallAnim = new Animation();
+        Animation dieBigAnim = new Animation();
+
+        for (File f : dieBig.listFiles()) {
+            try {
+                dieSmallAnim.addFrame(ImageIO.read(f), null);
+            } catch (IOException ex) {
+                System.err.println("Could not read:" + f.getPath() + " because: " + ex.getMessage());
+            }
+        }
+
+        LoadManager.animationBucket.put("weapon_die/big", dieBigAnim);
+        LoadManager.animationBucket.put("weapon_die/small", dieSmallAnim);
+
+        for (File f : dieSmall.listFiles()) {
+            try {
+                dieBigAnim.addFrame(ImageIO.read(f), ImageIO.read(f));
+            } catch (IOException ex) {
+                System.err.println("Could not read:" + f.getPath() + " because: " + ex.getMessage());
+            }
+        }
+
+        File root = new File("data/image/animation/weapons/");
+        for (File f : root.listFiles()) {
+            if (f.isDirectory()) {
+                String weaponKey = f.getName();
+                try {
+                    readSingleWeaponAnim(weaponKey);
+                } catch (IOException ex) {
+                    System.err.println("Error at reading weapon: " + weaponKey + ": " + ex.getMessage());
+                }
+            }
+        }
+    }
+
+    private static void readSingleWeaponAnim(String key) throws IOException {
+        File root = new File("data/image/animation/weapons/" + key);
+        Animation stillAnim = new Animation();
+
+        for (File f : root.listFiles()) {
+            stillAnim.addFrame(ImageIO.read(f), ImageIO.read(f));
+        }
+
+        LoadManager.animationBucket.put("weapons/" + key, stillAnim);
+    }
+
     private static void initilazieSources(EnemyList enemies, WeaponList weapons) {
+        for (EnemyInfo enemy : enemies.getList()) {
+            String key = enemy.getKey();
+            Animation still = LoadManager.getAnim("ships/" + key + "/default");
+            Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
+            Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
+            SoundEffect enteringSound = LoadManager.getSoundEffect("enterance/" + key);
+            Enemy e = new Enemy(still, leftRoll, rightRoll, enteringSound);
+            e.setHealth(e.getHealth());
+            enemyBucket.put(key, e);
+        }
         for (WeaponInfo weapon : weapons.getList()) {
             String key = weapon.getKey();
 
-            Animation still = LoadManager.getAnim("weapon/" + key + "/still");
-            Animation explode = LoadManager.getAnim("weapon/" + key + "/explode");
-            Animation die = LoadManager.getAnim("weapon/" + key + "/die");
+            Animation still = LoadManager.getAnim("weapons/" + key).clone();
 
+            still.setAnimType(Animation.AnimationType.SMOOTH);
             SoundEffect fire = LoadManager.getSoundEffect(weapon.getFireSound());
             SoundEffect explosion = LoadManager.getSoundEffect(weapon.getExplodeSound());
-
-            Weapon w = new Weapon(still, die, explode, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, explosion);
+            Weapon w = new Weapon(still, null, null, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, explosion, weapon.getSpeed());
             w.setVisible(false);
+
             weaponBucket.put(key, w);
+            weaponDefaultCountBucket.put(key, weapon.getDefaultAmount()); // Storing it for further use.
         }
+    }
+
+    public static Player getPlayer(int no) {
+        String key = "player" + no;
+        Animation still = LoadManager.getAnim("ships/" + key + "/default");
+        Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
+        Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
+        SoundEffect enteringSound = LoadManager.getSoundEffect("enterance/" + key);
+        Player p = new Player(new Point(600, 600), still.clone(), leftRoll.clone(), rightRoll.clone(), enteringSound);
+        p.addWeapon("proton_player1", -1);
+        p.addWeapon("plasma_player1", 100);
+        p.addWeapon("particle_player1", 25);
+        p.setHealth(100);
+        return p;
     }
 
     public static Level getNextLevel() {
@@ -194,6 +277,7 @@ public class LoadManager {
     }
 
     private static Animation readSingleShip(File root, String animation) throws IOException {
+        boolean isPlayerShip = root.getName().startsWith("player");
         Animation anim = new Animation();
 
         File triD_root = new File(root.getAbsolutePath() + "/" + animation + "/3D");
@@ -202,32 +286,35 @@ public class LoadManager {
         File[] images3D = triD_root.listFiles();
         File[] imagesNormal = normal_root.listFiles();
 
-        System.out.println(root.getPath()); 
-        System.out.println("\t" + animation);
-
         if (images3D == null || imagesNormal == null) {
             return anim;
         }
 
         for (int i = 0; i < images3D.length; i++) {
-            Image tri = ImageIO.read(images3D[i]);
-            Image norm = ImageIO.read(imagesNormal[i]);
+            BufferedImage tri = ImageIO.read(images3D[i]);
+            BufferedImage norm = ImageIO.read(imagesNormal[i]);
+            if (!isPlayerShip) {
+                tri = transform(tri);
+                norm = transform(norm);
+            }
             anim.addFrame(norm, tri);
         }
         return anim;
     }
 
+    public static BufferedImage transform(BufferedImage input) {
+        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+        tx.translate(-input.getWidth(null), 0);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return op.filter(input, null);
+    }
+
     public static Enemy getEnemy(String key) {
-        Animation still = LoadManager.getAnim("ships/" + key + "/default");
-        Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
-        Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
-        SoundEffect enteringSound = LoadManager.getSoundEffect("enterance/" + key);
-        Enemy e = new Enemy(still, leftRoll, rightRoll, enteringSound);
-        return e;
+        return enemyBucket.get(key).clone();
     }
 
     public static Weapon getWeapon(String key) {
-        return null;
+        return weaponBucket.get(key).clone();
     }
 
     public static Bonus getBonus(String key) {

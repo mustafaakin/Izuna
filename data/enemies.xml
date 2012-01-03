@@ -5,5 +5,45 @@
 			<EnterSound>enter</EnterSound>
 			<Weapon>missile</Weapon>
 		</Enemy>
+		<Enemy key="blackShipA">
+			<Health>100</Health>
+			<EnterSound>enter</EnterSound>
+			<Weapon>missile</Weapon>
+		</Enemy>			
+		<Enemy key="blueShip">
+			<Health>100</Health>
+			<EnterSound>enter</EnterSound>
+			<Weapon>missile</Weapon>
+		</Enemy>		
+		<Enemy key="blueShipA">
+			<Health>100</Health>
+			<EnterSound>enter</EnterSound>
+			<Weapon>missile</Weapon>
+		</Enemy>		
+		<Enemy key="boss">
+			<Health>100</Health>
+			<EnterSound>enter</EnterSound>
+			<Weapon>missile</Weapon>
+		</Enemy>		
+		<Enemy key="player">
+			<Health>100</Health>
+			<EnterSound>enter</EnterSound>
+			<Weapon>missile</Weapon>
+		</Enemy>						
+		<Enemy key="player2">
+			<Health>100</Health>
+			<EnterSound>enter</EnterSound>
+			<Weapon>missile</Weapon>
+		</Enemy>		
+		<Enemy key="redShip">
+			<Health>100</Health>
+			<EnterSound>enter</EnterSound>
+			<Weapon>missile</Weapon>
+		</Enemy>		
+		<Enemy key="redShipA">
+			<Health>100</Health>
+			<EnterSound>enter</EnterSound>
+			<Weapon>missile</Weapon>
+		</Enemy>				
 	</list>
 </EnemyList>

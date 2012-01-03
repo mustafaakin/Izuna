@@ -45,6 +45,10 @@ abstract public class Sprite {
         return currentAnimation;
     }
 
+    public long getAnimationDuration() {
+        return currentAnimation.getFrames().size() * Animation.FRAME_DURATION;
+    }
+
     /**
      * @return the position
      */

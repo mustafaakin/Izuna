@@ -1,11 +1,92 @@
 <WeaponList>
 	<list>
-		<Weapon key="laser">
+		<Weapon key="proton_player1">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>5</CausedDamage>
+			<FireSound>laser_1</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>100</RateOfFire>
+			<Speed>150</Speed>
+		</Weapon>
+		<Weapon key="proton_player2">
 			<DefaultAmount>150</DefaultAmount>
 			<CausedDamage>100</CausedDamage>
 			<FireSound>laser_blast</FireSound>
 			<ExplodeSound>laser_blast</ExplodeSound>			
 			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
+		</Weapon>
+		<Weapon key="plasma_player1">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
+		</Weapon>
+		<Weapon key="plasma_player2">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
+		</Weapon>
+		<Weapon key="particle_player1">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>-1</Speed>
+		</Weapon>
+		<Weapon key="particle_player2">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
+		</Weapon>		
+		<Weapon key="dark_player1">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
+		</Weapon>
+		<Weapon key="dark_player2">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
+		</Weapon>
+		<Weapon key="enemy1">
+			<DefaultAmount>-1</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
+		</Weapon>
+		<Weapon key="enemy2">
+			<DefaultAmount>-1</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
+		</Weapon>
+		<Weapon key="enemy3">
+			<DefaultAmount>-1</DefaultAmount>
+			<CausedDamage>100</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<ExplodeSound>laser_blast</ExplodeSound>			
+			<RateOfFire>500</RateOfFire>
+			<Speed>2500</Speed>
 		</Weapon>
 	</list>
 </WeaponList>

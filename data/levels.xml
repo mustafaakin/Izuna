@@ -5,45 +5,144 @@
 			<Waves>
 				<Wave>
 					<Enemies>
-						<Enemy key="blackShip">
-							<Paths>
-								<Path type="linear">
-									<startX>100</startX>
-									<startY>100</startY>
-									<endX>700</endX>
-									<endY>100</endY>
-									<duration>5500</duration>
-								</Path>
-							</Paths>
-						</Enemy>	
-					</Enemies>						
-				</Wave>
-				<Wave>
-					<Enemies>
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>100</startX>
+									<startX>-100</startX>
 									<startY>100</startY>
-									<endX>200</endX>
-									<endY>300</endY>
-									<duration>5500</duration>
+									<endX>50</endX>
+									<endY>100</endY>
+									<duration>1200</duration>
 								</Path>
+							</Paths>
+						</Enemy>	
+						<Enemy key="blueShipA">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>200</startY>
+									<endX>50</endX>
+									<endY>200</endY>
+									<duration>1200</duration>
+								</Path>								
 							</Paths>
 						</Enemy>
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>100</startX>
-									<startY>250</startY>
-									<endX>150</endX>
-									<endY>550</endY>
-									<duration>5500</duration>
+									<startX>-100</startX>
+									<startY>300</startY>
+									<endX>50</endX>
+									<endY>300</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
+						<Enemy key="blueShipA">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>400</startY>
+									<endX>50</endX>
+									<endY>400</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
+						<Enemy key="blueShipA">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>500</startY>
+									<endX>50</endX>
+									<endY>500</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
+						<Enemy key="blueShipA">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>600</startY>
+									<endX>50</endX>
+									<endY>600</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
+					</Enemies>						
+				</Wave>
+				<Wave>
+					<Enemies>
+						<Enemy key="blueShip">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>100</startY>
+									<endX>50</endX>
+									<endY>100</endY>
+									<duration>1200</duration>
 								</Path>
 							</Paths>
 						</Enemy>	
+						<Enemy key="blueShip">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>200</startY>
+									<endX>50</endX>
+									<endY>200</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
+						<Enemy key="blueShip">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>300</startY>
+									<endX>50</endX>
+									<endY>300</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
+						<Enemy key="blueShip">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>400</startY>
+									<endX>50</endX>
+									<endY>400</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
+						<Enemy key="blueShip">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>500</startY>
+									<endX>50</endX>
+									<endY>500</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
+						<Enemy key="blueShip">
+							<Paths>
+								<Path type="linear">
+									<startX>-100</startX>
+									<startY>600</startY>
+									<endX>50</endX>
+									<endY>600</endY>
+									<duration>1200</duration>
+								</Path>								
+							</Paths>
+						</Enemy>
 					</Enemies>						
-				</Wave>				
+				</Wave>
 			</Waves>
 		</Level>
 		<Level no="2">
@@ -51,61 +150,32 @@
 			<Waves>
 				<Wave>
 					<Enemies>
-						<Enemy key="redShipA">
+						<Enemy key="blackShipA">
 							<Paths>
-								<Path type="linear">
-									<startX>100</startX>
+								<Path type="quadratic">
+									<startX>50</startX>
 									<startY>100</startY>
-									<endX>200</endX>
-									<endY>300</endY>
-									<duration>5500</duration>
-								</Path>
-							</Paths>
-						</Enemy>
-						<Enemy key="redShipA">
-							<Paths>
-								<Path type="linear">
-									<startX>100</startX>
-									<startY>250</startY>
-									<endX>150</endX>
-									<endY>350</endY>
-									<duration>5500</duration>
+									<midX>500</midX>
+									<midY>300</midY>
+									<endX>900</endX>
+									<endY>600</endY>
+									<duration>3000</duration>
 								</Path>
 							</Paths>
 						</Enemy>	
-						<Enemy key="redShipA">
+						<Enemy key="blackShipA">
 							<Paths>
-								<Path type="linear">
-									<startX>900</startX>
-									<startY>-200</startY>
-									<endX>500</endX>
-									<endY>500</endY>
-									<duration>1500</duration>
-								</Path>
-							</Paths>
-						</Enemy>
-						<Enemy key="player2">
-							<Paths>
-								<Path type="linear">
+								<Path type="quadratic">
 									<startX>600</startX>
-									<startY>250</startY>
-									<endX>950</endX>
-									<endY>650</endY>
-									<duration>3500</duration>
+									<startY>900</startY>
+									<midX>500</midX>
+									<midY>300</midY>
+									<endX>50</endX>
+									<endY>100</endY>
+									<duration>2500</duration>
 								</Path>
 							</Paths>
-						</Enemy>
-						<Enemy key="player">
-							<Paths>
-								<Path type="linear">
-									<startX>600</startX>
-									<startY>250</startY>
-									<endX>40</endX>
-									<endY>30</endY>
-									<duration>1500</duration>
-								</Path>
-							</Paths>
-						</Enemy>
+						</Enemy>	
 					</Enemies>
 				</Wave>
 			</Waves>

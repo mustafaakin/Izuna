@@ -23,12 +23,19 @@ public class WeaponInfo {
     private String ExplodeSound;
     @Element
     private int RateOfFire;
-
+    @Element
+    private int Speed;
+    
+    
     @Override
     public String toString() {
         return key + "-" + DefaultAmount + "-" + CausedDamage;
     }
 
+    public int getSpeed() {
+        return Speed;
+    }
+    
     public int getCausedDamage() {
         return CausedDamage;
     }

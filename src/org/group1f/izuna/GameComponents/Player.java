@@ -1,34 +1,41 @@
 package org.group1f.izuna.GameComponents;
 
+import java.awt.Image;
 import java.awt.Point;
+import java.util.HashMap;
+import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Player extends GameObject implements SpaceShip {
 
+    private HashMap<String, Integer> weapons;
+    private HashMap<String, Long> lastFired;
     private boolean isDying;
     private Animation rollLeft;
     private Animation rollRight;
     private SoundEffect rollSound;
     private int health;
     //proton cannon and plasma cutter is infinite
-    private int particleSeparatorCount;
-    private int darkMatterCount;
-    private int superDesperationMoveCount;
     private float oldvY = 0.0f;
     private boolean isRFinished = true;
 
-    public Player(Point currentPos, Animation still, SoundEffect dieSound, Animation rollLeft, Animation rollRight, SoundEffect roll) {
+    public Player(Point currentPos, Animation still, Animation rollLeft, Animation rollRight, SoundEffect roll) {
         super(still);
+        this.setPosition(currentPos);
+        weapons = new HashMap<String, Integer>();
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
+        lastFired = new HashMap<String, Long>();
         rollRight.setAnimType(Animation.AnimationType.SMOOTH);
         rollLeft.setAnimType(Animation.AnimationType.SMOOTH);
+
         rollSound = roll;
         health = 100;
         isDying = false;
-        particleSeparatorCount = 0;
-        darkMatterCount = 0;
-        superDesperationMoveCount = 0;
+    }
+
+    public void addWeapon(String key, int amount) {
+        weapons.put(key, amount);
     }
 
     @Override
@@ -43,17 +50,17 @@ public class Player extends GameObject implements SpaceShip {
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = rollLeft;
-                rollSound.play();
+//                rollSound.play();
             }
         } else if (getvY() > 0) {
             if (oldvY < 0) { //
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = rollRight;
-                rollSound.play();
+//                rollSound.play();
             }
         } else { // vy = 0
-            if (getvY() != 0) {
+            if (oldvY != 0) {
                 isRFinished = currentAnimation.refine();
             } else {
                 newAnim = getStillAnimation();
@@ -63,7 +70,7 @@ public class Player extends GameObject implements SpaceShip {
         if (health < 1) {
             setState();
             if (!isDying) {
-                getDieSound().play();
+                //getDieSound().play();
             }
             isDying = true;
         }
@@ -92,42 +99,6 @@ public class Player extends GameObject implements SpaceShip {
         }
     }
 
-    public int getPScount() {
-        return particleSeparatorCount;
-    }
-
-    public int getDMcount() {
-        return darkMatterCount;
-    }
-
-    public int getSPcount() {
-        return superDesperationMoveCount;
-    }
-
-    public void decrPScount() {
-        particleSeparatorCount--;
-    }
-
-    public void decrSPcount() {
-        superDesperationMoveCount--;
-    }
-
-    public void decrDMcount() {
-        darkMatterCount--;
-    }
-
-    public void incrPScount() {
-        particleSeparatorCount++;
-    }
-
-    public void incrSPcount() {
-        superDesperationMoveCount++;
-    }
-
-    public void incrDMcount() {
-        darkMatterCount++;
-    }
-
     @Override
     public int getDieTime() {
         return 1000;
@@ -150,5 +121,35 @@ public class Player extends GameObject implements SpaceShip {
     @Override
     public float getMaxSpeed() {
         return 0.8f;
+    }
+
+    @Override
+    public Weapon fire(String key, long time) {
+        Integer i = weapons.get(key);
+        if (i == null) {
+            throw new IllegalArgumentException("There is no such weapon '" + key + "' available ones:" + weapons.keySet());
+        }
+        if (i <= -1 || i > 0) {
+            Long lastFireTime = lastFired.get(key);
+            Weapon weapon = LoadManager.getWeapon(key).clone();
+            if (lastFireTime != null) {
+                System.out.println("FIRE:" + (time - lastFireTime));
+            }
+
+            if (lastFireTime != null && time - lastFireTime < weapon.getRateOfFire()) {
+                return null;
+            }
+            lastFired.put(key, time);
+            Image img = getCurrentImage();
+            int shipHeight = img.getHeight(null);
+            int weaponHeight = weapon.getCurrentImage().getHeight(null);
+            int place = Math.abs(weaponHeight - shipHeight) / 2;
+            
+            weapon.startFiring(getPosition(), time, img.getWidth(null) - 30, place);
+            weapons.put(key, (i - 1));
+            return weapon;
+        } else {
+            return null;
+        }
     }
 }

@@ -34,6 +34,11 @@ public class Animation {
         currentFrameIndex = 0;
     }
 
+    public ArrayList<AnimationFrame> getFrames() {
+        return frames;
+    }
+
+    
     @Override
     public Animation clone() {
         Animation a = new Animation();

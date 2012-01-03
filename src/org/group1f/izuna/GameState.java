@@ -10,9 +10,9 @@ public class GameState {
     Image[] backgroundLayers;
     Player p1;
     Player p2;
-    private ArrayList<Enemy> enemies;
+    volatile private ArrayList<Enemy> enemies;
     ArrayList<Bonus> bonuses;
-    ArrayList<Weapon> userWeapons;
+    volatile private ArrayList<Weapon> userWeapons;
     ArrayList<Weapon> enemyWeapons;
     int score;
     long startTime;
@@ -24,6 +24,10 @@ public class GameState {
 
     public synchronized ArrayList<Enemy> getEnemies() {
         return enemies;
+    }
+
+    public synchronized ArrayList<Weapon> getUserWeapons() {
+        return userWeapons;
     }
 
     

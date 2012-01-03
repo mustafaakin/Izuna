@@ -1,5 +1,6 @@
 package org.group1f.izuna.GameComponents;
 
+import java.awt.Image;
 import java.awt.Point;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 
@@ -19,9 +20,27 @@ public class Weapon extends AIControllable {
     //so there wont be needed extra sprites for other spaceships
     private SoundEffect fireSound;
     private SoundEffect explodeSound;
+    private int speed;
+    private long lastFire;
 
-    // Weapon un die sound u olması garip
-    public Weapon(Animation still, Animation die, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound) {
+    public void playFire() {
+        fireSound.play();
+    }
+
+    public int getRateOfFire() {
+        return rateOfFire;
+    }
+
+    public int getDamageAmount() {
+        return damageAmount;
+    }
+
+    public long getLastFire() {
+        return lastFire;
+    }
+
+
+    public Weapon(Animation still, Animation die, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound, int speed) {
         super(still);
         this.weaponExplode = explode;
         this.spaceShipDies = die;
@@ -29,36 +48,42 @@ public class Weapon extends AIControllable {
         this.explodeSound = explodeSound;
         this.damageAmount = damageAmount;
         this.rateOfFire = rateOfFire;
+        this.speed = speed;
     }
 
-    public void startFiring(Point position, long time) {
+    @Override
+    public Weapon clone() {
+        return new Weapon(super.getStillAnimation(), spaceShipDies, weaponExplode, damageAmount, rateOfFire, fireSound, explodeSound, speed);
+    }
+
+    public void startFiring(Point position, long time, int offsetX, int offsetY) {
+        lastFire = time;
+        Point start = new Point(position);
         Point end = new Point(position);
-        end.y = 1280 + 50; // The position that the weapon will disappear        
-        LinearPath path = new LinearPath(position, end, DEFAULT_WEAPON_DURATION);
-        this.addPath(path);
-        this.setPathActivationTime(time);
+        start.x += offsetX;
+        start.y += offsetY;
+
+        end.y = start.y;
+        end.x = 1500; // The position that the weapon will disappear        
+        if (this.speed == -1) {
+            end.x = start.x;
+            end.y = start.y;
+            LinearPath path = new LinearPath(start, end, 100);
+            this.addPath(path);
+            this.setPathActivationTime(time);
+        } else {
+            LinearPath path = new LinearPath(start, end, speed);
+            this.addPath(path);
+            this.setPathActivationTime(time);
+        }
     }
 
     @Override
     public void checkStateToAnimate() {
-        Animation newAnim = currentAnimation;
-
-        if (state == WeaponState.STATE_HIT) {
-            newAnim = weaponExplode;
-            setvX(0);
-            setvY(0);
-        } else if (state == WeaponState.STATE_EXPLODE) {
-            newAnim = null;
-            setvX(0);
-            setvY(0);
-        }
-
-        if (currentAnimation != newAnim) {
-            currentAnimation = newAnim;
-            currentAnimation.startOver();
-        }
+        currentAnimation = getStillAnimation();
     }
 
+    @Override
     public void update(long elapsedTime) {
         checkStateToAnimate();
         super.update(elapsedTime);
