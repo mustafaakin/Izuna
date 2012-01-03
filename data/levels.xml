@@ -73,6 +73,39 @@
 								</Path>
 							</Paths>
 						</Enemy>	
+						<Enemy key="redShipA">
+							<Paths>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>-200</startY>
+									<endX>500</endX>
+									<endY>500</endY>
+									<duration>1500</duration>
+								</Path>
+							</Paths>
+						</Enemy>
+						<Enemy key="player2">
+							<Paths>
+								<Path type="linear">
+									<startX>600</startX>
+									<startY>250</startY>
+									<endX>950</endX>
+									<endY>650</endY>
+									<duration>3500</duration>
+								</Path>
+							</Paths>
+						</Enemy>
+						<Enemy key="player">
+							<Paths>
+								<Path type="linear">
+									<startX>600</startX>
+									<startY>250</startY>
+									<endX>40</endX>
+									<endY>30</endY>
+									<duration>1500</duration>
+								</Path>
+							</Paths>
+						</Enemy>
 					</Enemies>
 				</Wave>
 			</Waves>

@@ -1,6 +1,7 @@
 package org.group1f.izuna.GameComponents;
 
 import java.awt.Point;
+import java.util.Random;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
 public class Enemy extends AIControllable implements SpaceShip {
@@ -21,17 +22,18 @@ public class Enemy extends AIControllable implements SpaceShip {
         isDying = false;
     }
 
-    @Override
     public Enemy clone() {
-        return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), enteringSound.clone());
+        return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), enteringSound);
     }
-    
     float abc = 0;
+
     @Override
     public void checkStateToAnimate() {
         abc++;
-        if ( abc > 200)
-            abc = -200;
+        Random a = new Random();
+        if (abc > a.nextInt(200)) {
+            abc = -100;
+        }
         setvY(abc);
 
         Animation newAnim = currentAnimation;

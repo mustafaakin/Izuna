@@ -8,14 +8,14 @@ import org.group1f.izuna.GameCore;
 public class Animation {
 
     public enum AnimationType {
+
         REPEAT, SMOOTH
     }
-    
     private AnimationType animType = AnimationType.REPEAT;
     public static final long FRAME_DURATION = 1000 / 24;
     public boolean ended = false;
     private boolean isFinished = false;
-    public ArrayList<AnimationFrame> frames;
+    private ArrayList<AnimationFrame> frames;
     protected int currentFrameIndex;
     protected long totalDuration;
     protected long elapsedTime;
@@ -34,8 +34,14 @@ public class Animation {
         currentFrameIndex = 0;
     }
 
+    @Override
     public Animation clone() {
-        return new Animation(frames);
+        Animation a = new Animation();
+        for (AnimationFrame af : frames) {
+            a.addFrame(af.frame, af.frame3D);
+        }
+        a.setAnimType(animType);
+        return a;
     }
 
     public synchronized void update(long passedTime) {

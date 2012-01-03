@@ -18,7 +18,6 @@ import org.simpleframework.xml.core.Persister;
 public class LoadManager {
 
     private static HashMap<String, Animation> animationBucket;
-    private static HashMap<String, Enemy> enemyBucket;
     private static HashMap<String, Weapon> weaponBucket;
     private static HashMap<String, SoundEffect> soundBucket;
     private static HashMap<String, Image> imageBucket;
@@ -30,18 +29,19 @@ public class LoadManager {
     }
 
     public static Animation getAnim(String key) {
-        return animationBucket.get(key);
+        Animation a = animationBucket.get(key);
+        if (a == null) {
+            return null;
+        }
+        return a.clone();
     }
 
     public static void init() throws Exception {
-
         menuBucket = new HashMap<String, Image>();
         imageBucket = new HashMap<String, Image>();
         soundBucket = new HashMap<String, SoundEffect>();
         animationBucket = new HashMap<String, Animation>();
         weaponBucket = new HashMap<String, Weapon>();
-        enemyBucket = new HashMap<String, Enemy>();
-
 
         readMenus();
         readSounds();
@@ -97,6 +97,7 @@ public class LoadManager {
                 levelBucket.add(level);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -115,21 +116,6 @@ public class LoadManager {
             w.setVisible(false);
             weaponBucket.put(key, w);
         }
-
-        for (EnemyInfo enemy : enemies.getList()) {
-            String key = enemy.getKey();
-
-            Animation still = LoadManager.getAnim("ships/" + key + "/still");
-            Animation rollLeft = LoadManager.getAnim("ships/" + key + "/left");
-            Animation rollRight = LoadManager.getAnim("ships/" + key + "/right");
-            SoundEffect enteringSound = LoadManager.getSoundEffect(key);
-
-            Enemy e = new Enemy(still, rollLeft, rollRight, enteringSound);
-            e.setVisible(false);
-            e.setHealth(enemy.getHealth());
-            enemyBucket.put(key, e);
-        }
-
     }
 
     public static Level getNextLevel() {
@@ -192,6 +178,7 @@ public class LoadManager {
                     Animation still = readSingleShip(ship, "default");
                     Animation left = readSingleShip(ship, "left");
                     Animation right = readSingleShip(ship, "right");
+
                     left.setAnimType(Animation.AnimationType.SMOOTH);
                     right.setAnimType(Animation.AnimationType.SMOOTH);
 
@@ -214,6 +201,9 @@ public class LoadManager {
 
         File[] images3D = triD_root.listFiles();
         File[] imagesNormal = normal_root.listFiles();
+
+        System.out.println(root.getPath()); 
+        System.out.println("\t" + animation);
 
         if (images3D == null || imagesNormal == null) {
             return anim;
