@@ -8,9 +8,9 @@
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>100</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>100</endY>
 									<duration>1200</duration>
 								</Path>
@@ -19,9 +19,9 @@
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>200</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>200</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -30,9 +30,9 @@
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>300</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>300</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -41,9 +41,9 @@
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>400</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>400</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -52,9 +52,9 @@
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>500</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>500</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -63,9 +63,9 @@
 						<Enemy key="blueShipA">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>600</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>600</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -78,9 +78,9 @@
 						<Enemy key="blueShip">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>100</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>100</endY>
 									<duration>1200</duration>
 								</Path>
@@ -89,9 +89,9 @@
 						<Enemy key="blueShip">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>200</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>200</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -100,9 +100,9 @@
 						<Enemy key="blueShip">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>300</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>300</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -111,9 +111,9 @@
 						<Enemy key="blueShip">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>400</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>400</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -122,9 +122,9 @@
 						<Enemy key="blueShip">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>500</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>500</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -133,9 +133,9 @@
 						<Enemy key="blueShip">
 							<Paths>
 								<Path type="linear">
-									<startX>-100</startX>
+									<startX>1400</startX>
 									<startY>600</startY>
-									<endX>50</endX>
+									<endX>850</endX>
 									<endY>600</endY>
 									<duration>1200</duration>
 								</Path>								
@@ -153,9 +153,9 @@
 						<Enemy key="blackShipA">
 							<Paths>
 								<Path type="quadratic">
-									<startX>50</startX>
+									<startX>1950</startX>
 									<startY>100</startY>
-									<midX>500</midX>
+									<midX>800</midX>
 									<midY>300</midY>
 									<endX>900</endX>
 									<endY>600</endY>
@@ -166,11 +166,11 @@
 						<Enemy key="blackShipA">
 							<Paths>
 								<Path type="quadratic">
-									<startX>600</startX>
+									<startX>1950</startX>
 									<startY>900</startY>
 									<midX>500</midX>
 									<midY>300</midY>
-									<endX>50</endX>
+									<endX>800</endX>
 									<endY>100</endY>
 									<duration>2500</duration>
 								</Path>

@@ -1,6 +1,5 @@
 package org.group1f.izuna.GUI;
 
-import java.awt.Image;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.GameCore;
@@ -11,7 +10,7 @@ import org.group1f.izuna.GameCore;
  */
 public class MainMenu extends Menu {
 
-    public MainMenu(GameCore game) {
+    public MainMenu(final GameCore game) {
         super(game);
         // START GAME
         MenuButton startGame = new MenuButton(LoadManager.getMenuElement("main", "startGame")) {
@@ -23,32 +22,52 @@ public class MainMenu extends Menu {
                 }
             }
         };
+        MenuButton options = new MenuButton(LoadManager.getMenuElement("main", "options")) {
+
+            @Override
+            public void onInteracted(Key key) {
+                    game.currentMenu = new Options(game);
+            }
+        };
+        MenuButton password = new MenuButton(LoadManager.getMenuElement("main", "password")) {
+
+            @Override
+            public void onInteracted(Key key) {
+                    game.currentMenu = new Password(game);
+            }
+        };
+        MenuButton highScores = new MenuButton(LoadManager.getMenuElement("main", "highScores")) {
+
+            @Override
+            public void onInteracted(Key key) {
+                if(key.equals(Key.Enter)){
+                    game.currentMenu = new HighScores(game);
+                }
+            }
+        };
         MenuButton help = new MenuButton(LoadManager.getMenuElement("main", "help")) {
 
             @Override
             public void onInteracted(Key key) {
-            }
-        };
-
-        MenuButton anaglyph = new MenuButton(LoadManager.getMenuElement("options", "3DAnagyphDefault")) {
-
-            @Override
-            public void onInteracted(Key key) {
-                int i = this.getActive();
-                if (i == 0) {
-                    GameCore.preferences().putBoolean("3D", true);
-                } else {
-                    GameCore.preferences().putBoolean("3D", false);
+                if(key.equals(Key.Enter)){
+                    game.currentMenu = new Help(game);
                 }
             }
         };
-        anaglyph.setActive(GameCore.preferences().getBoolean("3D", true) ? 0 : 1);
-        anaglyph.addElement(LoadManager.getMenuElement("options", "3DAnagyphOn"));
-        anaglyph.addElement(LoadManager.getMenuElement("options", "3DAnagyphOff"));
+        MenuButton exit = new MenuButton(LoadManager.getMenuElement("main", "exit")) {
+
+            @Override
+            public void onInteracted(Key key) {
+                if(key.equals(Key.Enter))
+                    System.exit(0);
+            }
+        };
 
         this.addButton(startGame);
-        this.addButton(anaglyph);
+        this.addButton(options);
+        this.addButton(password);
+        this.addButton(highScores);
         this.addButton(help);
-
+        this.addButton(exit);
     }
 }

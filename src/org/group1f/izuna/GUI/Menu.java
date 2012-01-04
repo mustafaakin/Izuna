@@ -14,10 +14,13 @@ public class Menu {
 
     private GameCore owner;
     private ArrayList<MenuButton> buttons;
+    private ArrayList<MenuElement> elements;
+    
     private int active;
 
     public Menu(GameCore owner) {
         this.buttons = new ArrayList<MenuButton>();
+        this.elements = new ArrayList<MenuElement>();
         this.owner = owner;
         active = 0;
     }
@@ -36,8 +39,15 @@ public class Menu {
         this.buttons.add(button);
     }
 
+    public void addElement(MenuElement element) {
+        this.elements.add(element);
+    }
+
     public List<Image> getImagesToDraw() {
         ArrayList<Image> images = new ArrayList<Image>();
+        for(MenuElement element : this.elements){
+            images.add(element.getNormal());
+        }
         for (int i = 0; i < buttons.size(); i++) {
             MenuButton button = buttons.get(i);
             images.addAll(button.getImages(i == active));

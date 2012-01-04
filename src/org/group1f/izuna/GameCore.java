@@ -157,10 +157,7 @@ public class GameCore {
         if (key == null) {
             return;
         }
-        if (key.equals(Key.Escape)) {
-            System.exit(0);
-        }
-        if (!inMenu) {
+        if (!inMenu && isPressed) {
             if (key.equals(Key.Player1_Weapon1)) {
                 if (!game.getEnemies().isEmpty()) {
                     Enemy e = game.getEnemies().get(0);
