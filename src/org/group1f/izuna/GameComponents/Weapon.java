@@ -89,7 +89,7 @@ public class Weapon extends AIControllable {
         super.update(elapsedTime);
     }
 
-    public void applyDamege(SpaceShip a) {
+    public void applyDamage(SpaceShip a) {
         if (damageAmount >= a.getHealth()) {
             state = WeaponState.STATE_EXPLODE;
         } else {
@@ -104,5 +104,9 @@ public class Weapon extends AIControllable {
 
     public int getExplodeTime() {
         return 1000;
+    }
+
+    public SoundEffect getExplodeSound() {
+        return explodeSound;
     }
 }

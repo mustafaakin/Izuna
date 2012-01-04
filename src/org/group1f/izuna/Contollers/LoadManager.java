@@ -15,6 +15,7 @@ import org.group1f.izuna.Contollers.XML.*;
 import org.group1f.izuna.GUI.MenuElement;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 import org.group1f.izuna.GameComponents.*;
+import org.group1f.izuna.GameComponents.Drawing.Sprite;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -65,6 +66,47 @@ public class LoadManager {
 
         initilazieSources(enemies, weapons);
         loadLevels();
+        readExplosions();
+    }
+
+    public static GameObject getExplosion(boolean isBig, Point position) {
+        Animation anim = getAnim("explosion_" + (isBig ? "big" : "small"));
+        GameObject explosion = new GameObject(anim) {
+
+            @Override
+            public void checkStateToAnimate() {
+                // Does not need body
+            }
+        };
+        explosion.setPosition(position);
+        return explosion;
+    }
+
+    private static void readExplosions() {     
+        File rootSmall = new File("data/image/animation/explosion_small");
+        File rootBig = new File("data/image/animation/explosion_big");
+
+        Animation small = new Animation();
+        Animation big = new Animation();
+        small.setAnimType(Animation.AnimationType.SMOOTH);
+        big.setAnimType(Animation.AnimationType.SMOOTH);
+
+        try {
+            for (File f : rootSmall.listFiles()) {
+                Image frame = ImageIO.read(f);
+                small.addFrame(frame, frame);
+            }
+            for (File f : rootBig.listFiles()) {
+                Image frame = ImageIO.read(f);
+                big.addFrame(frame, frame);
+            }
+            animationBucket.put("explosion_big", big);
+            animationBucket.put("explosion_small", small);
+
+        } catch (IOException ex) {
+            System.err.println("Could not read explosions: " + ex.getMessage());
+        }
+
     }
 
     public static void loadLevels() {
@@ -111,31 +153,6 @@ public class LoadManager {
     }
 
     private static void readWeaponAnims() {
-        File dieSmall = new File("data/image/animation/weapon_die/small");
-        File dieBig = new File("data/image/animation/weapon_die/big");
-
-        Animation dieSmallAnim = new Animation();
-        Animation dieBigAnim = new Animation();
-
-        for (File f : dieBig.listFiles()) {
-            try {
-                dieSmallAnim.addFrame(ImageIO.read(f), null);
-            } catch (IOException ex) {
-                System.err.println("Could not read:" + f.getPath() + " because: " + ex.getMessage());
-            }
-        }
-
-        LoadManager.animationBucket.put("weapon_die/big", dieBigAnim);
-        LoadManager.animationBucket.put("weapon_die/small", dieSmallAnim);
-
-        for (File f : dieSmall.listFiles()) {
-            try {
-                dieBigAnim.addFrame(ImageIO.read(f), ImageIO.read(f));
-            } catch (IOException ex) {
-                System.err.println("Could not read:" + f.getPath() + " because: " + ex.getMessage());
-            }
-        }
-
         File root = new File("data/image/animation/weapons/");
         for (File f : root.listFiles()) {
             if (f.isDirectory()) {
@@ -167,8 +184,7 @@ public class LoadManager {
             Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
             Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
             SoundEffect enteringSound = LoadManager.getSoundEffect("enterance/" + key);
-            Enemy e = new Enemy(still, leftRoll, rightRoll, enteringSound);
-            e.setHealth(e.getHealth());
+            Enemy e = new Enemy(still, leftRoll, rightRoll, enteringSound, enemy.getHealth());
             enemyBucket.put(key, e);
         }
         for (WeaponInfo weapon : weapons.getList()) {

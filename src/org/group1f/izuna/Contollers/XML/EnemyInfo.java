@@ -34,20 +34,4 @@ public class EnemyInfo {
     public String getWeapon() {
         return Weapon;
     }
-
-    public void setEnterSound(String EnterSound) {
-        this.EnterSound = EnterSound;
-    }
-
-    public void setHealth(int Health) {
-        this.Health = Health;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public void setWeapon(String Weapon) {
-        this.Weapon = Weapon;
-    }    
 }

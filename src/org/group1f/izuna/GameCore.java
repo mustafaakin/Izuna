@@ -4,7 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
@@ -68,9 +70,9 @@ public class GameCore {
             currentTime += elapsedTime;
 
             // system time is needed
-//            updateBattlefield(elapsedTime);
 
             renderBattlefield(elapsedTime);
+            updateBattlefield(elapsedTime);
             //          movePlayer();
         }
     }
@@ -86,7 +88,7 @@ public class GameCore {
         List<Enemy> enemies = wave.startWave(System.currentTimeMillis());
         for (Enemy enemy : enemies) {
             enemy.setPathActivationTime(System.currentTimeMillis());
-            enemy.setPosition();
+            enemy.setStartingPosition();
             game.getEnemies().add(enemy);
         }
         inMenu = false;
@@ -147,7 +149,7 @@ public class GameCore {
         List<Enemy> newEnemies = wave.startWave(System.currentTimeMillis());
         for (Enemy enemy : newEnemies) {
             enemy.setPathActivationTime(System.currentTimeMillis());
-            enemy.setPosition();
+            enemy.setStartingPosition();
             game.getEnemies().add(enemy);
         }
     }
@@ -217,19 +219,58 @@ public class GameCore {
         // Check If wave is finished, load new enemies or new level
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
-        /*
-         * for (Enemy e : game.getEnemies()) { if
-         * (PhysicsHandler.checkSpriteCollisions(e, game.p1)) { } if (game.p2 !=
-         * null && PhysicsHandler.checkSpriteCollisions(e, game.p2)) { } //
-         * Enemies - UserWeapons for (Weapon w : game.userWeapons) { if
-         * (PhysicsHandler.checkSpriteCollisions(w, e)) { } } } // Players -
-         * EnemyWeapons for (Weapon w : game.enemyWeapons) { if
-         * (PhysicsHandler.checkSpriteCollisions(w, game.p1)) { } if (game.p2 !=
-         * null && PhysicsHandler.checkSpriteCollisions(w, game.p2)) { } } //
-         * Players - Bonuses for (Bonus b : game.bonuses) { if
-         * (PhysicsHandler.checkSpriteCollisions(b, game.p1)) { } if (game.p2 !=
-         * null && PhysicsHandler.checkSpriteCollisions(b, game.p2)) { } }
-         */
+        synchronized (game.getEnemies()) {
+            for (Enemy e : game.getEnemies()) {
+                if (e == null) {
+                    continue;
+                }
+                if (PhysicsHandler.checkSpriteCollisions(e, game.p1)) {
+                }
+                if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(e, game.p2)) {
+                } //
+                for (int i = 0; i < game.getUserWeapons().size(); i++) {
+                    Weapon w = game.getUserWeapons().get(i);
+                    if (w != null) {
+                        if (PhysicsHandler.checkSpriteCollisions(w, e)) {
+                            w.applyDamage(e);
+                            if ( e.getHealth() <= 0){
+                                w.getExplodeSound().play();
+                            }
+                            if (w.getDamageAmount() < 100 && System.currentTimeMillis() - w.getLastFire() > w.getRateOfFire()) {
+                                game.getUserWeapons().remove(w);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        for (Weapon w : game.enemyWeapons) {
+            if (PhysicsHandler.checkSpriteCollisions(w, game.p1)) {
+            }
+            if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(w, game.p2)) {
+            }
+        }
+        for (Bonus b : game.bonuses) {
+            if (PhysicsHandler.checkSpriteCollisions(b, game.p1)) {
+            }
+            if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(b, game.p2)) {
+            }
+        }
+
+        game.getUserWeapons().removeAll(Collections.singletonList(null));
+
+        for (int i = 0; i < game.getEnemies().size(); i++) {
+            Enemy enemy = game.getEnemies().get(i);
+            if (enemy != null && enemy.getHealth() <= 0) {
+                Point p = new Point(enemy.getPosition());
+                System.out.println("Explosion: "+ p);
+                System.out.println("Enemy:" + enemy.getPosition());
+                killEnemy(enemy);
+                GameObject explosion = LoadManager.getExplosion(true, p);
+                game.getExplosions().add(explosion);
+            } else {
+            }
+        }
     }
 
     private void movePlayer() {
@@ -242,8 +283,7 @@ public class GameCore {
         g.clearRect(0, 0, 2560, 1600);
         g.drawImage(LoadManager.getImage("menu_background"), 0, 0, null);
         game.p1.update(elapsedTime);
-
-        g.drawImage(game.p1.getCurrentAnim().getImage(), game.p1.getPosition().x, game.p1.getPosition().y, null);
+        game.p1.paint(g);
         for (int i = 0; i < game.backgroundLayers.length; i++) {
             Image background = game.backgroundLayers[i];
             g.drawImage(background, 0, 0, null);
@@ -259,7 +299,7 @@ public class GameCore {
                                 continue;
                             }
                             k.update(elapsedTime);
-                            g.drawImage(k.getCurrentImage(), k.getPosition().x, k.getPosition().y, null);
+                            k.paint(g);
                         }
                     }
                 } catch (Exception e) {
@@ -269,11 +309,24 @@ public class GameCore {
         List<Enemy> enemies = game.getEnemies();
         synchronized (enemies) {
             for (Enemy e : enemies) {
-                Point pos = e.getPosition();
+                if (e == null) {
+                    continue;
+                }
                 e.update(elapsedTime);
-                Animation currentAnimation = e.getCurrentAnim();
-                Image currentImage = currentAnimation.getImage();
-                g.drawImage(currentImage, pos.x, pos.y, null);
+                e.paint(g);
+            }
+        }
+
+        List<GameObject> explosions = game.getExplosions();
+        synchronized (explosions) {
+            for (int i = 0; i < explosions.size(); i++) {
+                GameObject explosion = explosions.get(i);
+                explosion.update(elapsedTime);
+                if (explosion.getCurrentAnim().isLastFrame()) {
+                    explosions.remove(explosion);
+                    continue;
+                }
+                explosion.paint(g);
             }
         }
         g.dispose();

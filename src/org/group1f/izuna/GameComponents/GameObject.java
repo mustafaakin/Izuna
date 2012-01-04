@@ -1,5 +1,6 @@
 package org.group1f.izuna.GameComponents;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
@@ -51,5 +52,14 @@ public abstract class GameObject extends Sprite {
         return super.getPosition();
     }
 
+    
+    
+    
+    
+
     public abstract void checkStateToAnimate();
+
+    public void paint(Graphics2D g) {
+        g.drawImage(getCurrentImage(), getPosition().x, getPosition().y, null);
+    }
 }

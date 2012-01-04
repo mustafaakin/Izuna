@@ -7,14 +7,14 @@ import org.group1f.izuna.GameCore;
 
 public class KeyboardHandler implements KeyListener {
 
-    private Hashtable<Key, Boolean> active;
+    private EnumMap<Key, Boolean> active;
     private GameCore owner;
     private Hashtable<Integer, Key> map;
 
     public KeyboardHandler(GameCore owner) {
         this.owner = owner;
         map = new Hashtable<Integer, Key>();
-        active = new Hashtable<Key, Boolean>();
+        active = new EnumMap<Key, Boolean>(Key.class);
         map.put(KeyEvent.VK_DOWN, Key.Player1_Down);
         map.put(KeyEvent.VK_RIGHT, Key.Player1_Right);
         map.put(KeyEvent.VK_UP, Key.Player1_Up);
@@ -37,14 +37,22 @@ public class KeyboardHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        active.put(resolveKey(e), true);
-        owner.inputFromKeyboard(resolveKey(e), true);
+        Key key = resolveKey(e);
+        if (key == null) {
+            return;
+        }
+        active.put(key, true);
+        owner.inputFromKeyboard(key, true);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        active.remove(resolveKey(e));
-        owner.inputFromKeyboard(resolveKey(e), false);
+        Key key = resolveKey(e);
+        if (key == null) {
+            return;
+        }
+        active.remove(key);
+        owner.inputFromKeyboard(key, false);
     }
 
     public enum Key {

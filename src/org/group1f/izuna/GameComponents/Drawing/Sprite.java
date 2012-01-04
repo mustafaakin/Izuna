@@ -1,7 +1,7 @@
 package org.group1f.izuna.GameComponents.Drawing;
 
-import java.awt.Point;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 abstract public class Sprite {

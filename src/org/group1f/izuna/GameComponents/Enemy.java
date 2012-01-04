@@ -14,16 +14,17 @@ public class Enemy extends AIControllable implements SpaceShip {
     private int health;
     private boolean isRFinished = true;
 
-    public Enemy(Animation still, Animation rollLeft, Animation rollRight, SoundEffect enteringSound) {
+    public Enemy(Animation still, Animation rollLeft, Animation rollRight, SoundEffect enteringSound, int health) {
         super(still);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
         this.enteringSound = enteringSound;
+        this.health = health;
         isDying = false;
     }
 
     public Enemy clone() {
-        return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), enteringSound);
+        return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), enteringSound, health);
     }
 
     @Override
@@ -92,6 +93,7 @@ public class Enemy extends AIControllable implements SpaceShip {
 
     @Override
     public void setHealth(int newValue) {
+        System.out.println("SET HELATH:" + newValue);
         if (newValue > 100) {
             health = 100;
         } else {

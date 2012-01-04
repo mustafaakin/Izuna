@@ -15,10 +15,10 @@ public abstract class AIControllable extends GameObject {
         this.paths = new ArrayList<Path>();
     }
 
-    public void setPosition() {
+    public void setStartingPosition() {
         setPosition(this.paths.get(0).getStartPoint());
     }
-
+    
     public void addPath(Path p) {
         this.paths.add(p);
     }
@@ -49,6 +49,7 @@ public abstract class AIControllable extends GameObject {
                     this.setvX((float) (diffX));
                     this.setvY((float) (diffY));
                 }
+                this.setPosition(nextPosition);
                 prevPosition = nextPosition;
                 return nextPosition;
             }

@@ -2,7 +2,7 @@ package org.group1f.izuna.Contollers;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import org.group1f.izuna.GameComponents.Drawing.*;
+import org.group1f.izuna.GameComponents.Drawing.Sprite;
 import org.group1f.izuna.GameComponents.Player;
 import org.group1f.izuna.GameState;
 

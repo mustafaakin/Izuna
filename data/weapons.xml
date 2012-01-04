@@ -1,26 +1,26 @@
 <WeaponList>
 	<list>
 		<Weapon key="proton_player1">
-			<DefaultAmount>150</DefaultAmount>
+			<DefaultAmount>15000</DefaultAmount>
 			<CausedDamage>5</CausedDamage>
 			<FireSound>laser_1</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
+			<ExplodeSound>explosion_1</ExplodeSound>			
 			<RateOfFire>100</RateOfFire>
-			<Speed>150</Speed>
+			<Speed>350</Speed>
 		</Weapon>
 		<Weapon key="proton_player2">
-			<DefaultAmount>150</DefaultAmount>
+			<DefaultAmount>15000</DefaultAmount>
 			<CausedDamage>100</CausedDamage>
 			<FireSound>laser_blast</FireSound>
 			<ExplodeSound>laser_blast</ExplodeSound>			
 			<RateOfFire>500</RateOfFire>
-			<Speed>2500</Speed>
+			<Speed>1750</Speed>
 		</Weapon>
 		<Weapon key="plasma_player1">
 			<DefaultAmount>150</DefaultAmount>
-			<CausedDamage>100</CausedDamage>
+			<CausedDamage>25</CausedDamage>
 			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
+			<ExplodeSound>explosion_1</ExplodeSound>			
 			<RateOfFire>500</RateOfFire>
 			<Speed>2500</Speed>
 		</Weapon>
@@ -33,11 +33,11 @@
 			<Speed>2500</Speed>
 		</Weapon>
 		<Weapon key="particle_player1">
-			<DefaultAmount>150</DefaultAmount>
-			<CausedDamage>100</CausedDamage>
+			<DefaultAmount>5</DefaultAmount>
+			<CausedDamage>200</CausedDamage>
 			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
-			<RateOfFire>500</RateOfFire>
+			<ExplodeSound>explosion_3</ExplodeSound>			
+			<RateOfFire>4000</RateOfFire>
 			<Speed>-1</Speed>
 		</Weapon>
 		<Weapon key="particle_player2">

@@ -20,8 +20,16 @@ public class Animation {
     protected long totalDuration;
     protected long elapsedTime;
 
+    public int getCurrentFrameIndex() {
+        return currentFrameIndex;
+    }
+
     public Animation() {
         this(new ArrayList<AnimationFrame>());
+    }
+
+    public boolean isLastFrame() {
+        return currentFrameIndex == frames.size() - 1;
     }
 
     private Animation(ArrayList<AnimationFrame> frames) {
@@ -38,7 +46,6 @@ public class Animation {
         return frames;
     }
 
-    
     @Override
     public Animation clone() {
         Animation a = new Animation();
