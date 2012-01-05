@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Queue;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.XML.*;
 import org.group1f.izuna.GUI.MenuElement;
@@ -79,6 +80,11 @@ public class LoadManager {
         initilazieSources(enemies, weapons);
         loadLevels();
         readExplosions();
+    }
+    
+    public static SoundEffect getAnExplosionSound(){
+        Random r = new Random();
+        return soundBucket.get("explosion_" + (r.nextInt(5) + 1));
     }
 
     /**
@@ -239,8 +245,8 @@ public class LoadManager {
         Animation still = LoadManager.getAnim("ships/" + key + "/default");
         Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
         Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
-
-        Player p = new Player(new Point(600, 600), still.clone(), leftRoll.clone(), rightRoll.clone());
+        Point position = no == 1 ? new Point(100,100) : new Point(100,300);
+        Player p = new Player(position, still.clone(), leftRoll.clone(), rightRoll.clone());
         p.addWeapon("proton_player" + no, -1);
         p.addWeapon("plasma_player" + no, 100);
         p.addWeapon("particle", 25);

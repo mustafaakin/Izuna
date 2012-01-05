@@ -6,7 +6,7 @@ import java.util.*;
 import org.group1f.izuna.GameCore;
 
 /**
- * 
+ *
  * @author Mustafa
  */
 public class KeyboardHandler implements KeyListener {
@@ -16,29 +16,43 @@ public class KeyboardHandler implements KeyListener {
     private Hashtable<Integer, Key> map;
 
     /**
-     * 
+     *
      * @param owner
      */
     public KeyboardHandler(GameCore owner) {
         this.owner = owner;
         map = new Hashtable<Integer, Key>();
         active = new EnumMap<Key, Boolean>(Key.class);
+
+        map.put(KeyEvent.VK_ESCAPE, Key.Escape);
+        map.put(KeyEvent.VK_ENTER, Key.Enter);
+
+
         map.put(KeyEvent.VK_DOWN, Key.Player1_Down);
         map.put(KeyEvent.VK_RIGHT, Key.Player1_Right);
         map.put(KeyEvent.VK_UP, Key.Player1_Up);
         map.put(KeyEvent.VK_LEFT, Key.Player1_Left);
-        map.put(KeyEvent.VK_ESCAPE, Key.Escape);
-        map.put(KeyEvent.VK_ENTER, Key.Enter);
         map.put(KeyEvent.VK_H, Key.Player1_Weapon1);
         map.put(KeyEvent.VK_U, Key.Player1_Weapon2);
         map.put(KeyEvent.VK_K, Key.Player1_Weapon3);
         map.put(KeyEvent.VK_L, Key.Player1_Weapon4);
         map.put(KeyEvent.VK_SPACE, Key.Player1_Weapon5);
-                
+
+
+        map.put(KeyEvent.VK_S, Key.Player2_Down);
+        map.put(KeyEvent.VK_D, Key.Player2_Right);
+        map.put(KeyEvent.VK_W, Key.Player2_Up);
+        map.put(KeyEvent.VK_A, Key.Player2_Left);
+        map.put(KeyEvent.VK_1, Key.Player2_Weapon1);
+        map.put(KeyEvent.VK_2, Key.Player2_Weapon2);
+        map.put(KeyEvent.VK_3, Key.Player2_Weapon3);
+        map.put(KeyEvent.VK_4, Key.Player2_Weapon4);
+        map.put(KeyEvent.VK_TAB, Key.Player2_Weapon5);
+
     }
 
     /**
-     * 
+     *
      * @return
      */
     public Set<Key> getActive() {
@@ -70,12 +84,12 @@ public class KeyboardHandler implements KeyListener {
     }
 
     /**
-     * 
+     *
      */
     public enum Key {
 
         /**
-         * 
+         *
          */
         Player1_Up,
         /**
@@ -91,7 +105,7 @@ public class KeyboardHandler implements KeyListener {
          */
         Player1_Right,
         /**
-         * 
+         *
          */
         Player1_Weapon1,
         /**
@@ -108,7 +122,7 @@ public class KeyboardHandler implements KeyListener {
         Player1_Weapon4,
         Player1_Weapon5,
         /**
-         * 
+         *
          */
         Player2_Up,
         /**
@@ -128,7 +142,7 @@ public class KeyboardHandler implements KeyListener {
          */
         Player2_Weapon1,
         /**
-         * 
+         *
          */
         Player2_Weapon2,
         /**
@@ -141,7 +155,7 @@ public class KeyboardHandler implements KeyListener {
         Player2_Weapon4,
         Player2_Weapon5,
         /**
-         * 
+         *
          */
         Escape,
         /**
@@ -152,7 +166,7 @@ public class KeyboardHandler implements KeyListener {
 
     // For both released & pressed keys, this method will be invoked.
     /**
-     * 
+     *
      * @param e
      * @return
      */

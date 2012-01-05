@@ -9,7 +9,8 @@ import org.group1f.izuna.GameComponents.Drawing.Animation;
  */
 public class Weapon extends AIControllable {
 
-    private static long DEFAULT_WEAPON_DURATION = 500;
+    public static int USER_WEAPON_END_POSITION = 1400;
+    public static int ENEMY_WEAPON_END_POSITION = -200;
 
     /**
      *
@@ -129,7 +130,7 @@ public class Weapon extends AIControllable {
         }
 
         end.y = start.y;
-        end.x = doesBelongEnemy ? -300 : 1500; // The position that the weapon will disappear        
+        end.x = doesBelongEnemy ? ENEMY_WEAPON_END_POSITION : USER_WEAPON_END_POSITION; // The position that the weapon will disappear        
         if (type == 1 || type == 2) {
             end.x = start.x;
             end.y = start.y;
@@ -137,6 +138,7 @@ public class Weapon extends AIControllable {
             this.addPath(path);
             this.setPathActivationTime(time);
         } else {
+            System.out.println("WEAPON END:" + end);
             LinearPath path = new LinearPath(start, end, speed);
             this.addPath(path);
             this.setPathActivationTime(time);

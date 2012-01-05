@@ -107,6 +107,7 @@ public class GameCore {
      */
     public void startGame(boolean isSinglePlayer) {
         game.p1 = LoadManager.getPlayer(1);
+        isSinglePlayer = false;
         if (!isSinglePlayer) {
             game.p2 = LoadManager.getPlayer(2);
         }
@@ -219,47 +220,56 @@ public class GameCore {
         if (key == null) {
             return;
         }
+        Set<Key> pressed = input.getActive();
         if (!inMenu && isPressed) {
-            Set<Key> pressed = input.getActive();
-            if (pressed.contains(Key.Player1_Left)) {
-                game.p1.setvX(-3);
-            }
-            if (pressed.contains(Key.Player1_Right)) {
-                game.p1.setvX(3);
-            }
-            if (pressed.contains(Key.Player1_Up)) {
-                game.p1.setvY(-3);
-            }
-            if (pressed.contains(Key.Player1_Down)) {
-                game.p1.setvY(3);
-            }
             if (pressed.contains(Key.Player1_Weapon1)) {
-                fireUserWeapon("proton_player1");
+                fireUserWeapon("proton_player1", true);
             }
             if (pressed.contains(Key.Player1_Weapon2)) {
-                fireUserWeapon("plasma_player1");
+                fireUserWeapon("plasma_player1", true);
             }
             if (pressed.contains(Key.Player1_Weapon3)) {
-                fireUserWeapon("particle");
+                fireUserWeapon("particle", true);
             }
             if (pressed.contains(Key.Player1_Weapon4)) {
-                fireUserWeapon("dark_matter");
+                fireUserWeapon("dark_matter", true);
             }
             if (pressed.contains(Key.Player1_Weapon5)) {
-                fireUserWeapon("super_desperation");
+                fireUserWeapon("super_desperation", true);
+            }
+
+
+            if (game.p2 != null) {
+                if (pressed.contains(Key.Player2_Weapon1)) {
+                    fireUserWeapon("proton_player2", false);
+                }
+                if (pressed.contains(Key.Player2_Weapon2)) {
+                    fireUserWeapon("plasma_player2", false);
+                }
+                if (pressed.contains(Key.Player2_Weapon3)) {
+                    fireUserWeapon("particle", false);
+                }
+                if (pressed.contains(Key.Player2_Weapon4)) {
+                    fireUserWeapon("dark_matter", false);
+                }
+                if (pressed.contains(Key.Player2_Weapon5)) {
+                    fireUserWeapon("super_desperation", false);
+                }
             }
         }
-        if (!inMenu && !isPressed) {
-            game.p1.setvX(0);
-            game.p1.setvY(0);
+
+        movePlayer(true, pressed, isPressed);
+        if (game.p2 != null) {
+            movePlayer(false, pressed, isPressed);
         }
+
         if (inMenu && isPressed) {
             currentMenu.onClicked(key);
         }
     }
 
-    private void fireUserWeapon(String key) {
-        Weapon weapon = game.p1.fire(key, System.currentTimeMillis());
+    private void fireUserWeapon(String key, boolean isFirstPlayer) {
+        Weapon weapon = (isFirstPlayer ? game.p1 : game.p2).fire(key, System.currentTimeMillis());
         if (weapon != null) {
             weapon.playFire();
         }
@@ -305,9 +315,15 @@ public class GameCore {
                     if (w != null) {
                         if (PhysicsHandler.checkSpriteCollisions(w, enemy)) {
                             w.applyDamage(enemy);
+
+                            LoadManager.getAnExplosionSound().play();
+                            GameObject explosion = LoadManager.getExplosion(false, w.getPosition());
+                            game.getExplosions().add(explosion);
+
                             if (enemy.getHealth() <= 0) {
+                                LoadManager.getAnExplosionSound().play();
                             }
-                            if (w.getDamageAmount() < 100 && System.currentTimeMillis() - w.getLastFire() > w.getRateOfFire()) {
+                            if (w.getType() == 0) {
                                 game.getUserWeapons().remove(w);
                             }
                         }
@@ -323,12 +339,11 @@ public class GameCore {
             }
             if (PhysicsHandler.checkSpriteCollisions(w, game.p1)) {
                 w.applyDamage(game.p1);
-                System.out.println("USER HEALTH: " + game.p1.getHealth());
-                if (game.p1.getHealth() <= 0) {
-                    Point p = new Point(game.p1.getPosition());
-                    GameObject explosion = LoadManager.getExplosion(true, p);
-                    game.getExplosions().add(explosion);
-                }
+                Point p = new Point(game.p1.getPosition());
+                GameObject explosion = LoadManager.getExplosion(game.p1.getHealth() <= 0, p);
+                game.getExplosions().add(explosion);
+
+                LoadManager.getAnExplosionSound().play();
                 game.getEnemyWeapons().remove(w);
             }
             if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(w, game.p2)) {
@@ -359,15 +374,43 @@ public class GameCore {
 
     }
 
-    private void movePlayer() {
+    private void movePlayer(boolean isFirstPlayer, Set<Key> pressed, boolean isPressed) {
+        Player player = isFirstPlayer ? game.p1 : game.p2;
+        if (!inMenu && isPressed) {
+            if (pressed.contains(isFirstPlayer ? Key.Player1_Left : Key.Player2_Left)) {
+                player.setvX(-3);
+            }
+            if (pressed.contains(isFirstPlayer ? Key.Player1_Right : Key.Player2_Right)) {
+                player.setvX(3);
+            }
+            if (pressed.contains(isFirstPlayer ? Key.Player1_Up : Key.Player2_Up)) {
+                player.setvY(-3);
+            }
+            if (pressed.contains(isFirstPlayer ? Key.Player1_Down : Key.Player2_Down)) {
+                player.setvY(3);
+            }
+        }
+        if (!inMenu && !isPressed) {
+            if (!pressed.contains(isFirstPlayer ? Key.Player1_Down : Key.Player2_Down) || pressed.contains(isFirstPlayer ? Key.Player1_Up : Key.Player2_Up)) {
+                player.setvY(0);
+            }
+            if (!pressed.contains(isFirstPlayer ? Key.Player1_Left : Key.Player2_Left) || pressed.contains(isFirstPlayer ? Key.Player1_Right : Key.Player2_Right)) {
+                player.setvX(0);
+            }
+        }
     }
 
     private void renderBattlefield(long elapsedTime) {
         Graphics2D g = FullScreenManager.getGraphics();
         g.clearRect(0, 0, 2560, 1600);
         g.drawImage(LoadManager.getImage("menu_background"), 0, 0, null);
+
         game.p1.update(elapsedTime);
         game.p1.paint(g);
+        if (game.p2 != null) {
+            game.p2.update(elapsedTime);
+            game.p2.paint(g);
+        }
         for (int i = 0; i < game.backgroundLayers.length; i++) {
             Image background = game.backgroundLayers[i];
             g.drawImage(background, 0, 0, null);
@@ -403,9 +446,16 @@ public class GameCore {
                 try {
                     for (Weapon k : userWeapons) {
                         if (k != null) {
-                            if (System.currentTimeMillis() - k.getLastFire() > k.getAnimationDuration()) {
-                                userWeapons.remove(k);
-                                continue;
+                            if (k.getType() > 0) {
+                                if (System.currentTimeMillis() - k.getLastFire() > k.getAnimationDuration()) {
+                                    userWeapons.remove(k);
+                                    continue;
+                                }
+                            } else {
+                                if (k.getPosition().x >= 1280) {
+                                    userWeapons.remove(k);
+                                    continue;
+                                }
                             }
                             k.update(elapsedTime);
                             k.paint(g);
@@ -422,9 +472,16 @@ public class GameCore {
                 try {
                     for (Weapon k : enemyWeapons) {
                         if (k != null) {
-                            if (System.currentTimeMillis() - k.getLastFire() > k.getAnimationDuration()) {
-                                enemyWeapons.remove(k);
-                                continue;
+                            if (k.getType() > 0) {
+                                if (System.currentTimeMillis() - k.getLastFire() > k.getAnimationDuration()) {
+                                    enemyWeapons.remove(k);
+                                    continue;
+                                }
+                            } else {
+                                if (k.getPosition().x <= 0) {
+                                    enemyWeapons.remove(k);
+                                    continue;
+                                }
                             }
                             k.update(elapsedTime);
                             k.paint(g);
@@ -437,10 +494,10 @@ public class GameCore {
 
         if (doShowLevelCleared) {
             Image i = LoadManager.getImage("level_cleared");
-            g.drawImage(i, 600, 600, null);
+            g.drawImage(i, 390, 200, null);
         } else if (doShowWaveCleared) {
             Image i = LoadManager.getImage("wave_cleared");
-            g.drawImage(i, 600, 600, null);
+            g.drawImage(i, 390, 200, null);
 
         }
 
