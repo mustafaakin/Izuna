@@ -2,12 +2,27 @@ package org.group1f.izuna.GameComponents;
 
 import java.awt.Point;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class LinearPath extends Path {
 
+    /**
+     * 
+     * @param start
+     * @param end
+     * @param duration
+     */
     public LinearPath(Point start, Point end, long duration) {
         super(start, end, duration);
     }
 
+    /**
+     * 
+     * @param time
+     * @return
+     */
     @Override
     public Point getPosition(long time) {
 

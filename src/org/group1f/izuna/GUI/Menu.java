@@ -18,6 +18,10 @@ public class Menu {
     
     private int active;
 
+    /**
+     * 
+     * @param owner
+     */
     public Menu(GameCore owner) {
         this.buttons = new ArrayList<MenuButton>();
         this.elements = new ArrayList<MenuElement>();
@@ -25,6 +29,10 @@ public class Menu {
         active = 0;
     }
 
+    /**
+     * 
+     * @param key
+     */
     public void onClicked(Key key) {
         if (key.equals(Key.Player1_Down)) {
             active = (active + 1) % buttons.size();
@@ -35,14 +43,26 @@ public class Menu {
         }
     }
 
+    /**
+     * 
+     * @param button
+     */
     public void addButton(MenuButton button) {
         this.buttons.add(button);
     }
 
+    /**
+     * 
+     * @param element
+     */
     public void addElement(MenuElement element) {
         this.elements.add(element);
     }
 
+    /**
+     * 
+     * @return
+     */
     public List<Image> getImagesToDraw() {
         ArrayList<Image> images = new ArrayList<Image>();
         for(MenuElement element : this.elements){
@@ -55,6 +75,10 @@ public class Menu {
         return images;
     }
 
+    /**
+     * 
+     * @return
+     */
     public GameCore getOwner() {
         return owner;
     }

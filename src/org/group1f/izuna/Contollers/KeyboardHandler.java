@@ -5,12 +5,20 @@ import java.awt.event.KeyListener;
 import java.util.*;
 import org.group1f.izuna.GameCore;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class KeyboardHandler implements KeyListener {
 
     private EnumMap<Key, Boolean> active;
     private GameCore owner;
     private Hashtable<Integer, Key> map;
 
+    /**
+     * 
+     * @param owner
+     */
     public KeyboardHandler(GameCore owner) {
         this.owner = owner;
         map = new Hashtable<Integer, Key>();
@@ -27,6 +35,10 @@ public class KeyboardHandler implements KeyListener {
         map.put(KeyEvent.VK_H, Key.Player1_Weapon4);
     }
 
+    /**
+     * 
+     * @return
+     */
     public Set<Key> getActive() {
         return active.keySet();
     }
@@ -55,16 +67,91 @@ public class KeyboardHandler implements KeyListener {
         owner.inputFromKeyboard(key, false);
     }
 
+    /**
+     * 
+     */
     public enum Key {
 
-        Player1_Up, Player1_Down, Player1_Left, Player1_Right,
-        Player1_Weapon1, Player1_Weapon2, Player1_Weapon3, Player1_Weapon4,
-        Player2_Up, Player2_Down, Player2_Left, Player2_Right, Player2_Weapon1,
-        Player2_Weapon2, Player2_Weapon3, Player2_Weapon4,
-        Escape, Enter
+        /**
+         * 
+         */
+        Player1_Up,
+        /**
+         *
+         */
+        Player1_Down,
+        /**
+         *
+         */
+        Player1_Left,
+        /**
+         *
+         */
+        Player1_Right,
+        /**
+         * 
+         */
+        Player1_Weapon1,
+        /**
+         *
+         */
+        Player1_Weapon2,
+        /**
+         *
+         */
+        Player1_Weapon3,
+        /**
+         *
+         */
+        Player1_Weapon4,
+        /**
+         * 
+         */
+        Player2_Up,
+        /**
+         *
+         */
+        Player2_Down,
+        /**
+         *
+         */
+        Player2_Left,
+        /**
+         *
+         */
+        Player2_Right,
+        /**
+         *
+         */
+        Player2_Weapon1,
+        /**
+         * 
+         */
+        Player2_Weapon2,
+        /**
+         *
+         */
+        Player2_Weapon3,
+        /**
+         *
+         */
+        Player2_Weapon4,
+        /**
+         * 
+         */
+        Escape,
+        /**
+         *
+         */
+        Enter
     }
 
     // For both released & pressed keys, this method will be invoked.
+    /**
+     * 
+     * @param e
+     * @return
+     */
     public Key resolveKey(KeyEvent e) {
         return map.get(e.getKeyCode());
     }

@@ -14,6 +14,10 @@ import org.group1f.izuna.GameCore;
  */
 public class Password extends Menu{
 
+    /**
+     * 
+     * @param owner
+     */
     public Password(final GameCore owner) {
         super(owner);
         MenuElement title = LoadManager.getMenuElement("pass", "enterLevelPass");

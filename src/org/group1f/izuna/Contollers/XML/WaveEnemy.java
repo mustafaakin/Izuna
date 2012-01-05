@@ -6,6 +6,10 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+/**
+ * 
+ * @author Mustafa
+ */
 @Root(name="Enemy")
 public class WaveEnemy {
     @Attribute
@@ -13,10 +17,18 @@ public class WaveEnemy {
     @ElementList
     private List<WavePath> Paths;
 
+    /**
+     * 
+     * @return
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * 
+     * @return
+     */
     public List<WavePath> getPaths() {
         return Paths;
     }

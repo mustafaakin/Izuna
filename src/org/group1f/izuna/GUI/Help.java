@@ -15,6 +15,10 @@ import org.group1f.izuna.GameCore;
 public class Help extends Menu{
     
     
+    /**
+     * 
+     * @param gameCore
+     */
     public Help(final GameCore gameCore){
         super(gameCore);
         MenuElement helpText = LoadManager.getMenuElement("help", "help");

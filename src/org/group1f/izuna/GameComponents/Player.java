@@ -6,6 +6,10 @@ import java.util.HashMap;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class Player extends GameObject implements SpaceShip {
 
     private HashMap<String, Integer> weapons;
@@ -13,13 +17,19 @@ public class Player extends GameObject implements SpaceShip {
     private boolean isDying;
     private Animation rollLeft;
     private Animation rollRight;
-    private SoundEffect rollSound;
     private int health;
     //proton cannon and plasma cutter is infinite
     private float oldvY = 0.0f;
     private boolean isRFinished = true;
 
-    public Player(Point currentPos, Animation still, Animation rollLeft, Animation rollRight, SoundEffect roll) {
+    /**
+     * 
+     * @param currentPos
+     * @param still
+     * @param rollLeft
+     * @param rollRight
+     */
+    public Player(Point currentPos, Animation still, Animation rollLeft, Animation rollRight) {
         super(still);
         this.setPosition(currentPos);
         weapons = new HashMap<String, Integer>();
@@ -28,16 +38,22 @@ public class Player extends GameObject implements SpaceShip {
         lastFired = new HashMap<String, Long>();
         rollRight.setAnimType(Animation.AnimationType.SMOOTH);
         rollLeft.setAnimType(Animation.AnimationType.SMOOTH);
-
-        rollSound = roll;
         health = 100;
         isDying = false;
     }
 
+    /**
+     * 
+     * @param key
+     * @param amount
+     */
     public void addWeapon(String key, int amount) {
         weapons.put(key, amount);
     }
 
+    /**
+     * 
+     */
     @Override
     public void checkStateToAnimate() {
         Animation newAnim = currentAnimation;
@@ -86,6 +102,10 @@ public class Player extends GameObject implements SpaceShip {
         oldvY = getvY();
     }
 
+    /**
+     * 
+     * @param elapsedTime
+     */
     @Override
     public void update(long elapsedTime) {
         checkStateToAnimate();
@@ -99,11 +119,19 @@ public class Player extends GameObject implements SpaceShip {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Override
     public int getDieTime() {
         return 1000;
     }
 
+    /**
+     * 
+     * @param newValue
+     */
     @Override
     public void setHealth(int newValue) {
         if (newValue > 100) {
@@ -113,16 +141,30 @@ public class Player extends GameObject implements SpaceShip {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     @Override
     public int getHealth() {
         return health;
     }
 
+    /**
+     * 
+     * @return
+     */
     @Override
     public float getMaxSpeed() {
         return 0.8f;
     }
 
+    /**
+     * 
+     * @param key
+     * @param time
+     * @return
+     */
     @Override
     public Weapon fire(String key, long time) {
         Integer i = weapons.get(key);
@@ -132,10 +174,7 @@ public class Player extends GameObject implements SpaceShip {
         if (i <= -1 || i > 0) {
             Long lastFireTime = lastFired.get(key);
             Weapon weapon = LoadManager.getWeapon(key).clone();
-            if (lastFireTime != null) {
-                System.out.println("FIRE:" + (time - lastFireTime));
-            }
-
+            weapon.setDoesBelongEnemy(false);
             if (lastFireTime != null && time - lastFireTime < weapon.getRateOfFire()) {
                 return null;
             }

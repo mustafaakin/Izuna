@@ -6,6 +6,10 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+/**
+ * 
+ * @author Mustafa
+ */
 @Root(name = "Path")
 public class WavePath {
 
@@ -28,34 +32,66 @@ public class WavePath {
     private int duration;
 
 
+    /**
+     * 
+     * @return
+     */
     public int getDuration() {
         return duration;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getEndX() {
         return endX;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getEndY() {
         return endY;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getMidX() {
         return midX;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getMidY() {
         return midY;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getStartX() {
         return startX;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getStartY() {
         return startY;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getType() {
         return type;
     }

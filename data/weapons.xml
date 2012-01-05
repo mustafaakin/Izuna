@@ -19,7 +19,7 @@
 		<Weapon key="plasma_player1">
 			<DefaultAmount>150</DefaultAmount>
 			<CausedDamage>25</CausedDamage>
-			<FireSound>laser_blast</FireSound>
+			<FireSound>laser_atari</FireSound>
 			<ExplodeSound>explosion_1</ExplodeSound>			
 			<RateOfFire>500</RateOfFire>
 			<Speed>2500</Speed>
@@ -35,7 +35,7 @@
 		<Weapon key="particle_player1">
 			<DefaultAmount>5</DefaultAmount>
 			<CausedDamage>200</CausedDamage>
-			<FireSound>laser_blast</FireSound>
+			<FireSound>laser_2n</FireSound>
 			<ExplodeSound>explosion_3</ExplodeSound>			
 			<RateOfFire>4000</RateOfFire>
 			<Speed>-1</Speed>
@@ -66,11 +66,11 @@
 		</Weapon>
 		<Weapon key="enemy1">
 			<DefaultAmount>-1</DefaultAmount>
-			<CausedDamage>100</CausedDamage>
-			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
-			<RateOfFire>500</RateOfFire>
-			<Speed>2500</Speed>
+			<CausedDamage>20</CausedDamage>
+			<FireSound>laser_2</FireSound>
+			<ExplodeSound>laser_2</ExplodeSound>			
+			<RateOfFire>2500</RateOfFire>
+			<Speed>1250</Speed>
 		</Weapon>
 		<Weapon key="enemy2">
 			<DefaultAmount>-1</DefaultAmount>

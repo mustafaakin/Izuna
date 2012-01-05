@@ -13,6 +13,10 @@ import org.group1f.izuna.GameCore;
  * @author mcad
  */
 public class HighScores extends Menu{
+    /**
+     * 
+     * @param game
+     */
     public HighScores( final GameCore game ){
         super(game);
         MenuElement helpText = LoadManager.getMenuElement("highscores", "highScores");

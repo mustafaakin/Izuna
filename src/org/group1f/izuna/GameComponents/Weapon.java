@@ -4,13 +4,31 @@ import java.awt.Image;
 import java.awt.Point;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class Weapon extends AIControllable {
 
     private static long DEFAULT_WEAPON_DURATION = 500;
 
+    /**
+     * 
+     */
     public enum WeaponState {
 
-        STATE_FIRED, STATE_HIT, STATE_EXPLODE
+        /**
+         * 
+         */
+        STATE_FIRED,
+        /**
+         *
+         */
+        STATE_HIT,
+        /**
+         *
+         */
+        STATE_EXPLODE
     }
     private WeaponState state;
     private int damageAmount;
@@ -22,24 +40,60 @@ public class Weapon extends AIControllable {
     private SoundEffect explodeSound;
     private int speed;
     private long lastFire;
-
+    private boolean doesBelongEnemy;
+    
+    /**
+     * 
+     */
     public void playFire() {
-        fireSound.play();
+        if (fireSound != null) {
+            fireSound.play();
+        }
     }
 
+    /**
+     * 
+     * @param doesBelongEnemy
+     */
+    public void setDoesBelongEnemy(boolean doesBelongEnemy) {
+        this.doesBelongEnemy = doesBelongEnemy;
+    }
+    
+    /**
+     * 
+     * @return
+     */
     public int getRateOfFire() {
         return rateOfFire;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getDamageAmount() {
         return damageAmount;
     }
 
+    /**
+     * 
+     * @return
+     */
     public long getLastFire() {
         return lastFire;
     }
 
-
+    /**
+     * 
+     * @param still
+     * @param die
+     * @param explode
+     * @param damageAmount
+     * @param rateOfFire
+     * @param fireSound
+     * @param explodeSound
+     * @param speed
+     */
     public Weapon(Animation still, Animation die, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound, int speed) {
         super(still);
         this.weaponExplode = explode;
@@ -56,15 +110,22 @@ public class Weapon extends AIControllable {
         return new Weapon(super.getStillAnimation(), spaceShipDies, weaponExplode, damageAmount, rateOfFire, fireSound, explodeSound, speed);
     }
 
+    /**
+     * 
+     * @param position
+     * @param time
+     * @param offsetX
+     * @param offsetY
+     */
     public void startFiring(Point position, long time, int offsetX, int offsetY) {
         lastFire = time;
         Point start = new Point(position);
         Point end = new Point(position);
         start.x += offsetX;
         start.y += offsetY;
-
+        
         end.y = start.y;
-        end.x = 1500; // The position that the weapon will disappear        
+        end.x = doesBelongEnemy ? -200 : 1500; // The position that the weapon will disappear        
         if (this.speed == -1) {
             end.x = start.x;
             end.y = start.y;
@@ -78,17 +139,28 @@ public class Weapon extends AIControllable {
         }
     }
 
+    /**
+     * 
+     */
     @Override
     public void checkStateToAnimate() {
         currentAnimation = getStillAnimation();
     }
 
+    /**
+     * 
+     * @param elapsedTime
+     */
     @Override
     public void update(long elapsedTime) {
         checkStateToAnimate();
         super.update(elapsedTime);
     }
 
+    /**
+     * 
+     * @param a
+     */
     public void applyDamage(SpaceShip a) {
         if (damageAmount >= a.getHealth()) {
             state = WeaponState.STATE_EXPLODE;
@@ -98,14 +170,26 @@ public class Weapon extends AIControllable {
         a.setHealth(a.getHealth() - damageAmount);
     }
 
+    /**
+     * 
+     * @return
+     */
     public WeaponState getState() {
         return state;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getExplodeTime() {
         return 1000;
     }
 
+    /**
+     * 
+     * @return
+     */
     public SoundEffect getExplodeSound() {
         return explodeSound;
     }

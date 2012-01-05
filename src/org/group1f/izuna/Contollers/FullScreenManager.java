@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class FullScreenManager {
 
     private static GraphicsDevice vc;
@@ -11,6 +15,9 @@ public class FullScreenManager {
     private FullScreenManager() {
     }
 
+    /**
+     * 
+     */
     public static void initGraphics() {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         vc = env.getDefaultScreenDevice();
@@ -31,6 +38,7 @@ public class FullScreenManager {
         frame.setResizable(false);
         frame.setBackground(Color.BLACK);
         frame.setForeground(Color.WHITE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         vc.setFullScreenWindow(frame);
 
         if (chosenDm != null && vc.isDisplayChangeSupported()) {
@@ -43,6 +51,10 @@ public class FullScreenManager {
         frame.createBufferStrategy(2);
     }
 
+    /**
+     * 
+     * @return
+     */
     public static Graphics2D getGraphics() {
         if (vc == null) {
             initGraphics();
@@ -56,6 +68,9 @@ public class FullScreenManager {
         }
     }
 
+    /**
+     * 
+     */
     public static void update() {
         Window window = vc.getFullScreenWindow();
         if (window != null) {
@@ -67,6 +82,10 @@ public class FullScreenManager {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public static JFrame getFullScreenWindow() {
         return (JFrame) vc.getFullScreenWindow();
     }

@@ -5,29 +5,69 @@ import java.util.ArrayList;
 
 import org.group1f.izuna.GameCore;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class Animation {
 
+    /**
+     * 
+     */
     public enum AnimationType {
 
-        REPEAT, SMOOTH
+        /**
+         * 
+         */
+        REPEAT,
+        /**
+         *
+         */
+        SMOOTH
     }
     private AnimationType animType = AnimationType.REPEAT;
+    /**
+     * 
+     */
     public static final long FRAME_DURATION = 1000 / 24;
+    /**
+     * 
+     */
     public boolean ended = false;
     private boolean isFinished = false;
     private ArrayList<AnimationFrame> frames;
+    /**
+     * 
+     */
     protected int currentFrameIndex;
+    /**
+     * 
+     */
     protected long totalDuration;
+    /**
+     * 
+     */
     protected long elapsedTime;
 
+    /**
+     * 
+     * @return
+     */
     public int getCurrentFrameIndex() {
         return currentFrameIndex;
     }
 
+    /**
+     * 
+     */
     public Animation() {
         this(new ArrayList<AnimationFrame>());
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isLastFrame() {
         return currentFrameIndex == frames.size() - 1;
     }
@@ -37,11 +77,18 @@ public class Animation {
         startOver();
     }
 
+    /**
+     * 
+     */
     public synchronized void startOver() {
         elapsedTime = 0;
         currentFrameIndex = 0;
     }
 
+    /**
+     * 
+     * @return
+     */
     public ArrayList<AnimationFrame> getFrames() {
         return frames;
     }
@@ -56,6 +103,10 @@ public class Animation {
         return a;
     }
 
+    /**
+     * 
+     * @param passedTime
+     */
     public synchronized void update(long passedTime) {
         if (frames.size() > 1) {
             elapsedTime += passedTime;
@@ -88,6 +139,10 @@ public class Animation {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public synchronized boolean refine() {
         if (!ended) {
             ended = true;
@@ -101,6 +156,10 @@ public class Animation {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public synchronized boolean finished() {
         if (isFinished) {
             ended = false;
@@ -112,6 +171,11 @@ public class Animation {
     }
 
     //eğer bi saçmalık olursa ilk buraya bak
+    /**
+     * 
+     * @param index
+     * @return
+     */
     protected boolean timeCorrespondImage2(int index) {
         long timeChecked = 0;
 
@@ -127,6 +191,11 @@ public class Animation {
         }
     }
 
+    /**
+     * 
+     * @param index
+     * @return
+     */
     protected boolean timeCorrespondImage(int index) {
         long timeChecked = 0;
 
@@ -141,19 +210,36 @@ public class Animation {
         }
     }
 
+    /**
+     * 
+     * @param value
+     */
     public void setAnimType(AnimationType value) {
         animType = value;
     }
 
+    /**
+     * 
+     * @return
+     */
     public AnimationType getAnimType() {
         return animType;
     }
 
+    /**
+     * 
+     * @param img
+     * @param img3D
+     */
     public synchronized void addFrame(Image img, Image img3D) {
         totalDuration += FRAME_DURATION;
         frames.add(new AnimationFrame(img, img3D));
     }
 
+    /**
+     * 
+     * @return
+     */
     public synchronized Image getImage() {
         if (frames.isEmpty()) {
             return null;
@@ -162,6 +248,10 @@ public class Animation {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public long getElapsedTime() {
         return elapsedTime;
     }

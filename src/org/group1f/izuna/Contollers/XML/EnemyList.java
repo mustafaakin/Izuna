@@ -14,10 +14,18 @@ public class EnemyList {
     @ElementList
     private List<EnemyInfo> list;
     
+    /**
+     * 
+     * @return
+     */
     public List<EnemyInfo> getList() {
         return list;
     }
 
+    /**
+     * 
+     * @param list
+     */
     public void setList(List<EnemyInfo> list) {
         this.list = list;
     }

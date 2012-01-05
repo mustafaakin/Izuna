@@ -4,19 +4,33 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+/**
+ * 
+ * @author Mustafa
+ */
 abstract public class Sprite {
 
     private Point position;
     private float vX;
     private float vY;
     private float oldvY = 0.0f;
+    /**
+     * 
+     */
     protected Animation currentAnimation;
     private Rectangle collisionRectangle;
 
+    /**
+     * 
+     */
     public Sprite() {
         this(new Point(0, 0));
     }
 
+    /**
+     * 
+     * @param position
+     */
     public Sprite(Point position) {
         this.position = position;
         vX = 0;
@@ -24,27 +38,51 @@ abstract public class Sprite {
         this.collisionRectangle = new Rectangle(position.x, position.y, 0, 0);
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getHeight() {
         return currentAnimation.getImage().getHeight(null);
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getWidth() {
         return currentAnimation.getImage().getWidth(null);
     }
 
+    /**
+     * 
+     * @param elapsedTime
+     */
     public void update(long elapsedTime) {
         currentAnimation.update(elapsedTime);
         setCollisionRectangle(new Rectangle(position.x, position.y, getWidth(), getHeight()));
     }
 
+    /**
+     * 
+     * @return
+     */
     public Image getCurrentImage() {
         return currentAnimation.getImage();
     }
 
+    /**
+     * 
+     * @return
+     */
     public Animation getCurrentAnim() {
         return currentAnimation;
     }
 
+    /**
+     * 
+     * @return
+     */
     public long getAnimationDuration() {
         return currentAnimation.getFrames().size() * Animation.FRAME_DURATION;
     }
@@ -84,10 +122,18 @@ abstract public class Sprite {
         return vY;
     }
 
+    /**
+     * 
+     * @return
+     */
     public float getOldvY() {
         return oldvY;
     }
 
+    /**
+     * 
+     * @param oldvY
+     */
     public void setOldvY(float oldvY) {
         this.oldvY = oldvY;
     }
@@ -100,10 +146,18 @@ abstract public class Sprite {
         this.vY = vY;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Rectangle getCollisionRectangle() {
         return collisionRectangle;
     }
 
+    /**
+     * 
+     * @param collisionRectangle
+     */
     public void setCollisionRectangle(Rectangle collisionRectangle) {
         this.collisionRectangle = collisionRectangle;
     }

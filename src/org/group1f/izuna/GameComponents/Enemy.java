@@ -1,11 +1,17 @@
 package org.group1f.izuna.GameComponents;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.util.Random;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
+/**
+ *
+ * @author Mustafa
+ */
 public class Enemy extends AIControllable implements SpaceShip {
 
+    private long lastFired = 0;
     private Weapon defaultWeapon;
     private boolean isDying;
     private Animation rollLeft;
@@ -14,19 +20,42 @@ public class Enemy extends AIControllable implements SpaceShip {
     private int health;
     private boolean isRFinished = true;
 
-    public Enemy(Animation still, Animation rollLeft, Animation rollRight, SoundEffect enteringSound, int health) {
+    /**
+     * Constructs a default enemy object with given parameters.
+     *
+     * @param still
+     * @param rollLeft
+     * @param rollRight
+     * @param health
+     * @param defaultWeapon  
+     */
+    public Enemy(Animation still, Animation rollLeft, Animation rollRight, int health, Weapon defaultWeapon) {
         super(still);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
         this.enteringSound = enteringSound;
         this.health = health;
         isDying = false;
+        this.defaultWeapon = defaultWeapon;
     }
 
+    /**
+     * Sets the default weapon.
+     *
+     * @param defaultWeapon
+     */
+    public void setDefaultWeapon(Weapon defaultWeapon) {
+        this.defaultWeapon = defaultWeapon;
+    }
+
+    @Override
     public Enemy clone() {
-        return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), enteringSound, health);
+        return new Enemy(super.getStillAnimation().clone(), rollLeft.clone(), rollRight.clone(), health, defaultWeapon.clone());
     }
 
+    /**
+     *
+     */
     @Override
     public void checkStateToAnimate() {
         Animation newAnim = currentAnimation;
@@ -73,6 +102,10 @@ public class Enemy extends AIControllable implements SpaceShip {
         // oldvY = getvY();
     }
 
+    /**
+     *
+     * @param elapsedTime
+     */
     @Override
     public void update(long elapsedTime) {
         checkStateToAnimate();
@@ -86,14 +119,21 @@ public class Enemy extends AIControllable implements SpaceShip {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int getDieTime() {
         return 1000;
     }
 
+    /**
+     *
+     * @param newValue
+     */
     @Override
     public void setHealth(int newValue) {
-        System.out.println("SET HELATH:" + newValue);
         if (newValue > 100) {
             health = 100;
         } else {
@@ -101,18 +141,50 @@ public class Enemy extends AIControllable implements SpaceShip {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int getHealth() {
         return health;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public float getMaxSpeed() {
         return 1.0f;
     }
 
+    /**
+     *
+     * @param key
+     * @param time
+     * @return
+     */
     @Override
     public Weapon fire(String key, long time) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (time - lastFired < defaultWeapon.getRateOfFire()) {
+            return null;
+        }
+        Random rand = new Random();
+        int randomNumber = rand.nextInt(10);
+        if (randomNumber == 5) {
+            lastFired = time;
+            Weapon weapon = defaultWeapon.clone();
+            weapon.setDoesBelongEnemy(true);
+            
+            Image img = getCurrentImage();
+            int shipHeight = img.getHeight(null);
+            int weaponHeight = weapon.getCurrentImage().getHeight(null);
+            int place = Math.abs(weaponHeight - shipHeight) / 2;
+
+            weapon.startFiring(getPosition(), time, img.getWidth(null) - 30, place);
+            return weapon;
+        }
+        return null;
     }
 }

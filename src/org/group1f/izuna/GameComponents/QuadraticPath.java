@@ -4,11 +4,22 @@ import java.awt.Point;
 import Jama.Matrix;
 import Jama.LUDecomposition;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class QuadraticPath extends Path {
 
     private float[] coEfficients = new float[3];
     private Point middlePoint;
 
+    /**
+     * 
+     * @param start
+     * @param end
+     * @param middle
+     * @param duration
+     */
     public QuadraticPath(Point start, Point end, Point middle, long duration) {
         super(start, end, duration);
         this.middlePoint = middle;
@@ -17,6 +28,11 @@ public class QuadraticPath extends Path {
     
    
 
+    /**
+     * 
+     * @param time
+     * @return
+     */
     @Override
     public Point getPosition(long time) {
         long timeDiff = time - super.getStartTime();

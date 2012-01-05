@@ -10,6 +10,10 @@ import org.group1f.izuna.GameCore;
  */
 public class MainMenu extends Menu {
 
+    /**
+     * 
+     * @param game
+     */
     public MainMenu(final GameCore game) {
         super(game);
         // START GAME

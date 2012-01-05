@@ -14,10 +14,18 @@ public class LevelList {
     @ElementList
     private List<LevelInfo> List;
     
+    /**
+     * 
+     * @return
+     */
     public List<LevelInfo> getList() {
         return List;
     }
 
+    /**
+     * 
+     * @param list
+     */
     public void setList(List<LevelInfo> list) {
         this.List = list;
     }

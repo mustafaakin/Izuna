@@ -19,18 +19,34 @@ public class EnemyInfo {
     @Element
     private String Weapon;
 
+    /**
+     * 
+     * @return
+     */
     public String getEnterSound() {
         return EnterSound;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getHealth() {
         return Health;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getWeapon() {
         return Weapon;
     }

@@ -19,6 +19,10 @@ import org.group1f.izuna.GameComponents.Drawing.Sprite;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class LoadManager {
 
     private static HashMap<String, Animation> animationBucket;
@@ -34,6 +38,11 @@ public class LoadManager {
         // Making it singleton
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public static Animation getAnim(String key) {
         Animation a = animationBucket.get(key);
         if (a == null) {
@@ -42,6 +51,10 @@ public class LoadManager {
         return a.clone();
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     public static void init() throws Exception {
         menuBucket = new HashMap<String, Image>();
         imageBucket = new HashMap<String, Image>();
@@ -69,6 +82,12 @@ public class LoadManager {
         readExplosions();
     }
 
+    /**
+     * 
+     * @param isBig
+     * @param position
+     * @return
+     */
     public static GameObject getExplosion(boolean isBig, Point position) {
         Animation anim = getAnim("explosion_" + (isBig ? "big" : "small"));
         GameObject explosion = new GameObject(anim) {
@@ -82,7 +101,7 @@ public class LoadManager {
         return explosion;
     }
 
-    private static void readExplosions() {     
+    private static void readExplosions() {
         File rootSmall = new File("data/image/animation/explosion_small");
         File rootBig = new File("data/image/animation/explosion_big");
 
@@ -109,6 +128,9 @@ public class LoadManager {
 
     }
 
+    /**
+     * 
+     */
     public static void loadLevels() {
         try {
             levelBucket = new ArrayDeque<Level>();
@@ -178,15 +200,6 @@ public class LoadManager {
     }
 
     private static void initilazieSources(EnemyList enemies, WeaponList weapons) {
-        for (EnemyInfo enemy : enemies.getList()) {
-            String key = enemy.getKey();
-            Animation still = LoadManager.getAnim("ships/" + key + "/default");
-            Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
-            Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
-            SoundEffect enteringSound = LoadManager.getSoundEffect("enterance/" + key);
-            Enemy e = new Enemy(still, leftRoll, rightRoll, enteringSound, enemy.getHealth());
-            enemyBucket.put(key, e);
-        }
         for (WeaponInfo weapon : weapons.getList()) {
             String key = weapon.getKey();
 
@@ -201,15 +214,32 @@ public class LoadManager {
             weaponBucket.put(key, w);
             weaponDefaultCountBucket.put(key, weapon.getDefaultAmount()); // Storing it for further use.
         }
+        
+        for (EnemyInfo enemy : enemies.getList()) {
+            String key = enemy.getKey();
+            Animation still = LoadManager.getAnim("ships/" + key + "/default");
+            Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
+            Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
+            Weapon weapon = LoadManager.getWeapon(enemy.getWeapon());
+            weapon.setDoesBelongEnemy(true);
+            
+            Enemy e = new Enemy(still, leftRoll, rightRoll, enemy.getHealth(), weapon);
+            enemyBucket.put(key, e);
+        }
     }
 
+    /**
+     * 
+     * @param no
+     * @return
+     */
     public static Player getPlayer(int no) {
         String key = "player" + no;
         Animation still = LoadManager.getAnim("ships/" + key + "/default");
         Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
         Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
-        SoundEffect enteringSound = LoadManager.getSoundEffect("enterance/" + key);
-        Player p = new Player(new Point(600, 600), still.clone(), leftRoll.clone(), rightRoll.clone(), enteringSound);
+
+        Player p = new Player(new Point(600, 600), still.clone(), leftRoll.clone(), rightRoll.clone());
         p.addWeapon("proton_player1", -1);
         p.addWeapon("plasma_player1", 100);
         p.addWeapon("particle_player1", 25);
@@ -217,20 +247,41 @@ public class LoadManager {
         return p;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static Level getNextLevel() {
         return levelBucket.poll();
     }
 
+    /**
+     * 
+     * @param menu
+     * @param key
+     * @return
+     */
     public static Image getMenuImage(String menu, String key) {
         return (Image) menuBucket.get(menu + "-" + key);
     }
 
+    /**
+     * 
+     * @param menu
+     * @param key
+     * @return
+     */
     public static MenuElement getMenuElement(String menu, String key) {
         Image normal = LoadManager.getMenuImage(menu, key);
         Image roll = LoadManager.getMenuImage(menu, key + "R");
         return new MenuElement(roll, normal);
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public static SoundEffect getSoundEffect(String key) {
         SoundEffect effect = soundBucket.get(key);
         if (effect == null) {
@@ -318,6 +369,11 @@ public class LoadManager {
         return anim;
     }
 
+    /**
+     * 
+     * @param input
+     * @return
+     */
     public static BufferedImage transform(BufferedImage input) {
         AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
         tx.translate(-input.getWidth(null), 0);
@@ -325,18 +381,38 @@ public class LoadManager {
         return op.filter(input, null);
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public static Enemy getEnemy(String key) {
         return enemyBucket.get(key).clone();
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public static Weapon getWeapon(String key) {
         return weaponBucket.get(key).clone();
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public static Bonus getBonus(String key) {
         return null;
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public static Image getImage(String key) {
         return imageBucket.get(key);
     }

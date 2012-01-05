@@ -13,10 +13,23 @@ import org.group1f.izuna.GameCore;
  * @author mcad
  */
 public class Options extends Menu{
+    /**
+     * 
+     */
     public static final String SOUND = "sound";
+    /**
+     * 
+     */
     public static final String DIFFICULTY = "difficulty";
+    /**
+     * 
+     */
     public static final String _3D = "3D";
     
+    /**
+     * 
+     * @param game
+     */
     public Options(final GameCore game) {
         super(game);
         MenuButton sound = new MenuButton(LoadManager.getMenuElement("options", "soundDefault")) {

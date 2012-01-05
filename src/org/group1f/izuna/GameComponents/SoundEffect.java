@@ -4,11 +4,19 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import javazoom.jl.player.Player;
 
+/**
+ * 
+ * @author Mustafa
+ */
 public class SoundEffect {
 
     private String filename;
     private Player player;
 
+    /**
+     * 
+     * @param filename
+     */
     public SoundEffect(String filename) {
         this.filename = filename;
     }
@@ -18,12 +26,18 @@ public class SoundEffect {
         return new SoundEffect(filename);
     }
 
+    /**
+     * 
+     */
     public void close() {
         if (player != null) {
             player.close();
         }
     }
 
+    /**
+     * 
+     */
     public void play() {
         try {
             FileInputStream fis = new FileInputStream(filename);
@@ -40,7 +54,7 @@ public class SoundEffect {
                 try {
                     player.play();
                 } catch (Exception e) {
-                    System.out.println(e);
+                    e.printStackTrace();
                 }
             }
         }.start();

@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
+import javax.swing.text.Position;
 import org.group1f.izuna.Contollers.FullScreenManager;
 import org.group1f.izuna.Contollers.KeyboardHandler;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
@@ -27,18 +28,41 @@ import org.group1f.izuna.GameComponents.*;
 public class GameCore {
 
     private static Preferences prefs = Preferences.userNodeForPackage(GameCore.class);
+    /**
+     * 
+     */
     public GameState game = new GameState();
+    /**
+     * 
+     */
     public boolean inMenu = true;
+    /**
+     * 
+     */
     public KeyboardHandler input;
+    /**
+     * 
+     */
     public Level currentLevel;
+    /**
+     * 
+     */
     public Menu currentMenu;
     long startTime;
     long currentTime;
 
+    /**
+     * 
+     * @return
+     */
     public static Preferences preferences() {
         return prefs;
     }
 
+    /**
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         GameCore core = new GameCore();
         core.initialize();
@@ -77,6 +101,10 @@ public class GameCore {
         }
     }
 
+    /**
+     * 
+     * @param isSinglePlayer
+     */
     public void startGame(boolean isSinglePlayer) {
         if (isSinglePlayer) {
             game.p1 = LoadManager.getPlayer(1);
@@ -116,6 +144,9 @@ public class GameCore {
         enterMainMenuState();
     }
 
+    /**
+     * 
+     */
     public void enterMainMenuState() {
         game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
         game.backgroundMusic.play();
@@ -125,6 +156,10 @@ public class GameCore {
         inMenu = true;
     }
 
+    /**
+     * 
+     * @param e
+     */
     public void killEnemy(Enemy e) {
         List<Enemy> enemies = game.getEnemies();
         synchronized (enemies) {
@@ -155,6 +190,11 @@ public class GameCore {
     }
 
     // check player inputs for two players
+    /**
+     * 
+     * @param key
+     * @param isPressed
+     */
     public void inputFromKeyboard(Key key, boolean isPressed) {
         if (key == null) {
             return;
@@ -180,13 +220,13 @@ public class GameCore {
                 game.p1.setvY(2);
             }
             if (pressed.contains(Key.Player1_Weapon2)) {
-                fireWeapon("proton_player1");
+                fireUserWeapon("proton_player1");
             }
             if (pressed.contains(Key.Player1_Weapon3)) {
-                fireWeapon("plasma_player1");
+                fireUserWeapon("plasma_player1");
             }
             if (pressed.contains(Key.Player1_Weapon4)) {
-                fireWeapon("particle_player1");
+                fireUserWeapon("particle_player1");
             }
         }
         if (!inMenu && !isPressed) {
@@ -198,14 +238,25 @@ public class GameCore {
         }
     }
 
-    private void fireWeapon(String key) {
-        Weapon ok = game.p1.fire(key, System.currentTimeMillis());
-        if (ok != null) {
-            ok.playFire();
+    private void fireUserWeapon(String key) {
+        Weapon weapon = game.p1.fire(key, System.currentTimeMillis());
+        if (weapon != null) {
+            weapon.playFire();
         }
         ArrayList<Weapon> userWeapons = game.getUserWeapons();
         synchronized (userWeapons) {
-            userWeapons.add(ok);
+            userWeapons.add(weapon);
+        }
+    }
+
+    private void fireEnemyWeapon(Enemy enemy) {
+        Weapon weapon = enemy.fire("", System.currentTimeMillis());
+        if (weapon != null) {
+            weapon.playFire();
+        }
+        ArrayList<Weapon> enemyWeapons = game.getEnemyWeapons();
+        synchronized (enemyWeapons) {
+            enemyWeapons.add(weapon);
         }
     }
     /*
@@ -220,20 +271,21 @@ public class GameCore {
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
         synchronized (game.getEnemies()) {
-            for (Enemy e : game.getEnemies()) {
-                if (e == null) {
+            for (Enemy enemy : game.getEnemies()) {
+                if (enemy == null) {
                     continue;
                 }
-                if (PhysicsHandler.checkSpriteCollisions(e, game.p1)) {
+                fireEnemyWeapon(enemy);
+                if (PhysicsHandler.checkSpriteCollisions(enemy, game.p1)) {
                 }
-                if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(e, game.p2)) {
+                if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(enemy, game.p2)) {
                 } //
                 for (int i = 0; i < game.getUserWeapons().size(); i++) {
                     Weapon w = game.getUserWeapons().get(i);
                     if (w != null) {
-                        if (PhysicsHandler.checkSpriteCollisions(w, e)) {
-                            w.applyDamage(e);
-                            if ( e.getHealth() <= 0){
+                        if (PhysicsHandler.checkSpriteCollisions(w, enemy)) {
+                            w.applyDamage(enemy);
+                            if (enemy.getHealth() <= 0) {
                                 w.getExplodeSound().play();
                             }
                             if (w.getDamageAmount() < 100 && System.currentTimeMillis() - w.getLastFire() > w.getRateOfFire()) {
@@ -244,12 +296,27 @@ public class GameCore {
                 }
             }
         }
-        for (Weapon w : game.enemyWeapons) {
+
+        for (int i = 0; i < game.getEnemyWeapons().size(); i++) {
+            Weapon w = game.getEnemyWeapons().get(i);
+            if (w == null) {
+                continue;
+            }
             if (PhysicsHandler.checkSpriteCollisions(w, game.p1)) {
+                w.applyDamage(game.p1);
+                System.out.println("USER HEALTH: " + game.p1.getHealth());
+                if (game.p1.getHealth() <= 0) {
+                    Point p = new Point(game.p1.getPosition());
+                    GameObject explosion = LoadManager.getExplosion(true, p);
+                    game.getExplosions().add(explosion);
+                    w.getExplodeSound().play();
+                }
+                game.getEnemyWeapons().remove(w);
             }
             if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(w, game.p2)) {
             }
         }
+
         for (Bonus b : game.bonuses) {
             if (PhysicsHandler.checkSpriteCollisions(b, game.p1)) {
             }
@@ -258,13 +325,12 @@ public class GameCore {
         }
 
         game.getUserWeapons().removeAll(Collections.singletonList(null));
+        game.getEnemyWeapons().removeAll(Collections.singletonList(null));
 
         for (int i = 0; i < game.getEnemies().size(); i++) {
             Enemy enemy = game.getEnemies().get(i);
             if (enemy != null && enemy.getHealth() <= 0) {
                 Point p = new Point(enemy.getPosition());
-                System.out.println("Explosion: "+ p);
-                System.out.println("Enemy:" + enemy.getPosition());
                 killEnemy(enemy);
                 GameObject explosion = LoadManager.getExplosion(true, p);
                 game.getExplosions().add(explosion);
@@ -275,10 +341,8 @@ public class GameCore {
 
     private void movePlayer() {
     }
-    private boolean isRendering = false;
 
     private void renderBattlefield(long elapsedTime) {
-        isRendering = true;
         Graphics2D g = FullScreenManager.getGraphics();
         g.clearRect(0, 0, 2560, 1600);
         g.drawImage(LoadManager.getImage("menu_background"), 0, 0, null);
@@ -329,8 +393,28 @@ public class GameCore {
                 explosion.paint(g);
             }
         }
+
+        ArrayList<Weapon> enemyWeapons = game.getEnemyWeapons();
+        synchronized (enemyWeapons) {
+            if (!enemyWeapons.isEmpty()) {
+                try {
+                    for (Weapon k : enemyWeapons) {
+                        if (k != null) {
+                            if (System.currentTimeMillis() - k.getLastFire() > k.getAnimationDuration()) {
+                                userWeapons.remove(k);
+                                continue;
+                            }
+                            k.update(elapsedTime);
+                            k.paint(g);
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+
+
         g.dispose();
         FullScreenManager.update();
-        isRendering = false;
     }
 }
