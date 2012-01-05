@@ -29,10 +29,12 @@ public class KeyboardHandler implements KeyListener {
         map.put(KeyEvent.VK_LEFT, Key.Player1_Left);
         map.put(KeyEvent.VK_ESCAPE, Key.Escape);
         map.put(KeyEvent.VK_ENTER, Key.Enter);
-        map.put(KeyEvent.VK_B, Key.Player1_Weapon1);
-        map.put(KeyEvent.VK_F, Key.Player1_Weapon2);
-        map.put(KeyEvent.VK_G, Key.Player1_Weapon3);
-        map.put(KeyEvent.VK_H, Key.Player1_Weapon4);
+        map.put(KeyEvent.VK_H, Key.Player1_Weapon1);
+        map.put(KeyEvent.VK_U, Key.Player1_Weapon2);
+        map.put(KeyEvent.VK_K, Key.Player1_Weapon3);
+        map.put(KeyEvent.VK_L, Key.Player1_Weapon4);
+        map.put(KeyEvent.VK_SPACE, Key.Player1_Weapon5);
+                
     }
 
     /**
@@ -104,6 +106,7 @@ public class KeyboardHandler implements KeyListener {
          *
          */
         Player1_Weapon4,
+        Player1_Weapon5,
         /**
          * 
          */
@@ -136,6 +139,7 @@ public class KeyboardHandler implements KeyListener {
          *
          */
         Player2_Weapon4,
+        Player2_Weapon5,
         /**
          * 
          */

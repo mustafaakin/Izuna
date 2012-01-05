@@ -1,92 +1,74 @@
 <WeaponList>
 	<list>
-		<Weapon key="proton_player1">
+		<Weapon key="proton_player1" type="0">
 			<DefaultAmount>15000</DefaultAmount>
 			<CausedDamage>5</CausedDamage>
 			<FireSound>laser_1</FireSound>
-			<ExplodeSound>explosion_1</ExplodeSound>			
 			<RateOfFire>100</RateOfFire>
 			<Speed>350</Speed>
 		</Weapon>
-		<Weapon key="proton_player2">
+		<Weapon key="proton_player2" type="0">
 			<DefaultAmount>15000</DefaultAmount>
 			<CausedDamage>100</CausedDamage>
-			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
-			<RateOfFire>500</RateOfFire>
-			<Speed>1750</Speed>
+			<FireSound>laser_1</FireSound>
+			<RateOfFire>100</RateOfFire>
+			<Speed>350</Speed>
 		</Weapon>
-		<Weapon key="plasma_player1">
+		<Weapon key="plasma_player1" type="0">
 			<DefaultAmount>150</DefaultAmount>
 			<CausedDamage>25</CausedDamage>
 			<FireSound>laser_atari</FireSound>
-			<ExplodeSound>explosion_1</ExplodeSound>			
 			<RateOfFire>500</RateOfFire>
 			<Speed>2500</Speed>
 		</Weapon>
-		<Weapon key="plasma_player2">
+		<Weapon key="plasma_player2" type="0">
 			<DefaultAmount>150</DefaultAmount>
 			<CausedDamage>100</CausedDamage>
 			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
 			<RateOfFire>500</RateOfFire>
 			<Speed>2500</Speed>
 		</Weapon>
-		<Weapon key="particle_player1">
-			<DefaultAmount>5</DefaultAmount>
-			<CausedDamage>200</CausedDamage>
-			<FireSound>laser_2n</FireSound>
-			<ExplodeSound>explosion_3</ExplodeSound>			
-			<RateOfFire>4000</RateOfFire>
-			<Speed>-1</Speed>
-		</Weapon>
-		<Weapon key="particle_player2">
+		<Weapon key="particle" type="1">
 			<DefaultAmount>150</DefaultAmount>
 			<CausedDamage>100</CausedDamage>
-			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
-			<RateOfFire>500</RateOfFire>
-			<Speed>2500</Speed>
-		</Weapon>		
-		<Weapon key="dark_player1">
-			<DefaultAmount>150</DefaultAmount>
-			<CausedDamage>100</CausedDamage>
-			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
-			<RateOfFire>500</RateOfFire>
-			<Speed>2500</Speed>
-		</Weapon>
-		<Weapon key="dark_player2">
-			<DefaultAmount>150</DefaultAmount>
-			<CausedDamage>100</CausedDamage>
-			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
-			<RateOfFire>500</RateOfFire>
-			<Speed>2500</Speed>
-		</Weapon>
-		<Weapon key="enemy1">
-			<DefaultAmount>-1</DefaultAmount>
-			<CausedDamage>20</CausedDamage>
 			<FireSound>laser_2</FireSound>
-			<ExplodeSound>laser_2</ExplodeSound>			
-			<RateOfFire>2500</RateOfFire>
-			<Speed>1250</Speed>
-		</Weapon>
-		<Weapon key="enemy2">
-			<DefaultAmount>-1</DefaultAmount>
+			<RateOfFire>1500</RateOfFire>
+			<Speed>250</Speed>
+		</Weapon>		
+		<Weapon key="dark_matter" type="0">
+			<DefaultAmount>150</DefaultAmount>
 			<CausedDamage>100</CausedDamage>
 			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
-			<RateOfFire>500</RateOfFire>
-			<Speed>2500</Speed>
+			<RateOfFire>1500</RateOfFire>
+			<Speed>250</Speed>
 		</Weapon>
-		<Weapon key="enemy3">
-			<DefaultAmount>-1</DefaultAmount>
-			<CausedDamage>100</CausedDamage>
+		<Weapon key="super_desperation" type="2">
+			<DefaultAmount>150</DefaultAmount>
+			<CausedDamage>500</CausedDamage>
 			<FireSound>laser_blast</FireSound>
-			<ExplodeSound>laser_blast</ExplodeSound>			
-			<RateOfFire>500</RateOfFire>
-			<Speed>2500</Speed>
+			<RateOfFire>10000</RateOfFire>
+			<Speed>-1</Speed>
+		</Weapon>		
+		<Weapon key="enemy1" type="0">
+			<DefaultAmount>-1</DefaultAmount>
+			<CausedDamage>5</CausedDamage>
+			<FireSound>laser_2</FireSound>
+			<RateOfFire>4000</RateOfFire>
+			<Speed>1000</Speed>
+		</Weapon>
+		<Weapon key="enemy2" type="0">
+			<DefaultAmount>-1</DefaultAmount>
+			<CausedDamage>10</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<RateOfFire>5000</RateOfFire>
+			<Speed>1000</Speed>
+		</Weapon>
+		<Weapon key="enemy3" type="0">
+			<DefaultAmount>-1</DefaultAmount>
+			<CausedDamage>15</CausedDamage>
+			<FireSound>laser_blast</FireSound>
+			<RateOfFire>5000</RateOfFire>
+			<Speed>1000</Speed>
 		</Weapon>
 	</list>
 </WeaponList>

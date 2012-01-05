@@ -13,6 +13,9 @@ public class WeaponInfo {
 
     @Attribute
     private String key;
+    @Attribute
+    private int type;
+    
     @Element
     private int DefaultAmount;
     @Element
@@ -20,18 +23,19 @@ public class WeaponInfo {
     @Element
     private String FireSound;
     @Element
-    private String ExplodeSound;
-    @Element
     private int RateOfFire;
     @Element
     private int Speed;
-    
-    
+        
     @Override
     public String toString() {
         return key + "-" + DefaultAmount + "-" + CausedDamage;
     }
 
+    public int getType() {
+        return type;
+    }
+    
     /**
      * 
      * @return
@@ -76,63 +80,7 @@ public class WeaponInfo {
      * 
      * @return
      */
-    public String getExplodeSound() {
-        return ExplodeSound;
-    }
-
-    /**
-     * 
-     * @return
-     */
     public String getFireSound() {
         return FireSound;
-    }
-
-    /**
-     * 
-     * @param CausedDamage
-     */
-    public void setCausedDamage(int CausedDamage) {
-        this.CausedDamage = CausedDamage;
-    }
-
-    /**
-     * 
-     * @param DefaultAmount
-     */
-    public void setDefaultAmount(int DefaultAmount) {
-        this.DefaultAmount = DefaultAmount;
-    }
-
-    /**
-     * 
-     * @param key
-     */
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    /**
-     * 
-     * @param RateOfFire
-     */
-    public void setRateOfFire(int RateOfFire) {
-        this.RateOfFire = RateOfFire;
-    }
- 
-    /**
-     * 
-     * @param ExplodeSound
-     */
-    public void setExplodeSound(String ExplodeSound) {
-        this.ExplodeSound = ExplodeSound;
-    }
-
-    /**
-     * 
-     * @param FireSound
-     */
-    public void setFireSound(String FireSound) {
-        this.FireSound = FireSound;
     }
 }

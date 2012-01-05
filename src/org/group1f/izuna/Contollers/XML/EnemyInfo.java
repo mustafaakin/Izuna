@@ -12,21 +12,13 @@ import org.simpleframework.xml.Root;
 public class EnemyInfo {
     @Attribute
     private String key;
+
     @Element
     private int Health;
-    @Element
-    private String EnterSound;
+
     @Element
     private String Weapon;
-
-    /**
-     * 
-     * @return
-     */
-    public String getEnterSound() {
-        return EnterSound;
-    }
-
+    
     /**
      * 
      * @return

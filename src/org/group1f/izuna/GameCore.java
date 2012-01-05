@@ -6,11 +6,9 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
-import javax.swing.text.Position;
 import org.group1f.izuna.Contollers.FullScreenManager;
 import org.group1f.izuna.Contollers.KeyboardHandler;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
@@ -18,7 +16,6 @@ import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.Contollers.PhysicsHandler;
 import org.group1f.izuna.GUI.MainMenu;
 import org.group1f.izuna.GUI.Menu;
-import org.group1f.izuna.GameComponents.Drawing.Animation;
 import org.group1f.izuna.GameComponents.*;
 
 /**
@@ -29,30 +26,33 @@ public class GameCore {
 
     private static Preferences prefs = Preferences.userNodeForPackage(GameCore.class);
     /**
-     * 
+     *
      */
     public GameState game = new GameState();
     /**
-     * 
+     *
      */
     public boolean inMenu = true;
     /**
-     * 
+     *
      */
     public KeyboardHandler input;
     /**
-     * 
+     *
      */
     public Level currentLevel;
     /**
-     * 
+     *
      */
     public Menu currentMenu;
-    long startTime;
-    long currentTime;
+    private long startTime;
+    private long currentTime;
+    private long lastEnemyDeath;
+    private boolean doShowLevelCleared = false;
+    private boolean doShowWaveCleared = false;
 
     /**
-     * 
+     *
      * @return
      */
     public static Preferences preferences() {
@@ -60,7 +60,7 @@ public class GameCore {
     }
 
     /**
-     * 
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -102,13 +102,13 @@ public class GameCore {
     }
 
     /**
-     * 
+     *
      * @param isSinglePlayer
      */
     public void startGame(boolean isSinglePlayer) {
-        if (isSinglePlayer) {
-            game.p1 = LoadManager.getPlayer(1);
-        } else {
+        game.p1 = LoadManager.getPlayer(1);
+        if (!isSinglePlayer) {
+            game.p2 = LoadManager.getPlayer(2);
         }
         LoadManager.loadLevels();
         currentLevel = LoadManager.getNextLevel();
@@ -145,7 +145,7 @@ public class GameCore {
     }
 
     /**
-     * 
+     *
      */
     public void enterMainMenuState() {
         game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
@@ -156,8 +156,39 @@ public class GameCore {
         inMenu = true;
     }
 
+    public void tryToLoadNewLevel() {
+        long timeDifference = System.currentTimeMillis() - lastEnemyDeath;
+        if (timeDifference > 5000) {
+            if (currentLevel.isFinished()) {
+                currentLevel = LoadManager.getNextLevel();
+                if (currentLevel == null) {
+                    enterMainMenuState();
+                } else {
+                    AttackWave wave = this.currentLevel.startLevel();
+                    addWaveToGame(wave);
+                }
+                doShowLevelCleared = false;
+                doShowWaveCleared = false;
+            } else if (this.currentLevel.getCurrentWave().isFinished()) {
+                AttackWave wave = this.currentLevel.swapNextWave();
+                addWaveToGame(wave);
+                doShowLevelCleared = false;
+                doShowWaveCleared = false;
+            }
+        } else {
+            if (currentLevel.isFinished()) {
+                doShowLevelCleared = true;
+            } else if (currentLevel.getCurrentWave().isFinished()) {
+                doShowWaveCleared = true;
+            } else {
+                doShowLevelCleared = false;
+                doShowWaveCleared = false;
+            }
+        }
+    }
+
     /**
-     * 
+     *
      * @param e
      */
     public void killEnemy(Enemy e) {
@@ -166,18 +197,7 @@ public class GameCore {
             enemies.remove(e);
         }
         this.currentLevel.killEnemy(e);
-        if (currentLevel.isFinished()) {
-            currentLevel = LoadManager.getNextLevel();
-            if (currentLevel == null) {
-                enterMainMenuState();
-            } else {
-                AttackWave wave = this.currentLevel.startLevel();
-                addWaveToGame(wave);
-            }
-        } else if (this.currentLevel.getCurrentWave().isFinished()) {
-            AttackWave wave = this.currentLevel.swapNextWave();
-            addWaveToGame(wave);
-        }
+        lastEnemyDeath = System.currentTimeMillis();
     }
 
     private void addWaveToGame(AttackWave wave) {
@@ -191,7 +211,7 @@ public class GameCore {
 
     // check player inputs for two players
     /**
-     * 
+     *
      * @param key
      * @param isPressed
      */
@@ -200,33 +220,33 @@ public class GameCore {
             return;
         }
         if (!inMenu && isPressed) {
-            if (key.equals(Key.Player1_Weapon1)) {
-                if (!game.getEnemies().isEmpty()) {
-                    Enemy e = game.getEnemies().get(0);
-                    killEnemy(e);
-                }
-            }
             Set<Key> pressed = input.getActive();
             if (pressed.contains(Key.Player1_Left)) {
-                game.p1.setvX(-2);
+                game.p1.setvX(-3);
             }
             if (pressed.contains(Key.Player1_Right)) {
-                game.p1.setvX(2);
+                game.p1.setvX(3);
             }
             if (pressed.contains(Key.Player1_Up)) {
-                game.p1.setvY(-2);
+                game.p1.setvY(-3);
             }
             if (pressed.contains(Key.Player1_Down)) {
-                game.p1.setvY(2);
+                game.p1.setvY(3);
             }
-            if (pressed.contains(Key.Player1_Weapon2)) {
+            if (pressed.contains(Key.Player1_Weapon1)) {
                 fireUserWeapon("proton_player1");
             }
-            if (pressed.contains(Key.Player1_Weapon3)) {
+            if (pressed.contains(Key.Player1_Weapon2)) {
                 fireUserWeapon("plasma_player1");
             }
+            if (pressed.contains(Key.Player1_Weapon3)) {
+                fireUserWeapon("particle");
+            }
             if (pressed.contains(Key.Player1_Weapon4)) {
-                fireUserWeapon("particle_player1");
+                fireUserWeapon("dark_matter");
+            }
+            if (pressed.contains(Key.Player1_Weapon5)) {
+                fireUserWeapon("super_desperation");
             }
         }
         if (!inMenu && !isPressed) {
@@ -286,7 +306,6 @@ public class GameCore {
                         if (PhysicsHandler.checkSpriteCollisions(w, enemy)) {
                             w.applyDamage(enemy);
                             if (enemy.getHealth() <= 0) {
-                                w.getExplodeSound().play();
                             }
                             if (w.getDamageAmount() < 100 && System.currentTimeMillis() - w.getLastFire() > w.getRateOfFire()) {
                                 game.getUserWeapons().remove(w);
@@ -309,7 +328,6 @@ public class GameCore {
                     Point p = new Point(game.p1.getPosition());
                     GameObject explosion = LoadManager.getExplosion(true, p);
                     game.getExplosions().add(explosion);
-                    w.getExplodeSound().play();
                 }
                 game.getEnemyWeapons().remove(w);
             }
@@ -337,6 +355,8 @@ public class GameCore {
             } else {
             }
         }
+        tryToLoadNewLevel();
+
     }
 
     private void movePlayer() {
@@ -352,24 +372,7 @@ public class GameCore {
             Image background = game.backgroundLayers[i];
             g.drawImage(background, 0, 0, null);
         }
-        ArrayList<Weapon> userWeapons = game.getUserWeapons();
-        synchronized (userWeapons) {
-            if (!userWeapons.isEmpty()) {
-                try {
-                    for (Weapon k : userWeapons) {
-                        if (k != null) {
-                            if (System.currentTimeMillis() - k.getLastFire() > k.getAnimationDuration()) {
-                                userWeapons.remove(k);
-                                continue;
-                            }
-                            k.update(elapsedTime);
-                            k.paint(g);
-                        }
-                    }
-                } catch (Exception e) {
-                }
-            }
-        }
+
         List<Enemy> enemies = game.getEnemies();
         synchronized (enemies) {
             for (Enemy e : enemies) {
@@ -394,11 +397,11 @@ public class GameCore {
             }
         }
 
-        ArrayList<Weapon> enemyWeapons = game.getEnemyWeapons();
-        synchronized (enemyWeapons) {
-            if (!enemyWeapons.isEmpty()) {
+        ArrayList<Weapon> userWeapons = game.getUserWeapons();
+        synchronized (userWeapons) {
+            if (!userWeapons.isEmpty()) {
                 try {
-                    for (Weapon k : enemyWeapons) {
+                    for (Weapon k : userWeapons) {
                         if (k != null) {
                             if (System.currentTimeMillis() - k.getLastFire() > k.getAnimationDuration()) {
                                 userWeapons.remove(k);
@@ -411,6 +414,34 @@ public class GameCore {
                 } catch (Exception e) {
                 }
             }
+        }
+
+        ArrayList<Weapon> enemyWeapons = game.getEnemyWeapons();
+        synchronized (enemyWeapons) {
+            if (!enemyWeapons.isEmpty()) {
+                try {
+                    for (Weapon k : enemyWeapons) {
+                        if (k != null) {
+                            if (System.currentTimeMillis() - k.getLastFire() > k.getAnimationDuration()) {
+                                enemyWeapons.remove(k);
+                                continue;
+                            }
+                            k.update(elapsedTime);
+                            k.paint(g);
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        if (doShowLevelCleared) {
+            Image i = LoadManager.getImage("level_cleared");
+            g.drawImage(i, 600, 600, null);
+        } else if (doShowWaveCleared) {
+            Image i = LoadManager.getImage("wave_cleared");
+            g.drawImage(i, 600, 600, null);
+
         }
 
 

@@ -171,7 +171,7 @@ public class Enemy extends AIControllable implements SpaceShip {
             return null;
         }
         Random rand = new Random();
-        int randomNumber = rand.nextInt(10);
+        int randomNumber = rand.nextInt(30);
         if (randomNumber == 5) {
             lastFired = time;
             Weapon weapon = defaultWeapon.clone();

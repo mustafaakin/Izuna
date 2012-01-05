@@ -15,7 +15,6 @@ import org.group1f.izuna.Contollers.XML.*;
 import org.group1f.izuna.GUI.MenuElement;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 import org.group1f.izuna.GameComponents.*;
-import org.group1f.izuna.GameComponents.Drawing.Sprite;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -68,7 +67,7 @@ public class LoadManager {
         readSounds();
         initShipsImages();
         readWeaponAnims();
-
+        
         // XML Information files. 
         Serializer serializer = new Persister();
         File enemiesSource = new File("data/enemies.xml");
@@ -202,24 +201,26 @@ public class LoadManager {
     private static void initilazieSources(EnemyList enemies, WeaponList weapons) {
         for (WeaponInfo weapon : weapons.getList()) {
             String key = weapon.getKey();
-
+            
             Animation still = LoadManager.getAnim("weapons/" + key).clone();
-
             still.setAnimType(Animation.AnimationType.SMOOTH);
+            
             SoundEffect fire = LoadManager.getSoundEffect(weapon.getFireSound());
-            SoundEffect explosion = LoadManager.getSoundEffect(weapon.getExplodeSound());
-            Weapon w = new Weapon(still, null, null, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, explosion, weapon.getSpeed());
+            
+            Weapon w = new Weapon(still, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, weapon.getSpeed(), weapon.getType());
             w.setVisible(false);
-
+            
             weaponBucket.put(key, w);
             weaponDefaultCountBucket.put(key, weapon.getDefaultAmount()); // Storing it for further use.
         }
         
         for (EnemyInfo enemy : enemies.getList()) {
             String key = enemy.getKey();
+            
             Animation still = LoadManager.getAnim("ships/" + key + "/default");
             Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
             Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
+            
             Weapon weapon = LoadManager.getWeapon(enemy.getWeapon());
             weapon.setDoesBelongEnemy(true);
             
@@ -240,9 +241,11 @@ public class LoadManager {
         Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
 
         Player p = new Player(new Point(600, 600), still.clone(), leftRoll.clone(), rightRoll.clone());
-        p.addWeapon("proton_player1", -1);
-        p.addWeapon("plasma_player1", 100);
-        p.addWeapon("particle_player1", 25);
+        p.addWeapon("proton_player" + no, -1);
+        p.addWeapon("plasma_player" + no, 100);
+        p.addWeapon("particle", 25);
+        p.addWeapon("dark_matter", 5);
+        p.addWeapon("super_desperation", 1);
         p.setHealth(100);
         return p;
     }
@@ -291,6 +294,12 @@ public class LoadManager {
     }
 
     private static void readMenus() throws IOException {
+        File level_cleared = new File("data/image/level_cleared.png");
+        File wave_cleared = new File("data/image/wave_cleared.png");
+        
+        imageBucket.put("level_cleared", ImageIO.read(level_cleared));
+        imageBucket.put("wave_cleared", ImageIO.read(wave_cleared));
+        
         File background = new File("data/image/menu/background.png");
         imageBucket.put("menu_background", ImageIO.read(background));
         File root = new File("data/image/menu/");
@@ -396,6 +405,7 @@ public class LoadManager {
      * @return
      */
     public static Weapon getWeapon(String key) {
+        System.out.println(key);
         return weaponBucket.get(key).clone();
     }
 

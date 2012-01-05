@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import javazoom.jl.player.Player;
 
 /**
- * 
+ *
  * @author Mustafa
  */
 public class SoundEffect {
@@ -14,7 +14,7 @@ public class SoundEffect {
     private Player player;
 
     /**
-     * 
+     *
      * @param filename
      */
     public SoundEffect(String filename) {
@@ -27,7 +27,7 @@ public class SoundEffect {
     }
 
     /**
-     * 
+     *
      */
     public void close() {
         if (player != null) {
@@ -36,7 +36,7 @@ public class SoundEffect {
     }
 
     /**
-     * 
+     *
      */
     public void play() {
         try {
@@ -44,8 +44,7 @@ public class SoundEffect {
             BufferedInputStream bis = new BufferedInputStream(fis);
             player = new Player(bis);
         } catch (Exception e) {
-            System.out.println("Problem playing file: " + filename);
-            System.out.println(e);
+            System.err.println("Problem playing file: " + filename + ":" + e.getMessage());
         }
         new Thread() {
 
@@ -54,7 +53,7 @@ public class SoundEffect {
                 try {
                     player.play();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.err.println("SOUND ERROR:" + e.getMessage());
                 }
             }
         }.start();

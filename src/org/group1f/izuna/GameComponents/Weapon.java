@@ -1,11 +1,10 @@
 package org.group1f.izuna.GameComponents;
 
-import java.awt.Image;
 import java.awt.Point;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 
 /**
- * 
+ *
  * @author Mustafa
  */
 public class Weapon extends AIControllable {
@@ -13,12 +12,12 @@ public class Weapon extends AIControllable {
     private static long DEFAULT_WEAPON_DURATION = 500;
 
     /**
-     * 
+     *
      */
     public enum WeaponState {
 
         /**
-         * 
+         *
          */
         STATE_FIRED,
         /**
@@ -33,17 +32,14 @@ public class Weapon extends AIControllable {
     private WeaponState state;
     private int damageAmount;
     private int rateOfFire;
-    private Animation spaceShipDies; //this animation shows up when it damages to spaceship
-    private Animation weaponExplode;// this animation shows up when it cause spaceship explode,
-    //so there wont be needed extra sprites for other spaceships
+    private int type;
     private SoundEffect fireSound;
-    private SoundEffect explodeSound;
     private int speed;
     private long lastFire;
     private boolean doesBelongEnemy;
-    
+
     /**
-     * 
+     *
      */
     public void playFire() {
         if (fireSound != null) {
@@ -52,15 +48,15 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      * @param doesBelongEnemy
      */
     public void setDoesBelongEnemy(boolean doesBelongEnemy) {
         this.doesBelongEnemy = doesBelongEnemy;
     }
-    
+
     /**
-     * 
+     *
      * @return
      */
     public int getRateOfFire() {
@@ -68,7 +64,7 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getDamageAmount() {
@@ -76,7 +72,7 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public long getLastFire() {
@@ -84,7 +80,7 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      * @param still
      * @param die
      * @param explode
@@ -94,24 +90,26 @@ public class Weapon extends AIControllable {
      * @param explodeSound
      * @param speed
      */
-    public Weapon(Animation still, Animation die, Animation explode, int damageAmount, int rateOfFire, SoundEffect fireSound, SoundEffect explodeSound, int speed) {
+    public Weapon(Animation still, int damageAmount, int rateOfFire, SoundEffect fireSound, int speed, int type) {
         super(still);
-        this.weaponExplode = explode;
-        this.spaceShipDies = die;
         this.fireSound = fireSound;
-        this.explodeSound = explodeSound;
         this.damageAmount = damageAmount;
         this.rateOfFire = rateOfFire;
         this.speed = speed;
+        this.type = type;
     }
 
     @Override
     public Weapon clone() {
-        return new Weapon(super.getStillAnimation(), spaceShipDies, weaponExplode, damageAmount, rateOfFire, fireSound, explodeSound, speed);
+        return new Weapon(super.getStillAnimation(), damageAmount, rateOfFire, fireSound, speed, type);
+    }
+
+    public int getType() {
+        return type;
     }
 
     /**
-     * 
+     *
      * @param position
      * @param time
      * @param offsetX
@@ -121,12 +119,18 @@ public class Weapon extends AIControllable {
         lastFire = time;
         Point start = new Point(position);
         Point end = new Point(position);
-        start.x += offsetX;
-        start.y += offsetY;
-        
+
+        if (type == 2) {
+            start.x = 0;
+            start.y = 0;
+        } else {
+            start.x += offsetX;
+            start.y += offsetY;
+        }
+
         end.y = start.y;
-        end.x = doesBelongEnemy ? -200 : 1500; // The position that the weapon will disappear        
-        if (this.speed == -1) {
+        end.x = doesBelongEnemy ? -300 : 1500; // The position that the weapon will disappear        
+        if (type == 1 || type == 2) {
             end.x = start.x;
             end.y = start.y;
             LinearPath path = new LinearPath(start, end, 100);
@@ -140,7 +144,7 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void checkStateToAnimate() {
@@ -148,7 +152,7 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      * @param elapsedTime
      */
     @Override
@@ -158,7 +162,7 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      * @param a
      */
     public void applyDamage(SpaceShip a) {
@@ -171,7 +175,7 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public WeaponState getState() {
@@ -179,18 +183,10 @@ public class Weapon extends AIControllable {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public int getExplodeTime() {
         return 1000;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public SoundEffect getExplodeSound() {
-        return explodeSound;
     }
 }
