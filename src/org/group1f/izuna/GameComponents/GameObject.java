@@ -13,7 +13,8 @@ public abstract class GameObject extends Sprite {
     private Animation stillAnimation;
     private boolean isVisible;
     private SoundEffect dieSound;
-
+    private Point prevPosition;
+    
     /**
      * Her Game objesi genel bir ses çıkarmıyor, yani currentSound a gerek yok,
      * dieSound da yok olduklarında çıkacak ses fakat o da null olabilir o
@@ -75,16 +76,17 @@ public abstract class GameObject extends Sprite {
         return dieSound;
     }
 
+    public Point getPrevPosition() {
+        return prevPosition;
+    }
+    
+    
     @Override
     public Point getPosition() {
+        prevPosition = new Point(super.getPosition());
         super.getPosition().translate((int) getvX(), (int) getvY());
         return super.getPosition();
     }
-
-    
-    
-    
-    
 
     /**
      * 

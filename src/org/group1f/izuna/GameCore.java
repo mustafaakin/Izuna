@@ -303,7 +303,7 @@ public class GameCore {
         int i = rand.nextInt(100);
         if (i < 90) {
             Point position = new Point(e.getPosition());
-            Bonus bonus = new Bonus(LoadManager.getAnim("bonus").clone(), i, false);
+            Bonus bonus = new Bonus(LoadManager.getAnim("bonus").clone(), (i % 4 + 1) * 10, i % 2 == 0);
 
             Point start = new Point(position);
             Point end = new Point(position);
@@ -314,11 +314,9 @@ public class GameCore {
             bonus.addPath(path);
             bonus.setPathActivationTime(System.currentTimeMillis());
             this.game.getBonuses().add(bonus);
-            
+
             System.out.println("addingBonus");
         }
-
-
         game.getCurrentLevel().killEnemy(e);
         game.setLastEnemyDeath(System.currentTimeMillis());
         game.increaseScore(e.getDefaultHealth());
@@ -504,10 +502,18 @@ public class GameCore {
             }
         }
 
-        for (Bonus b : game.getBonuses()) {
-            if (PhysicsHandler.checkSpriteCollisions(b, game.getP1())) {
-            }
-            if (game.getP2() != null && PhysicsHandler.checkSpriteCollisions(b, game.getP2())) {
+        synchronized (game.getBonuses()) {
+            for (Bonus b : game.getBonuses()) {
+                if (PhysicsHandler.checkSpriteCollisions(b, game.getP1())) {
+                    b.applyBonus(game.getP1());
+                    game.getBonuses().remove(b);
+                    LoadManager.getSoundEffect("bonus").play();
+                }
+                if (game.getP2() != null && PhysicsHandler.checkSpriteCollisions(b, game.getP2())) {
+                    b.applyBonus(game.getP2());
+                    game.getBonuses().remove(b);
+                    LoadManager.getSoundEffect("bonus").play();
+                }
             }
         }
 
@@ -525,7 +531,6 @@ public class GameCore {
             }
         }
         tryToLoadNewLevel();
-
     }
 
     private void movePlayer(boolean isFirstPlayer, Set<Key> pressed, boolean isPressed) {
@@ -655,7 +660,7 @@ public class GameCore {
                 try {
                     for (Bonus k : bonus) {
                         if (k != null) {
-                            k.update(elapsedTime);                            
+                            k.update(elapsedTime);
                             k.paint(g);
                         }
                     }
@@ -674,6 +679,12 @@ public class GameCore {
 
         }
 
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+
+        g.drawString(game.getP1().getStatusText(1), 15, 700);
+        if (game.getP2() != null) {
+            g.drawString(game.getP2().getStatusText(2), 15, 15);
+        }
 
         g.dispose();
         FullScreenManager.update();

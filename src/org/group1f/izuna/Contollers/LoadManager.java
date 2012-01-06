@@ -135,7 +135,6 @@ public class LoadManager {
         } catch (IOException ex) {
             System.err.println("Could not read explosions: " + ex.getMessage());
         }
-
     }
 
     /**

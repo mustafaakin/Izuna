@@ -46,7 +46,7 @@ public class GameState {
     public boolean isShowWaveCleared() {
         return showWaveCleared;
     }
-        
+
     public SoundEffect getBackgroundMusic() {
         return backgroundMusic;
     }
@@ -154,8 +154,6 @@ public class GameState {
     public void setShowWaveCleared(boolean showWaveCleared) {
         this.showWaveCleared = showWaveCleared;
     }
-    
-    
 
     /**
      *
@@ -180,15 +178,17 @@ public class GameState {
     public synchronized ArrayList<Weapon> getUserWeapons() {
         return userWeapons;
     }
-    
-    public void increaseScore(int difference){
+
+    public void increaseScore(int difference) {
         int difficulty = GameCore.getDifficulty();
         double factor = 1;
-        if ( difficulty == 1){
+        if (difficulty == 1) {
             factor = 1.25;
-        } else if ( factor == 2){
+        } else if (factor == 2) {
             factor = 1.75;
         }
-        score += (double)(difference * factor);
+        score += (double) (difference * factor);
     }
+
+
 }

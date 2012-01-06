@@ -2,12 +2,13 @@ package org.group1f.izuna.GameComponents;
 
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.HashMap;
 import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
 /**
- * 
+ *
  * @author Mustafa
  */
 public class Player extends GameObject implements SpaceShip {
@@ -23,7 +24,7 @@ public class Player extends GameObject implements SpaceShip {
     private boolean isRFinished = true;
 
     /**
-     * 
+     *
      * @param currentPos
      * @param still
      * @param rollLeft
@@ -42,8 +43,16 @@ public class Player extends GameObject implements SpaceShip {
         isDying = false;
     }
 
+    public int getWeaponCount(String key) {
+        return this.weapons.get(key);
+    }
+
+    public void increaseWeapon(String key, int amount) {
+        addWeapon(key, weapons.get(key) + amount);
+    }
+
     /**
-     * 
+     *
      * @param key
      * @param amount
      */
@@ -52,7 +61,7 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void checkStateToAnimate() {
@@ -103,7 +112,7 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     * 
+     *
      * @param elapsedTime
      */
     @Override
@@ -120,7 +129,7 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
@@ -129,7 +138,7 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     * 
+     *
      * @param newValue
      */
     @Override
@@ -142,7 +151,7 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
@@ -151,7 +160,7 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     * 
+     *
      * @return
      */
     @Override
@@ -160,7 +169,7 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     * 
+     *
      * @param key
      * @param time
      * @return
@@ -183,12 +192,44 @@ public class Player extends GameObject implements SpaceShip {
             int shipHeight = img.getHeight(null);
             int weaponHeight = weapon.getCurrentImage().getHeight(null);
             int place = Math.abs(weaponHeight - shipHeight) / 2;
-            
+
             weapon.startFiring(getPosition(), time, img.getWidth(null) - 30, place);
             weapons.put(key, (i - 1));
             return weapon;
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Point getPosition() {
+        Point p = super.getPosition();
+        int width = this.getCurrentImage().getWidth(null);
+        int height = this.getCurrentImage().getHeight(null);
+
+        if (p.x < 0 ) {
+            p.x = 0;
+        } 
+        if (p.x > 1280 - height) {
+            p.x = 1280 - height;
+        }
+
+        if (p.y < 0) {
+            p.y = 0;
+        } 
+        if (p.y > 720 - width) {
+            p.y = 720 - width;
+        }
+
+        return p;
+    }
+
+    public String getStatusText(int player) {
+        String status = "Player " + player + "   Health: " + getHealth() + "   Weapons: "
+                + "   Plasma:" + getWeaponCount("plasma_player" + player)
+                + "   Dark Matter: " + getWeaponCount("dark_matter")
+                + "   Particle: " + getWeaponCount("particle")
+                + "   Super Desperation: " + getWeaponCount("super_desperation");
+        return status;
     }
 }
