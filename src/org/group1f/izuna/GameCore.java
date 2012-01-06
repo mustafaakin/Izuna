@@ -1,5 +1,6 @@
 package org.group1f.izuna;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -9,16 +10,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
-import org.group1f.izuna.Contollers.FullScreenManager;
-import org.group1f.izuna.Contollers.KeyboardHandler;
+import org.group1f.izuna.Contollers.*;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
-import org.group1f.izuna.Contollers.LoadManager;
-import org.group1f.izuna.Contollers.PhysicsHandler;
+import org.group1f.izuna.GUI.GameOver;
+import org.group1f.izuna.GUI.HighScores;
 import org.group1f.izuna.GUI.MainMenu;
 import org.group1f.izuna.GUI.Menu;
 import org.group1f.izuna.GameComponents.*;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
-import org.group1f.izuna.GameComponents.Drawing.Sprite;
 
 /**
  * @author Mustafa
@@ -55,6 +54,7 @@ public class GameCore {
     private int currentLevelNo;
     private GameObject backLayer;
     private GameObject frontLayer;
+    private String enteredCharsSoFar = "";
 
     /**
      *
@@ -83,11 +83,23 @@ public class GameCore {
         if (inMenu) {
             List<Image> images = currentMenu.getImagesToDraw();
             Graphics2D g = FullScreenManager.getGraphics();
+            g.setFont(new Font("Arial", Font.BOLD, 26));
             g.clearRect(0, 0, 2560, 1600);
             Image background = LoadManager.getImage("menu_background");
             g.drawImage(background, 0, 0, null);
             for (Image i : images) {
                 g.drawImage(i, 0, 0, null);
+            }
+            if (currentMenu instanceof HighScores) {
+                HighScores h = (HighScores) currentMenu;
+                int pos = 310;
+                for (Score score : h.getHighScores()) {
+                    String str = score.getName() + "  " + score.getHighScore();
+                    g.drawString(str, 555, pos);
+                    pos = pos + 35;
+                }
+            } else if (currentMenu instanceof GameOver) {
+                g.drawString(enteredCharsSoFar, 500, 500);
             }
             g.dispose();
             FullScreenManager.update();
@@ -100,7 +112,6 @@ public class GameCore {
             } catch (Exception e) {
                 System.err.println("Error: " + e.getMessage());
             }
-            //          movePlayer();
         }
     }
 
@@ -147,7 +158,7 @@ public class GameCore {
             System.exit(-1);
         }
         FullScreenManager.getFullScreenWindow().addKeyListener(input);
-        enterMainMenuState();
+        enterMainMenu();
     }
 
     private void initBackgrounds() {
@@ -209,11 +220,20 @@ public class GameCore {
     /**
      *
      */
-    public void enterMainMenuState() {
+    public void enterMainMenu() {
         game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
         game.backgroundMusic.play();
         startTime = System.currentTimeMillis();
         currentMenu = new MainMenu(this);
+        currentTime = startTime;
+        inMenu = true;
+    }
+
+    public void enterGameOver() {
+        game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
+        game.backgroundMusic.play();
+        startTime = System.currentTimeMillis();
+        currentMenu = new GameOver(this);
         currentTime = startTime;
         inMenu = true;
     }
@@ -224,7 +244,7 @@ public class GameCore {
             if (currentLevel.isFinished()) {
                 currentLevel = LoadManager.getNextLevel();
                 if (currentLevel == null) {
-                    enterMainMenuState();
+                    enterGameOver();
                 } else {
                     currentLevelNo++;
                     AttackWave wave = this.currentLevel.startLevel();
@@ -273,7 +293,13 @@ public class GameCore {
         }
     }
 
+    public void keyTypeFromKeyboard(char c) {
+        if (inMenu && currentMenu instanceof GameOver) {
+            enteredCharsSoFar += c;
+        }
+    }
     // check player inputs for two players
+
     /**
      *
      * @param key

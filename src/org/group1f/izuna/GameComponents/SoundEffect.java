@@ -3,6 +3,7 @@ package org.group1f.izuna.GameComponents;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import javazoom.jl.player.Player;
+import org.group1f.izuna.GameCore;
 
 /**
  *
@@ -39,6 +40,10 @@ public class SoundEffect {
      *
      */
     public void play() {
+        boolean doPlay = GameCore.preferences().getBoolean("sound", true);
+        if (!doPlay) {
+            return;
+        }
         try {
             FileInputStream fis = new FileInputStream(filename);
             BufferedInputStream bis = new BufferedInputStream(fis);

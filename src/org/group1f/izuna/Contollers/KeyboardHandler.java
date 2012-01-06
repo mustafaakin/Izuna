@@ -60,7 +60,8 @@ public class KeyboardHandler implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) { // Dont'need
+    public void keyTyped(KeyEvent e) {
+        owner.keyTypeFromKeyboard(e.getKeyChar());
     }
 
     @Override

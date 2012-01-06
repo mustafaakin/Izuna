@@ -5,22 +5,26 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Queue;
-import java.util.Random;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.util.*;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.XML.*;
 import org.group1f.izuna.GUI.MenuElement;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 import org.group1f.izuna.GameComponents.*;
+import org.group1f.izuna.GameCore;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 /**
- * 
+ *
  * @author Mustafa
  */
 public class LoadManager {
@@ -39,7 +43,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      */
@@ -52,7 +56,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @throws Exception
      */
     public static void init() throws Exception {
@@ -68,7 +72,7 @@ public class LoadManager {
         readSounds();
         initShipsImages();
         readWeaponAnims();
-        
+
         // XML Information files. 
         Serializer serializer = new Persister();
         File enemiesSource = new File("data/enemies.xml");
@@ -81,14 +85,14 @@ public class LoadManager {
         loadLevels();
         readExplosions();
     }
-    
-    public static SoundEffect getAnExplosionSound(){
+
+    public static SoundEffect getAnExplosionSound() {
         Random r = new Random();
         return soundBucket.get("explosion_" + (r.nextInt(5) + 1));
     }
 
     /**
-     * 
+     *
      * @param isBig
      * @param position
      * @return
@@ -134,12 +138,12 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      */
     public static void loadLevels() {
         try {
             File root = new File("data/image/background");
-            for ( File f : root.listFiles()){
+            for (File f : root.listFiles()) {
                 imageBucket.put("background/" + f.getName().replace(".jpg", ""), ImageIO.read(f));
             }
             System.out.println(imageBucket.keySet());
@@ -212,36 +216,36 @@ public class LoadManager {
     private static void initilazieSources(EnemyList enemies, WeaponList weapons) {
         for (WeaponInfo weapon : weapons.getList()) {
             String key = weapon.getKey();
-            
+
             Animation still = LoadManager.getAnim("weapons/" + key).clone();
             still.setAnimType(Animation.AnimationType.SMOOTH);
-            
+
             SoundEffect fire = LoadManager.getSoundEffect(weapon.getFireSound());
-            
+
             Weapon w = new Weapon(still, weapon.getCausedDamage(), weapon.getRateOfFire(), fire, weapon.getSpeed(), weapon.getType());
             w.setVisible(false);
-            
+
             weaponBucket.put(key, w);
             weaponDefaultCountBucket.put(key, weapon.getDefaultAmount()); // Storing it for further use.
         }
-        
+
         for (EnemyInfo enemy : enemies.getList()) {
             String key = enemy.getKey();
-            
+
             Animation still = LoadManager.getAnim("ships/" + key + "/default");
             Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
             Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
-            
+
             Weapon weapon = LoadManager.getWeapon(enemy.getWeapon());
             weapon.setDoesBelongEnemy(true);
-            
+
             Enemy e = new Enemy(still, leftRoll, rightRoll, enemy.getHealth(), weapon);
             enemyBucket.put(key, e);
         }
     }
 
     /**
-     * 
+     *
      * @param no
      * @return
      */
@@ -250,7 +254,7 @@ public class LoadManager {
         Animation still = LoadManager.getAnim("ships/" + key + "/default");
         Animation leftRoll = LoadManager.getAnim("ships/" + key + "/left");
         Animation rightRoll = LoadManager.getAnim("ships/" + key + "/right");
-        Point position = no == 1 ? new Point(100,100) : new Point(100,300);
+        Point position = no == 1 ? new Point(100, 100) : new Point(100, 300);
         Player p = new Player(position, still.clone(), leftRoll.clone(), rightRoll.clone());
         p.addWeapon("proton_player" + no, -1);
         p.addWeapon("plasma_player" + no, 100);
@@ -262,7 +266,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static Level getNextLevel() {
@@ -270,7 +274,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param menu
      * @param key
      * @return
@@ -280,7 +284,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param menu
      * @param key
      * @return
@@ -292,7 +296,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      */
@@ -307,10 +311,10 @@ public class LoadManager {
     private static void readMenus() throws IOException {
         File level_cleared = new File("data/image/level_cleared.png");
         File wave_cleared = new File("data/image/wave_cleared.png");
-        
+
         imageBucket.put("level_cleared", ImageIO.read(level_cleared));
         imageBucket.put("wave_cleared", ImageIO.read(wave_cleared));
-        
+
         File background = new File("data/image/menu/background.png");
         imageBucket.put("menu_background", ImageIO.read(background));
         File root = new File("data/image/menu/");
@@ -390,7 +394,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param input
      * @return
      */
@@ -402,7 +406,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      */
@@ -411,7 +415,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      */
@@ -421,7 +425,7 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      */
@@ -430,11 +434,45 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param key
      * @return
      */
     public static Image getImage(String key) {
         return imageBucket.get(key);
+    }
+
+    public static ArrayList<Score> getHighScores() {
+        ArrayList<Score> scores = new ArrayList<Score>();
+        try {
+            String page = getHTML("http://localhost/izuna/get.php");
+            String rows[] = page.split(",");
+            for (int i = 0; i < rows.length; i++) {
+                String cols[] = rows[i].split(";");
+                scores.add(new Score(Integer.parseInt(cols[2]), cols[0], cols[1]));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return scores;
+    }
+
+    private static String getHTML(String urlToRead) throws ProtocolException, IOException {
+        URL url;
+        HttpURLConnection conn;
+        BufferedReader rd;
+        String line;
+        String result = "";
+
+        url = new URL(urlToRead);
+        conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        while ((line = rd.readLine()) != null) {
+            result += line;
+        }
+        rd.close();
+
+        return result;
     }
 }
