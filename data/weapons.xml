@@ -65,7 +65,7 @@
 		</Weapon>
 		<Weapon key="enemy3" type="0">
 			<DefaultAmount>-1</DefaultAmount>
-			<CausedDamage>15</CausedDamage>
+			<CausedDamage>25</CausedDamage>
 			<FireSound>laser_4</FireSound>
 			<RateOfFire>1500</RateOfFire>
 			<Speed>500</Speed>

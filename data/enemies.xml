@@ -17,7 +17,7 @@
 			<Weapon>enemy2</Weapon>
 		</Enemy>		
 		<Enemy key="boss">
-			<Health>5000</Health>
+			<Health>600</Health>
 			<Weapon>enemy3</Weapon>
 		</Enemy>		
 		<Enemy key="player">

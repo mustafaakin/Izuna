@@ -171,10 +171,122 @@
 							<Paths>
 								<Path type="linear">
 									<startX>1400</startX>
-									<startY>200</startY>
+									<startY>50</startY>
 									<endX>900</endX>
-									<endY>200</endY>
+									<endY>50</endY>
 									<duration>1500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>50</startY>
+									<endX>900</endX>
+									<endY>150</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>150</startY>
+									<endX>900</endX>
+									<endY>50</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>50</startY>
+									<endX>900</endX>
+									<endY>150</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>150</startY>
+									<endX>900</endX>
+									<endY>50</endY>
+									<duration>3500</duration>
+								</Path>								
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>50</startY>
+									<endX>900</endX>
+									<endY>150</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>150</startY>
+									<endX>900</endX>
+									<endY>50</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>50</startY>
+									<endX>900</endX>
+									<endY>150</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>150</startY>
+									<endX>900</endX>
+									<endY>50</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>50</startY>
+									<endX>900</endX>
+									<endY>150</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>150</startY>
+									<endX>900</endX>
+									<endY>50</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>50</startY>
+									<endX>900</endX>
+									<endY>150</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>150</startY>
+									<endX>900</endX>
+									<endY>50</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>50</startY>
+									<endX>900</endX>
+									<endY>150</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>150</startY>
+									<endX>900</endX>
+									<endY>50</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>50</startY>
+									<endX>900</endX>
+									<endY>150</endY>
+									<duration>3500</duration>
+								</Path>
+								<Path type="linear">
+									<startX>900</startX>
+									<startY>150</startY>
+									<endX>900</endX>
+									<endY>50</endY>
+									<duration>3500</duration>
 								</Path>								
 							</Paths>
 						</Enemy>
@@ -188,7 +300,7 @@
 			<Waves>
 				<Wave>
 					<Enemies>
-						<Enemy key="blueShipA">
+						<Enemy key="blueShip">
 							<Paths>
 								<Path type="linear">
 									<startX>1400</startX>
@@ -196,6 +308,15 @@
 									<endX>950</endX>
 									<endY>100</endY>
 									<duration>1500</duration>
+								</Path>
+								<Path type="quadratic">
+									<startX>950</startX>
+									<startY>100</startY>
+									<midX>750</midX>
+									<midY>300</midY>									
+									<endX>410</endX>
+									<endY>230</endY>
+									<duration>3500</duration>
 								</Path>
 							</Paths>
 						</Enemy>
