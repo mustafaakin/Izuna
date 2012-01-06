@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 /**
- * 
+ *
  * @author Mustafa
  */
 public class Level {
@@ -12,23 +12,24 @@ public class Level {
     private Queue<AttackWave> waves;
     private AttackWave currentWave;
     private String password;
+
     /**
-     * 
-     * @return
+     * This function gets current attack wave.
+     * @return currentWave
      */
     public AttackWave getCurrentWave() {
         return currentWave;
     }
 
     /**
-     * 
+     * This function creates attack waves.
      */
     public Level() {
         waves = new ArrayDeque<AttackWave>();
     }
 
     /**
-     * 
+     * This function adds attack waves.
      * @param wave
      */
     public void addWave(AttackWave wave) {
@@ -36,8 +37,8 @@ public class Level {
     }
 
     /**
-     * 
-     * @return
+     * This function starts the level.
+     * @return currentWave : current attack wave
      */
     public AttackWave startLevel() {
         currentWave = waves.poll();
@@ -45,8 +46,8 @@ public class Level {
     }
 
     /**
-     * 
-     * @return
+     * This function swaps the next attack wave.
+     * @return currentWave : current attack wave.
      */
     public AttackWave swapNextWave() {
         if (currentWave.isFinished()) {
@@ -61,34 +62,38 @@ public class Level {
     }
 
     /**
-     * 
-     * @return
+     * This function handles attack wave is finished or not.
+     *
+     * @return waves.isEmpty() && currentWave.isFinished() : if both attack
+     * waves and current attack waves are finished, it is true.
+     *
      */
     public boolean isFinished() {
         return waves.isEmpty() && currentWave.isFinished();
     }
 
     /**
-     * 
-     * @param e
+     * This function removes enemy.
+     *
+     * @param e : enemy of the game
      */
     public void killEnemy(Enemy e) {
         currentWave.removeEnemy(e);
     }
 
     /**
-     * 
-     * @return
+     *
+     * @return the password indicated for this level
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * 
-     * @param password
+     *
+     * @param password password for this level
      */
     public void setPassword(String password) {
         this.password = password;
-    } 
+    }
 }

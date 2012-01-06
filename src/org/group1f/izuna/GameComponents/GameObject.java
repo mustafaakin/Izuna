@@ -16,9 +16,7 @@ public abstract class GameObject extends Sprite {
     private Point prevPosition;
     
     /**
-     * Her Game objesi genel bir ses çıkarmıyor, yani currentSound a gerek yok,
-     * dieSound da yok olduklarında çıkacak ses fakat o da null olabilir o
-     * yüzden constructora koymadım
+     * Very simple GameObject that can be drawn on screen
      * @param still Animation to be displayed when no any other animation is being shown.
      */
     public GameObject(Animation still) {
@@ -98,8 +96,8 @@ public abstract class GameObject extends Sprite {
     public abstract void checkStateToAnimate();
 
     /**
-     * 
-     * @param g
+     * Draws this image to the screen by using the given graphics object
+     * @param g the graphics that this object will be drawn to
      */
     public void paint(Graphics2D g) {
         g.drawImage(getCurrentImage(), getPosition().x, getPosition().y, null);

@@ -1,64 +1,66 @@
 package org.group1f.izuna.GameComponents.Drawing;
 
-import java.awt.*;
+import java.awt.Image;
 import java.util.ArrayList;
-
 import org.group1f.izuna.GameCore;
 
 /**
+ * Animation class provides user to animate Image sequences. 
+ * It automatically updates corresponding images according to their frame duration 
+ * and elapsed time.
  * 
- * @author Mustafa
+ * @author Nail AKINCI
  */
 public class Animation {
 
     /**
-     * 
+     * Determines the type of the animation that is used, Smooth or REPEAT.
      */
     public enum AnimationType {
 
         /**
-         * 
+         * If animation type is REPEAT, it starts form the beginning after it is ended.
          */
         REPEAT,
         /**
-         *
+         * If animation type is SMOOTH, it returns to initial state by rewinding frames, after animation lasts.
          */
         SMOOTH
     }
     private AnimationType animType = AnimationType.REPEAT;
     /**
-     * 
+     * It determines the duration of an Image in an animation.
      */
     public static final long FRAME_DURATION = 1000 / 24;
     /**
-     * 
+     * It is used only in smooth animation, if animation is ended, it starts the rewinding procedure.
      */
     public boolean ended = false;
     private boolean isFinished = false;
     private ArrayList<AnimationFrame> frames;
     /**
-     * 
+     * It shows which frame is active currently.
      */
     protected int currentFrameIndex;
     /**
-     * 
+     * Holds the total time of the animation.
      */
     protected long totalDuration;
     /**
-     * 
+     * Holds the elapsed time of the animation.
      */
     protected long elapsedTime;
 
     /**
      * 
-     * @return
+     * @return Index of the current frame.
      */
     public int getCurrentFrameIndex() {
         return currentFrameIndex;
     }
 
     /**
-     * 
+     * Initialize a new animation.
      */
     public Animation() {
         this(new ArrayList<AnimationFrame>());
@@ -66,7 +68,7 @@ public class Animation {
 
     /**
      * 
-     * @return
+     * @return Checks whether its last frame of the animation.
      */
     public boolean isLastFrame() {
         return currentFrameIndex == frames.size() - 1;
@@ -78,7 +80,7 @@ public class Animation {
     }
 
     /**
-     * 
+     * Starts the animation from its beginning
      */
     public synchronized void startOver() {
         elapsedTime = 0;
@@ -87,7 +89,7 @@ public class Animation {
 
     /**
      * 
-     * @return
+     * @return Image frames of the animation.
      */
     public ArrayList<AnimationFrame> getFrames() {
         return frames;
@@ -104,8 +106,8 @@ public class Animation {
     }
 
     /**
-     * 
-     * @param passedTime
+     * Updates the animation according to elapsed time.If time has come, put next or previous image onto the screen.
+     * @param passedTime time in milliseconds.
      */
     public synchronized void update(long passedTime) {
         if (frames.size() > 1) {
@@ -129,7 +131,7 @@ public class Animation {
             currentFrameIndex++;
         }
         if (animType == AnimationType.SMOOTH) { //smooth
-            while (ended && !timeCorrespondImage2(currentFrameIndex)) {
+            while (ended && !timeCorrespondImageRewind(currentFrameIndex)) {
                 currentFrameIndex--;
             }
 
@@ -140,8 +142,8 @@ public class Animation {
     }
 
     /**
-     * 
-     * @return
+     * If animation is smooth, it needs to be refined to initial position.
+     * @return whether it is refining.
      */
     public synchronized boolean refine() {
         if (!ended) {
@@ -158,7 +160,7 @@ public class Animation {
 
     /**
      * 
-     * @return
+     * @return whether its refinement completed.
      */
     public synchronized boolean finished() {
         if (isFinished) {
@@ -170,20 +172,19 @@ public class Animation {
         }
     }
 
-    //eğer bi saçmalık olursa ilk buraya bak
     /**
-     * 
-     * @param index
-     * @return
+     * Checks whether previous image needs to be displayed,
+     * @param index current index
+     * @return true if previous image needs to be displayed, false otherwise.
      */
-    protected boolean timeCorrespondImage2(int index) {
+    protected boolean timeCorrespondImageRewind(int index) {
         long timeChecked = 0;
 
         for (int i = 0; i <= index; i++) {
             timeChecked += FRAME_DURATION;
         }
 
-        //özellikle ilk bu ife bak
+        //if there is a mistake look at it first
         if ((totalDuration - timeChecked) < elapsedTime && !(timeChecked == FRAME_DURATION)) {
             return false;
         } else {
@@ -192,9 +193,9 @@ public class Animation {
     }
 
     /**
-     * 
-     * @param index
-     * @return
+     * Checks whether next image needs to be displayed,
+     * @param index current index
+     * @return true if next image needs to be displayed, false otherwise.
      */
     protected boolean timeCorrespondImage(int index) {
         long timeChecked = 0;
@@ -211,25 +212,25 @@ public class Animation {
     }
 
     /**
-     * 
-     * @param value
+     * Sets the type of the animation SMOOTH or REPEAT
+     * @param value AnimationType SMOOTH or REPEAT
      */
     public void setAnimType(AnimationType value) {
         animType = value;
     }
 
     /**
-     * 
-     * @return
+     * Gets the type of the animation SMOOTH or REPEAT
+     * @return  AnimationType SMOOTH or REPEAT
      */
     public AnimationType getAnimType() {
         return animType;
     }
 
     /**
-     * 
-     * @param img
-     * @param img3D
+     * Adds new a new Frame to the Animation and extend the totalDuration accordingly.
+     * @param img Image
+     * @param img3D Image
      */
     public synchronized void addFrame(Image img, Image img3D) {
         totalDuration += FRAME_DURATION;
@@ -237,8 +238,8 @@ public class Animation {
     }
 
     /**
-     * 
-     * @return
+     * Returns the image that needs to be currently displayed.
+     * @return Image that corresponds to currentFrame Index.
      */
     public synchronized Image getImage() {
         if (frames.isEmpty()) {
@@ -249,8 +250,8 @@ public class Animation {
     }
 
     /**
-     * 
-     * @return
+     * Returns passed time from the beginning of the animation.
+     * @return elapsed time
      */
     public long getElapsedTime() {
         return elapsedTime;
@@ -261,30 +262,10 @@ public class Animation {
     }
 
     /*
-     * public synchronized void oldupdate(long passedTime) { if (frames.size() >
-     * 1) { elapsedTime += passedTime; }
-     *
-     * if (elapsedTime >= totalDuration) { elapsedTime = elapsedTime %
-     * totalDuration; currentFrameIndex = 0; }
-     *
-     * while (!timeCorrespondImage(currentFrameIndex)) { currentFrameIndex++; }
-     * }
-     */
-    /*
-     * public synchronized void oldupdate2(long passedTime) { if (!ended &&
-     * frames.size() > 1) { elapsedTime += passedTime; }
-     *
-     *
-     * if ( !ended && elapsedTime >= totalDuration) { currentFrameIndex =
-     * frames.size()-1; } else if (ended){ elapsedTime = elapsedTime %
-     * totalDuration; }
-     *
-     *
-     * while (!timeCorrespondImage(currentFrameIndex)) { currentFrameIndex++; }
-     * while ( ended && !timeCorrespondImage2(currentFrameIndex))
-     * currentFrameIndex--;
-     *
-     * if(ended && currentFrameIndex == 0) isFinished = true; }
+     * Animation Frame class stores 2d and 3d images that will be used in animations, in the memory. It
+     * stores both 2d and 3d images of the animation sequences but if an object has no 3d image, both
+     * stores the same image. Because it makes images ready before animation and it will be only used
+     * in Animation class so it is an inner class of animation.
      */
     private class AnimationFrame {
 

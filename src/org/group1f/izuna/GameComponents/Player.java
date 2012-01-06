@@ -8,8 +8,10 @@ import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.GameComponents.Drawing.*;
 
 /**
- *
- * @author Mustafa
+ * The Player class inherits from GameObject class and SpaceShip class. 
+ * Holds information of a player, which is controlled by keyboard (despite AIControllable s which are
+ * controlled by Path list)
+ * @author Nail AKINCI
  */
 public class Player extends GameObject implements SpaceShip {
 
@@ -19,16 +21,16 @@ public class Player extends GameObject implements SpaceShip {
     private Animation rollLeft;
     private Animation rollRight;
     private int health;
-    //proton cannon and plasma cutter is infinite
+
     private float oldvY = 0.0f;
     private boolean isRFinished = true;
 
     /**
-     *
-     * @param currentPos
-     * @param still
-     * @param rollLeft
-     * @param rollRight
+     * Constructs a default player object with given parameters.
+     * @param currentPos current position
+     * @param still default animation
+     * @param rollLeft left roll animation
+     * @param rollRight right roll animation
      */
     public Player(Point currentPos, Animation still, Animation rollLeft, Animation rollRight) {
         super(still);
@@ -46,32 +48,32 @@ public class Player extends GameObject implements SpaceShip {
     /**
      * 
      * @param key
-     * @return
+     * @return the remaining weapon count from the weapon
      */
     public int getWeaponCount(String key) {
         return this.weapons.get(key);
     }
 
     /**
-     * 
-     * @param key
-     * @param amount
+     * Increases the given weapon's count by amount
+     * @param key weapon key
+     * @param amount quantity to increase
      */
     public void increaseWeapon(String key, int amount) {
         addWeapon(key, weapons.get(key) + amount);
     }
 
     /**
-     *
-     * @param key
-     * @param amount
+     * Adds given weapon to the player
+     * @param key name of the weapon
+     * @param amount quantity of the weapon
      */
     public void addWeapon(String key, int amount) {
         weapons.put(key, amount);
     }
 
     /**
-     *
+     * Arranges and changes the current animation with respect to their speed and direction.
      */
     @Override
     public void checkStateToAnimate() {
@@ -122,8 +124,8 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     *
-     * @param elapsedTime
+     * Updates the animation and position according to elapsed time.
+     * @param elapsedTime passed time.
      */
     @Override
     public void update(long elapsedTime) {
@@ -139,8 +141,8 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     *
-     * @return
+     * Returns dying time before its disposed.
+     * @return dying time in milliseconds.
      */
     @Override
     public int getDieTime() {
@@ -148,8 +150,8 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     *
-     * @param newValue
+     * Changes Health with its new value, it can be used to adjust health after bonuses and damages that are inflicted.
+     * @param newValue integer Health
      */
     @Override
     public void setHealth(int newValue) {
@@ -161,8 +163,8 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     *
-     * @return
+     * Returns Remaining health of the player.
+     * @return integer Health
      */
     @Override
     public int getHealth() {
@@ -170,19 +172,19 @@ public class Player extends GameObject implements SpaceShip {
     }
 
     /**
-     *
-     * @return
+     * 
+     * @return max speed that player can reach.
      */
     @Override
     public float getMaxSpeed() {
-        return 0.8f;
+        return 3.0f;
     }
 
     /**
-     *
-     * @param key
-     * @param time
-     * @return
+     * Fires the specified weapon with given key
+     * @param key weapon type
+     * @param time time
+     * @return Weapon
      */
     @Override
     public Weapon fire(String key, long time) {

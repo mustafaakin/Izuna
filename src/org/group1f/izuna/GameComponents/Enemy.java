@@ -7,8 +7,10 @@ import org.group1f.izuna.GameComponents.Drawing.*;
 import org.group1f.izuna.GameCore;
 
 /**
- *
- * @author Mustafa
+ * The Enemy class inherits from AIControllable class and SpaceShip class. 
+ * As different from spaceship, it has a list of Weapon to damage to the
+ * user and enters the scene with a sound.
+ * @author Nail AKINCI
  */
 public class Enemy extends AIControllable implements SpaceShip {
 
@@ -25,11 +27,11 @@ public class Enemy extends AIControllable implements SpaceShip {
     /**
      * Constructs a default enemy object with given parameters.
      *
-     * @param still
-     * @param rollLeft
-     * @param rollRight
-     * @param health
-     * @param defaultWeapon
+     * @param still default animation
+     * @param rollLeft left roll animation
+     * @param rollRight right roll animation
+     * @param health Health of the enemy
+     * @param defaultWeapon default weapon of the enemy
      */
     public Enemy(Animation still, Animation rollLeft, Animation rollRight, int health, Weapon defaultWeapon) {
         super(still);
@@ -57,10 +59,10 @@ public class Enemy extends AIControllable implements SpaceShip {
         return defaultHealth;
     }
 
-    /**
+   /**
      * Sets the default weapon.
      *
-     * @param defaultWeapon
+     * @param defaultWeapon weapon
      */
     public void setDefaultWeapon(Weapon defaultWeapon) {
         this.defaultWeapon = defaultWeapon;
@@ -72,7 +74,7 @@ public class Enemy extends AIControllable implements SpaceShip {
     }
 
     /**
-     *
+     * Arranges and changes the current animation with respect to their speed and direction.
      */
     @Override
     public void checkStateToAnimate() {
@@ -121,8 +123,8 @@ public class Enemy extends AIControllable implements SpaceShip {
     }
 
     /**
-     *
-     * @param elapsedTime
+     * Updates the animation and position according to elapsed time.
+     * @param elapsedTime passed time.
      */
     @Override
     public void update(long elapsedTime) {
@@ -138,26 +140,26 @@ public class Enemy extends AIControllable implements SpaceShip {
     }
 
     /**
-     *
-     * @return
+     * Returns dying time before its disposed.
+     * @return dying time in milliseconds.
      */
     @Override
     public int getDieTime() {
         return 1000;
     }
-
+    
     /**
-     *
-     * @param newValue
+     * Changes Health with its new value to damage enemies.
+     * @param newValue integer Health
      */
     @Override
     public void setHealth(int newValue) {
         health = newValue;
     }
-
+    
     /**
-     *
-     * @return
+     * Returns Remaining health of the enemy.
+     * @return integer Health
      */
     @Override
     public int getHealth() {
@@ -166,7 +168,7 @@ public class Enemy extends AIControllable implements SpaceShip {
 
     /**
      *
-     * @return
+     * @return max speed that an enemy spaceship can reach.
      */
     @Override
     public float getMaxSpeed() {
@@ -174,10 +176,10 @@ public class Enemy extends AIControllable implements SpaceShip {
     }
 
     /**
-     *
-     * @param key
-     * @param time
-     * @return
+     * Gives a brand new Weapon object if the enemy can fire a weapon.
+     * @param key weapon type
+     * @param time time
+     * @return Weapon
      */
     @Override
     public Weapon fire(String key, long time) {

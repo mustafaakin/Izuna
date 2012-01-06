@@ -5,8 +5,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
- * 
- * @author Mustafa
+ * Sprite Class is positions the animation sequences that are created by the animation class. It is the
+ * parent class of the GameObject class that provides all game objects animations and movement
+ * ability on the screen. It has also critical role on the physics since it creates collision rectangles with
+ * respect to the sizes of the animation frames.
+ * @author Nail AKINCI
  */
 abstract public class Sprite {
 
@@ -15,21 +18,21 @@ abstract public class Sprite {
     private float vY;
     private float oldvY = 0.0f;
     /**
-     * 
+     * Current animation of the Sprite.
      */
     protected Animation currentAnimation;
     private Rectangle collisionRectangle;
 
     /**
-     * 
+     * Initialize Sprite at the position (0,0)
      */
     public Sprite() {
         this(new Point(0, 0));
     }
 
     /**
-     * 
-     * @param position
+     * Initialize Sprite at the given position
+     * @param position Point
      */
     public Sprite(Point position) {
         this.position = position;
@@ -39,24 +42,24 @@ abstract public class Sprite {
     }
 
     /**
-     * 
-     * @return
+     * Returns the height of the image from current animation.
+     * @return currentAnimation's Image height in int.
      */
     public int getHeight() {
         return currentAnimation.getImage().getHeight(null);
     }
 
     /**
-     * 
-     * @return
+     * Returns the width of the image from current animation.
+     * @return currentAnimation's Image width in int.
      */
     public int getWidth() {
         return currentAnimation.getImage().getWidth(null);
     }
 
     /**
-     * 
-     * @param elapsedTime
+     * Updates the position of the collisionRectangle and the Image of the currentAnimation 
+     * @param elapsedTime elapsed time in milliseconds.
      */
     public void update(long elapsedTime) {
         currentAnimation.update(elapsedTime);
@@ -65,7 +68,7 @@ abstract public class Sprite {
 
     /**
      * 
-     * @return
+     * @return Image of the currentAnimation
      */
     public Image getCurrentImage() {
         return currentAnimation.getImage();
@@ -73,7 +76,7 @@ abstract public class Sprite {
 
     /**
      * 
-     * @return
+     * @return currentAnimation
      */
     public Animation getCurrentAnim() {
         return currentAnimation;
@@ -81,7 +84,7 @@ abstract public class Sprite {
 
     /**
      * 
-     * @return
+     * @return duration of the currentAnimation
      */
     public long getAnimationDuration() {
         return currentAnimation.getFrames().size() * Animation.FRAME_DURATION;
@@ -124,15 +127,15 @@ abstract public class Sprite {
 
     /**
      * 
-     * @return
+     * @return previous velocity of the Y
      */
     public float getOldvY() {
         return oldvY;
     }
 
     /**
-     * 
-     * @param oldvY
+     * Sets previous velocity of the Y
+     * @param oldvY previous velocity of the Y
      */
     public void setOldvY(float oldvY) {
         this.oldvY = oldvY;
@@ -147,16 +150,16 @@ abstract public class Sprite {
     }
 
     /**
-     * 
-     * @return
+     * Returns the collision rectangle that needs to be used in physic tests.
+     * @return the collisionRectangle
      */
     public Rectangle getCollisionRectangle() {
         return collisionRectangle;
     }
 
     /**
-     * 
-     * @param collisionRectangle
+     * Sets the collision rectangle that needs to be used in physic tests.
+     * @param collisionRectangle Rectangle
      */
     public void setCollisionRectangle(Rectangle collisionRectangle) {
         this.collisionRectangle = collisionRectangle;

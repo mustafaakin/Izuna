@@ -2,11 +2,11 @@ package org.group1f.izuna.GameComponents;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 
 /**
- * 
+ * This class will just provide a list of Path objects, for which needed position calculation. 
+ * All the CPU controlled objects must extend this abstract class.
  * @author Mustafa
  */
 public abstract class AIControllable extends GameObject {
@@ -16,7 +16,7 @@ public abstract class AIControllable extends GameObject {
 
     /**
      * 
-     * @param still
+     * @param still still(initial) animation
      */
     public AIControllable(Animation still) {
         super(still);
@@ -24,14 +24,14 @@ public abstract class AIControllable extends GameObject {
     }
 
     /**
-     * 
+     * Sets the starting position of the path.
      */
     public void setStartingPosition() {
         setPosition(this.paths.get(0).getStartPoint());
     }
     
     /**
-     * 
+     * Adds Path p to the path list
      * @param p
      */
     public void addPath(Path p) {
@@ -40,8 +40,8 @@ public abstract class AIControllable extends GameObject {
 
     // Pathlerin ilkinin time ı x ise diğerinin start ı x.start + x.duration olmalı.
     /**
-     * 
-     * @param startTime
+     * Sets the activation time for the paths.
+     * @param startTime start time of the path in milliseconds
      */
     public void setPathActivationTime(long startTime) {
         if (!paths.isEmpty()) {

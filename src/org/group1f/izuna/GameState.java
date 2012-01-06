@@ -1,13 +1,12 @@
 package org.group1f.izuna;
 
-import java.awt.Image;
 import java.util.ArrayList;
-import java.util.List;
 import org.group1f.izuna.GameComponents.*;
-import org.group1f.izuna.GameComponents.Drawing.Sprite;
 
 /**
- *
+ * The GameState class, manages the states of the game. It will hold all the information of a game state. Objects are not stored in generic GameObject
+ * format because we want to avoid “instance of” checks for collisions to improve the physics
+ * calculation performance.
  * @author Mustafa
  */
 public class GameState {

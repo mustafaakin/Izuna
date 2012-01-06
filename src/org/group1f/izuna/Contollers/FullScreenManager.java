@@ -5,8 +5,8 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 /**
- * 
- * @author Mustafa
+ * The FullScreenManager class creates a JFrame for the game, and arrange fullscreen bussiness in it.
+ * @author Nail AKINCI
  */
 public class FullScreenManager {
 
@@ -16,7 +16,7 @@ public class FullScreenManager {
     }
 
     /**
-     * 
+     * Initializes the Graphic environment for the game.
      */
     public static void initGraphics() {
         GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -52,8 +52,8 @@ public class FullScreenManager {
     }
 
     /**
-     * 
-     * @return
+     * checks whether graphics is initialized then returns the 2d Graphics in the buffer.
+     * @return Graphics2D
      */
     public static Graphics2D getGraphics() {
         if (vc == null) {
@@ -69,7 +69,7 @@ public class FullScreenManager {
     }
 
     /**
-     * 
+     * Applies double buffering to prevent screen tearing.
      */
     public static void update() {
         Window window = vc.getFullScreenWindow();
@@ -83,8 +83,8 @@ public class FullScreenManager {
     }
 
     /**
-     * 
-     * @return
+     * Returns the JFrame that is currently used in the game.
+     * @return JFrame
      */
     public static JFrame getFullScreenWindow() {
         return (JFrame) vc.getFullScreenWindow();
