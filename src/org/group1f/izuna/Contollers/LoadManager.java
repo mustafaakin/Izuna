@@ -138,6 +138,11 @@ public class LoadManager {
      */
     public static void loadLevels() {
         try {
+            File root = new File("data/image/background");
+            for ( File f : root.listFiles()){
+                imageBucket.put("background/" + f.getName().replace(".jpg", ""), ImageIO.read(f));
+            }
+            System.out.println(imageBucket.keySet());
             levelBucket = new ArrayDeque<Level>();
             Serializer serializer = new Persister();
             File levelsSource = new File("data/levels.xml");

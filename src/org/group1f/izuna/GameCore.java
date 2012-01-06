@@ -17,6 +17,8 @@ import org.group1f.izuna.Contollers.PhysicsHandler;
 import org.group1f.izuna.GUI.MainMenu;
 import org.group1f.izuna.GUI.Menu;
 import org.group1f.izuna.GameComponents.*;
+import org.group1f.izuna.GameComponents.Drawing.Animation;
+import org.group1f.izuna.GameComponents.Drawing.Sprite;
 
 /**
  * @author Mustafa
@@ -50,6 +52,9 @@ public class GameCore {
     private long lastEnemyDeath;
     private boolean doShowLevelCleared = false;
     private boolean doShowWaveCleared = false;
+    private int currentLevelNo;
+    private GameObject backLayer;
+    private GameObject frontLayer;
 
     /**
      *
@@ -74,9 +79,6 @@ public class GameCore {
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
      */
-    int active = 0;
-    long counter = 0;
-
     private void gameLoop() {
         if (inMenu) {
             List<Image> images = currentMenu.getImagesToDraw();
@@ -92,11 +94,12 @@ public class GameCore {
         } else {
             long elapsedTime = System.currentTimeMillis() - currentTime;
             currentTime += elapsedTime;
-
-            // system time is needed
-
-            renderBattlefield(elapsedTime);
-            updateBattlefield(elapsedTime);
+            try {
+                renderBattlefield(elapsedTime);
+                updateBattlefield(elapsedTime);
+            } catch (Exception e) {
+                System.err.println("Error: " + e.getMessage());
+            }
             //          movePlayer();
         }
     }
@@ -107,13 +110,15 @@ public class GameCore {
      */
     public void startGame(boolean isSinglePlayer) {
         game.p1 = LoadManager.getPlayer(1);
-        isSinglePlayer = false;
         if (!isSinglePlayer) {
             game.p2 = LoadManager.getPlayer(2);
         }
         LoadManager.loadLevels();
+
         currentLevel = LoadManager.getNextLevel();
         AttackWave wave = currentLevel.startLevel();
+        initBackgrounds();
+
         List<Enemy> enemies = wave.startWave(System.currentTimeMillis());
         for (Enemy enemy : enemies) {
             enemy.setPathActivationTime(System.currentTimeMillis());
@@ -145,6 +150,62 @@ public class GameCore {
         enterMainMenuState();
     }
 
+    private void initBackgrounds() {
+        Animation back = new Animation();
+        Image i_back = LoadManager.getImage("background/" + currentLevelNo);
+        System.out.println("GETTING BACK" + i_back);
+        back.addFrame(i_back, i_back);
+
+        this.backLayer = new GameObject(back) {
+
+            int count = 0;
+
+            @Override
+            public void checkStateToAnimate() {
+            }
+
+            @Override
+            public void update(long elapsedTime) {
+                count++;
+                if (count == 2) {
+                    count = 0;
+                } else {
+                    return;
+                }
+                getPosition().translate(-1, 0);
+
+                super.update(elapsedTime);
+
+            }
+        };
+
+
+        Animation front = new Animation();
+        Image i_front = LoadManager.getImage("background/stars.png");
+        front.addFrame(i_front, i_front);
+
+        this.frontLayer = new GameObject(front) {
+
+            int count = 0;
+
+            @Override
+            public void checkStateToAnimate() {
+            }
+
+            @Override
+            public void update(long elapsedTime) {
+                count++;
+                if (count == 5) {
+                    count = 0;
+                } else {
+                    return;
+                }
+                super.getPosition().translate(-1, 0);
+                super.update(elapsedTime);
+            }
+        };
+    }
+
     /**
      *
      */
@@ -165,7 +226,9 @@ public class GameCore {
                 if (currentLevel == null) {
                     enterMainMenuState();
                 } else {
+                    currentLevelNo++;
                     AttackWave wave = this.currentLevel.startLevel();
+                    initBackgrounds();
                     addWaveToGame(wave);
                 }
                 doShowLevelCleared = false;
@@ -403,7 +466,12 @@ public class GameCore {
     private void renderBattlefield(long elapsedTime) {
         Graphics2D g = FullScreenManager.getGraphics();
         g.clearRect(0, 0, 2560, 1600);
-        g.drawImage(LoadManager.getImage("menu_background"), 0, 0, null);
+
+        this.backLayer.update(elapsedTime);
+        this.frontLayer.update(elapsedTime);
+
+        this.backLayer.paint(g);
+        this.frontLayer.paint(g);
 
         game.p1.update(elapsedTime);
         game.p1.paint(g);
