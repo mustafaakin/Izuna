@@ -5,7 +5,7 @@ import Jama.Matrix;
 import Jama.LUDecomposition;
 
 /**
- * 
+ *
  * @author Mustafa
  */
 public class QuadraticPath extends Path {
@@ -14,24 +14,24 @@ public class QuadraticPath extends Path {
     private Point middlePoint;
 
     /**
-     * 
-     * @param start
-     * @param end
-     * @param middle
-     * @param duration
+     * @param start The position that the object is gonna start moving at this
+     * path
+     * @param middle The 3rd position needed to calculate quadratic path.
+     * @param end The position that the object is gonna end moving at this path
+     * @param duration The duration that the object is gonna move from start to
+     * end
      */
     public QuadraticPath(Point start, Point end, Point middle, long duration) {
         super(start, end, duration);
         this.middlePoint = middle;
         setEquation();
     }
-    
-   
 
     /**
-     * 
-     * @param time
-     * @return
+     * Calculates the position that the object is gonna be on the given time
+     *
+     * @param time Timestamp which indicates the requested position
+     * @return The position that object should be on.
      */
     @Override
     public Point getPosition(long time) {
@@ -48,10 +48,13 @@ public class QuadraticPath extends Path {
         float resultingX = diffX * incrRatio + result.x;
         float resultingY = coEfficients[0] * resultingX * resultingX + coEfficients[1] * resultingX + coEfficients[2];
 
-        result.move((int) resultingX,(int) resultingY);
+        result.move((int) resultingX, (int) resultingY);
         return result;
     }
 
+    /**
+     * Calculates the quadratic equation from the 3 points given.
+     */
     private void setEquation() {
         int[] x = new int[3];
         int[] y = new int[3];

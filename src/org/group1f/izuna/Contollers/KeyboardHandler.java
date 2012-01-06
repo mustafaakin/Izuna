@@ -16,8 +16,8 @@ public class KeyboardHandler implements KeyListener {
     private Hashtable<Integer, Key> map;
 
     /**
-     *
-     * @param owner
+     * It is used to map the keys to the some actions.
+     * @param owner The observer object, that is needed to be notified.
      */
     public KeyboardHandler(GameCore owner) {
         this.owner = owner;
@@ -53,8 +53,8 @@ public class KeyboardHandler implements KeyListener {
     }
 
     /**
-     *
-     * @return
+     * Active: pressed but not released at that moment
+     * @return a set of keys, that is active
      */
     public Set<Key> getActive() {
         return active.keySet();
@@ -86,7 +86,7 @@ public class KeyboardHandler implements KeyListener {
     }
 
     /**
-     *
+     * The abstraction enumeration for handling keys.
      */
     public enum Key {
 
@@ -178,11 +178,11 @@ public class KeyboardHandler implements KeyListener {
 
     // For both released & pressed keys, this method will be invoked.
     /**
-     *
-     * @param e
-     * @return
+     * Provides conversion between KeyCode and Key
+     * @param event The event that is fired by any piece from KeyListener
+     * @return the key
      */
-    public Key resolveKey(KeyEvent e) {
-        return map.get(e.getKeyCode());
+    public Key resolveKey(KeyEvent event) {
+        return map.get(event.getKeyCode());
     }
 }

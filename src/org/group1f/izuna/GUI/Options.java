@@ -75,7 +75,7 @@ public class Options extends Menu{
 
             @Override
             public void onInteracted(KeyboardHandler.Key key) {
-                game.currentMenu = new MainMenu(game); 
+                 getOwner().setCurrentMenu(new MainMenu(game)); 
             }
         };
         this.addButton(sound);

@@ -20,36 +20,35 @@ import org.group1f.izuna.GameComponents.Drawing.Animation;
 public class GameCore {
 
     private static Preferences prefs = Preferences.userNodeForPackage(GameCore.class);
-    /**
-     *
-     */
-    public GameState game = new GameState();
-    /**
-     *
-     */
-    public boolean inMenu = true;
-    /**
-     *
-     */
-    public KeyboardHandler input;
-    /**
-     *
-     */
-    public Menu currentMenu;
+    private GameState game = new GameState();
+    private boolean inMenu = true;
+    private KeyboardHandler input;
+    private Menu currentMenu;
     private GameObject backLayer;
     private GameObject frontLayer;
     private String enteredCharsSoFar = "";
     private int lastGameScore = 0;
 
+    public Menu getCurrentMenu() {
+        return currentMenu;
+    }
+
+    public void setCurrentMenu(Menu currentMenu) {
+        this.currentMenu = currentMenu;
+    }
+
     /**
+     * The game preferences.
      *
-     * @return
+     * @return this game's preferences which are only specific to the user in
+     * the computer
      */
     public static Preferences preferences() {
         return prefs;
     }
 
     /**
+     * Starts the game.
      *
      * @param args
      */
@@ -62,16 +61,17 @@ public class GameCore {
     }
 
     /**
-     * 
-     * @return
+     * 0: Easy, 1:Medium, 2: Hard
+     *
+     * @return the current difficulty
      */
     public static int getDifficulty() {
         return GameCore.preferences().getInt("difficulty", 0);
     }
+
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
      */
-
     private void gameLoop() {
         if (inMenu) {
             List<Image> images = currentMenu.getImagesToDraw();
@@ -113,8 +113,10 @@ public class GameCore {
     }
 
     /**
+     * Starts a game with either one player or two players.
      *
-     * @param isSinglePlayer
+     * @param isSinglePlayer true if only one player will play, false if two
+     * player is intended to play.
      */
     public void startGame(boolean isSinglePlayer) {
         game.setP1(LoadManager.getPlayer(1));
@@ -195,7 +197,6 @@ public class GameCore {
             }
         };
 
-
         Animation front = new Animation();
         Image i_front = LoadManager.getImage("background/stars.png");
         front.addFrame(i_front, i_front);
@@ -228,7 +229,7 @@ public class GameCore {
     }
 
     /**
-     *
+     * Game enters the main menu state
      */
     public void enterMainMenu() {
         game.setBackgroundMusic(LoadManager.getSoundEffect("main_menu"));
@@ -240,7 +241,7 @@ public class GameCore {
     }
 
     /**
-     * 
+     * Game enters the Game over menu state
      */
     public void enterGameOver() {
         game.setBackgroundMusic(LoadManager.getSoundEffect("main_menu"));
@@ -252,7 +253,9 @@ public class GameCore {
     }
 
     /**
-     * 
+     * For entering user name or level password, it returns the entered
+     * characters by user so far
+     *
      * @return
      */
     public String getEnteredCharsSoFar() {
@@ -260,23 +263,28 @@ public class GameCore {
     }
 
     /**
-     * 
-     * @return
+     * Different from game score, it holds the last score to store the score
+     * when game state is lost.
+     *
+     * @return Last game score.
      */
     public int getLastGameScore() {
         return lastGameScore;
     }
 
     /**
-     * 
-     * @return
+     * GameState, which holds all the GameObject and provides synchronized
+     * access to them
+     *
+     * @return all the game objects that is in the battlefield
      */
     public GameState getGame() {
         return game;
     }
 
     /**
-     * 
+     * If all the enemies are died, it waits for 5 seconds, and then loads the
+     * next attack wave or the enemy or it finishes the game.
      */
     public void tryToLoadNewLevel() {
         long timeDifference = System.currentTimeMillis() - game.getLastEnemyDeath();
@@ -312,18 +320,20 @@ public class GameCore {
     }
 
     /**
+     * Removes the enemy from battlefield and tries to genereate a bonus from
+     * the enemy.
      *
-     * @param e
+     * @param enemy the enemy to be removed
      */
-    public void killEnemy(Enemy e) {
+    public void killEnemy(Enemy enemy) {
         List<Enemy> enemies = game.getEnemies();
         synchronized (enemies) {
-            enemies.remove(e);
+            enemies.remove(enemy);
         }
         Random rand = new Random();
         int i = rand.nextInt(100);
         if (i < 10) { // 10% probability of having bonus
-            Point position = new Point(e.getPosition());
+            Point position = new Point(enemy.getPosition());
             Bonus bonus = new Bonus(LoadManager.getAnim("bonus").clone(), (i % 4 + 1) * 10, i % 2 == 0); // %50 health, %50 bonus, added health varies from 10 to 30.
 
             Point start = new Point(position);
@@ -336,17 +346,17 @@ public class GameCore {
             bonus.setPathActivationTime(System.currentTimeMillis());
             this.game.getBonuses().add(bonus);
         }
-        game.getCurrentLevel().killEnemy(e);
+        game.getCurrentLevel().killEnemy(enemy);
         game.setLastEnemyDeath(System.currentTimeMillis());
-        
-        int difficulty = GameCore.getDifficulty();        
+
+        int difficulty = GameCore.getDifficulty();
         double factor = 1;
-        if ( difficulty == 1){
+        if (difficulty == 1) {
             factor = 1.25;
-        } else if ( difficulty == 2){
+        } else if (difficulty == 2) {
             factor = 1.75;
         }
-        game.increaseScore((int)(e.getDefaultHealth() * factor));
+        game.increaseScore((int) (enemy.getDefaultHealth() * factor));
     }
 
     private void addWaveToGame(AttackWave wave) {
@@ -359,7 +369,8 @@ public class GameCore {
     }
 
     /**
-     * 
+     * Checks whether the given password is valid for any levels and loads if a
+     * password is for some level.
      */
     public void checkPassword() {
         LoadManager.loadLevels();
@@ -385,27 +396,28 @@ public class GameCore {
     }
 
     /**
-     * 
-     * @param c
+     * Adds the typed character, if its key code is between 32 and 128.
+     *
+     * @param character the character typed
      */
-    public void keyTypeFromKeyboard(char c) {
-        if (c > 32 && c < 128) {
+    public void keyTypeFromKeyboard(char character) {
+        if (character > 32 && character < 128) {
             if (inMenu) {
                 if (currentMenu instanceof GameOver) {
-                    enteredCharsSoFar += c;
+                    enteredCharsSoFar += character;
                 } else if (currentMenu instanceof Password && enteredCharsSoFar.length() < 4) {
-                    enteredCharsSoFar += c;
+                    enteredCharsSoFar += character;
                     enteredCharsSoFar = enteredCharsSoFar.toUpperCase();
                 }
             }
         }
     }
-    // check player inputs for two players
 
     /**
+     * The observer, that is notified from the keyboard handler
      *
-     * @param key
-     * @param isPressed
+     * @param key The key that is pressed or released
+     * @param isPressed whether key is pressed or released
      */
     public void inputFromKeyboard(Key key, boolean isPressed) {
         if (key == null) {
@@ -487,15 +499,8 @@ public class GameCore {
             enemyWeapons.add(weapon);
         }
     }
-    /*
-     * In this class the operations below needs to be implemented in this order
-     * 1) if the level is over load next level 2) update all gameobjects
-     * (sprites and sounds) 3) check neccessary collisions using physics class
-     * and change states of the gameobjects accordingly
-     */
 
     private void updateBattlefield(long elapsedTime) {
-        // Check If wave is finished, load new enemies or new level
         // Neccesary collisions needed to be calculated::
         // Players - Enemies
         synchronized (game.getEnemies()) {
@@ -597,32 +602,44 @@ public class GameCore {
         tryToLoadNewLevel();
     }
 
-    private void movePlayer(boolean isFirstPlayer, Set<Key> pressed, boolean isPressed) {
+    /**
+     * tries to move player
+     *
+     * @param isFirstPlayer true if P1 false if P2
+     * @param activeKeys the keys that have been pressed but not released yet
+     * @param isPressed whether the action is a press or release action
+     */
+    private void movePlayer(boolean isFirstPlayer, Set<Key> activeKeys, boolean isPressed) {
         Player player = isFirstPlayer ? game.getP1() : game.getP2();
         if (!inMenu && isPressed) {
-            if (pressed.contains(isFirstPlayer ? Key.Player1_Left : Key.Player2_Left)) {
+            if (activeKeys.contains(isFirstPlayer ? Key.Player1_Left : Key.Player2_Left)) {
                 player.setvX(-3);
             }
-            if (pressed.contains(isFirstPlayer ? Key.Player1_Right : Key.Player2_Right)) {
+            if (activeKeys.contains(isFirstPlayer ? Key.Player1_Right : Key.Player2_Right)) {
                 player.setvX(3);
             }
-            if (pressed.contains(isFirstPlayer ? Key.Player1_Up : Key.Player2_Up)) {
+            if (activeKeys.contains(isFirstPlayer ? Key.Player1_Up : Key.Player2_Up)) {
                 player.setvY(-3);
             }
-            if (pressed.contains(isFirstPlayer ? Key.Player1_Down : Key.Player2_Down)) {
+            if (activeKeys.contains(isFirstPlayer ? Key.Player1_Down : Key.Player2_Down)) {
                 player.setvY(3);
             }
         }
         if (!inMenu && !isPressed) {
-            if (!pressed.contains(isFirstPlayer ? Key.Player1_Down : Key.Player2_Down) || pressed.contains(isFirstPlayer ? Key.Player1_Up : Key.Player2_Up)) {
+            if (!activeKeys.contains(isFirstPlayer ? Key.Player1_Down : Key.Player2_Down) || activeKeys.contains(isFirstPlayer ? Key.Player1_Up : Key.Player2_Up)) {
                 player.setvY(0);
             }
-            if (!pressed.contains(isFirstPlayer ? Key.Player1_Left : Key.Player2_Left) || pressed.contains(isFirstPlayer ? Key.Player1_Right : Key.Player2_Right)) {
+            if (!activeKeys.contains(isFirstPlayer ? Key.Player1_Left : Key.Player2_Left) || activeKeys.contains(isFirstPlayer ? Key.Player1_Right : Key.Player2_Right)) {
                 player.setvX(0);
             }
         }
     }
 
+    /**
+     * Renders the battlefield from game objects
+     *
+     * @param elapsedTime
+     */
     private void renderBattlefield(long elapsedTime) {
         Graphics2D g = FullScreenManager.getGraphics();
         g.clearRect(0, 0, 2560, 1600);

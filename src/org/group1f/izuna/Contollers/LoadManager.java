@@ -45,7 +45,7 @@ public class LoadManager {
     /**
      *
      * @param key
-     * @return
+     * @return clone of the animation stored with the key
      */
     public static Animation getAnim(String key) {
         Animation a = animationBucket.get(key);
@@ -56,6 +56,7 @@ public class LoadManager {
     }
 
     /**
+     * Reads every binary & text data from disk.
      *
      * @throws Exception
      */
@@ -89,8 +90,8 @@ public class LoadManager {
     }
 
     /**
-     * 
-     * @return
+     *
+     * @return a random explosion sound to make the sounds more different.
      */
     public static SoundEffect getAnExplosionSound() {
         Random r = new Random();
@@ -99,13 +100,14 @@ public class LoadManager {
 
     /**
      *
-     * @param isBig
-     * @param position
+     * @param isBig big: when spaceship explodes, small: when space ship takes a
+     * hit
+     * @param position where the explosion will be created
      * @return
      */
     public static GameObject getExplosion(boolean isBig, Point position) {
         Animation anim = getAnim("explosion_" + (isBig ? "big" : "small"));
-        GameObject explosion = new GameObject(anim) {
+        GameObject explosion = new GameObject(anim) { // Do not need to create another class, inner class will be enough because it is no different.
 
             @Override
             public void checkStateToAnimate() {
@@ -116,6 +118,9 @@ public class LoadManager {
         return explosion;
     }
 
+    /**
+     * initializes the explosion animations
+     */
     private static void readExplosions() {
         File rootSmall = new File("data/image/animation/explosion_small");
         File rootBig = new File("data/image/animation/explosion_big");
@@ -143,7 +148,7 @@ public class LoadManager {
     }
 
     /**
-     *
+     * Reads levels from levels.xml and constructs the levels queue.
      */
     public static void loadLevels() {
         try {
@@ -162,10 +167,10 @@ public class LoadManager {
                 for (WaveInfo waveData : levelData.getWaves()) {
                     AttackWave wave = new AttackWave();
                     for (WaveEnemy enemyData : waveData.getEnemies()) {
-                        Enemy enemy = LoadManager.getEnemy(enemyData.getKey());      
+                        Enemy enemy = LoadManager.getEnemy(enemyData.getKey());
                         Weapon defaultWeapon = enemy.getDefaultWeapon();
                         int difficulty = GameCore.getDifficulty();
-                        defaultWeapon.setRateOfFire((int) (defaultWeapon.getRateOfFire() * 1.0 / (difficulty+1)));
+                        defaultWeapon.setRateOfFire((int) (defaultWeapon.getRateOfFire() * 1.0 / (difficulty + 1)));
                         for (WavePath pathData : enemyData.getPaths()) {
                             String pathType = pathData.getType();
                             if (pathType.equals("linear")) {
@@ -195,9 +200,9 @@ public class LoadManager {
     }
 
     /**
-     * 
+     *
      * @param password
-     * @return
+     * @return checks if any level has that password
      */
     public static boolean isValidPassword(String password) {
         return passwords.containsKey(password);
@@ -260,7 +265,7 @@ public class LoadManager {
     }
 
     /**
-     *
+     * Constructs a player object with necessary animations and weapons.
      * @param no
      * @return
      */
@@ -272,8 +277,8 @@ public class LoadManager {
         Point position = no == 1 ? new Point(100, 100) : new Point(100, 300);
         Player p = new Player(position, still.clone(), leftRoll.clone(), rightRoll.clone());
         p.addWeapon("proton_player" + no, -1);
-        p.addWeapon("plasma_player" + no, 100);
-        p.addWeapon("particle", 25);
+        p.addWeapon("plasma_player" + no, 50);
+        p.addWeapon("particle", 2);
         p.addWeapon("dark_matter", 5);
         p.addWeapon("super_desperation", 1);
         p.setHealth(100);
@@ -282,7 +287,7 @@ public class LoadManager {
 
     /**
      *
-     * @return
+     * @return gets the next level from the level queue
      */
     public static Level getNextLevel() {
         return levelBucket.poll();
@@ -290,8 +295,8 @@ public class LoadManager {
 
     /**
      *
-     * @param menu
-     * @param key
+     * @param menu - which menu
+     * @param key - which element
      * @return
      */
     public static Image getMenuImage(String menu, String key) {
@@ -300,9 +305,9 @@ public class LoadManager {
 
     /**
      *
-     * @param menu
-     * @param key
-     * @return
+     * @param menu - which menu
+     * @param key - which element
+     * @return Menu Element that has the normal & rollover images
      */
     public static MenuElement getMenuElement(String menu, String key) {
         Image normal = LoadManager.getMenuImage(menu, key);
@@ -312,8 +317,8 @@ public class LoadManager {
 
     /**
      *
-     * @param key
-     * @return
+     * @param key 
+     * @return the sound effect with given key
      */
     public static SoundEffect getSoundEffect(String key) {
         SoundEffect effect = soundBucket.get(key);
@@ -412,9 +417,9 @@ public class LoadManager {
     }
 
     /**
-     *
-     * @param input
-     * @return
+     * Transforms the image to the mirror of it self.
+     * @param input image to be mirrored
+     * @return new transformed image
      */
     public static BufferedImage transform(BufferedImage input) {
         AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
@@ -426,7 +431,7 @@ public class LoadManager {
     /**
      *
      * @param key
-     * @return
+     * @return a clone of the enemy with given key
      */
     public static Enemy getEnemy(String key) {
         return enemyBucket.get(key).clone();
@@ -435,34 +440,23 @@ public class LoadManager {
     /**
      *
      * @param key
-     * @return
+     * @return a clone of the weapon with given key
      */
     public static Weapon getWeapon(String key) {
         return weaponBucket.get(key).clone();
     }
 
-    /**
-     *
-     * @param key
-     * @return
-     */
-    public static Bonus getBonus(String key) {
-        return null;
-    }
 
     /**
      *
      * @param key
-     * @return
+     * @return image with given key
      */
     public static Image getImage(String key) {
         return imageBucket.get(key);
     }
 
-    /**
-     * 
-     */
-    public static void readBonus() {
+    private static void readBonus() {
         try {
             File root = new File("data/image/animation/bonus");
             Animation bonus = new Animation();
@@ -477,9 +471,9 @@ public class LoadManager {
     }
 
     /**
-     * 
-     * @param score
-     * @param name
+     * Submits the given score & name to the web.
+     * @param score the score that user has gathered from gameplay
+     * @param name the name user has entered via keyboard
      */
     public static void submitHighScore(int score, String name) {
         try {
@@ -490,8 +484,8 @@ public class LoadManager {
     }
 
     /**
-     * 
-     * @return
+     * Reads the high scores from web.
+     * @return the high scores read from web.
      */
     public static ArrayList<Score> getHighScores() {
         ArrayList<Score> scores = new ArrayList<Score>();
@@ -503,7 +497,7 @@ public class LoadManager {
                 scores.add(new Score(Integer.parseInt(cols[2]), cols[0], cols[1]));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.err.println("Could not read highscores: " + ex.getMessage());
         }
         return scores;
     }

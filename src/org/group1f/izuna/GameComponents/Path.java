@@ -28,10 +28,11 @@ public abstract class Path {
     }
 
     /**
-     * This function handles time is valid or not.
+     * This function handles time is valid for this path or not.
      *
      * @param time
-     * @return limit > time
+     * @return True if the given time is between the startTime and
+     * startTime+duration
      */
     public boolean isValidTime(long time) {
         long limit = duration + startTime;
@@ -39,7 +40,8 @@ public abstract class Path {
     }
 
     /**
-     * This function gets position of point.
+     * This function gets position of point. Must be implemented in the child
+     * objects.
      *
      * @param time
      * @return position

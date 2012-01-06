@@ -43,14 +43,14 @@ public class MainMenu extends Menu {
 
             @Override
             public void onInteracted(Key key) {
-                game.currentMenu = new Options(game);
+                getOwner().setCurrentMenu(new Options(game));
             }
         };
         MenuButton password = new MenuButton(LoadManager.getMenuElement("main", "password")) {
 
             @Override
             public void onInteracted(Key key) {
-                game.currentMenu = new Password(game);
+                 getOwner().setCurrentMenu(new Password(game));
             }
         };
         MenuButton highScores = new MenuButton(LoadManager.getMenuElement("main", "highScores")) {
@@ -58,7 +58,7 @@ public class MainMenu extends Menu {
             @Override
             public void onInteracted(Key key) {
                 if (key.equals(Key.Enter)) {
-                    game.currentMenu = new HighScores(game);
+                     getOwner().setCurrentMenu(new HighScores(game));
                 }
             }
         };
@@ -67,7 +67,7 @@ public class MainMenu extends Menu {
             @Override
             public void onInteracted(Key key) {
                 if (key.equals(Key.Enter)) {
-                    game.currentMenu = new Help(game);
+                     getOwner().setCurrentMenu(new Help(game));
                 }
             }
         };

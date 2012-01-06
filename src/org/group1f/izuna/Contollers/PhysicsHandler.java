@@ -13,10 +13,10 @@ import org.group1f.izuna.GameState;
 public final class PhysicsHandler {
 
     /**
-     * 
+     * Checks if the given two sprite collides or not.
      * @param s1
      * @param s2
-     * @return
+     * @return 
      */
     public static boolean checkSpriteCollisions(Sprite s1, Sprite s2) {
         if (s1 == null || s2 == null) {
@@ -28,25 +28,5 @@ public final class PhysicsHandler {
         Rectangle r1 = s1.getCollisionRectangle();
         Rectangle r2 = s2.getCollisionRectangle();
         return r1.intersects(r2);
-    }
-    /*
-     * TODO need to implement a method to make sure player is always in the
-     * screen
-     */
-
-    /**
-     * 
-     * @param player
-     * @param position
-     */
-    public static void movePlayer(Player player, Point position) {
-    }
-
-    /**
-     * 
-     * @param gs
-     */
-    public static void moveAI(GameState gs) {
-        // Moves AI to the proper places according to their paths and the current time..
     }
 }

@@ -10,18 +10,18 @@ public class LinearPath extends Path {
 
     /**
      * 
-     * @param start
-     * @param end
-     * @param duration
+     * @param start The position that the object is gonna start moving at this path
+     * @param end The position that the object is gonna end moving at this path
+     * @param duration The duration that the object is gonna move from start to end
      */
     public LinearPath(Point start, Point end, long duration) {
         super(start, end, duration);
     }
 
     /**
-     * 
-     * @param time
-     * @return
+     * Calculates the position that the object is gonna be on the given time
+     * @param time Timestamp which indicates the requested position
+     * @return The position that object should be on.
      */
     @Override
     public Point getPosition(long time) {

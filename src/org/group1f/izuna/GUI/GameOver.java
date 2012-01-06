@@ -29,7 +29,7 @@ public class GameOver extends Menu {
             public void onInteracted(KeyboardHandler.Key key) {
                 if (key.equals(KeyboardHandler.Key.Enter)) {
                     LoadManager.submitHighScore(gameCore.getLastGameScore(), gameCore.getEnteredCharsSoFar());
-                    gameCore.currentMenu = new MainMenu(gameCore);
+                    gameCore.setCurrentMenu(new MainMenu(gameCore));
                 }
             }
         };

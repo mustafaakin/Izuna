@@ -28,7 +28,7 @@ public class HighScores extends Menu {
 
             @Override
             public void onInteracted(KeyboardHandler.Key key) {
-                game.currentMenu = new MainMenu(game);
+                getOwner().setCurrentMenu(new MainMenu(game));
             }
         };
         this.addElement(helpText);

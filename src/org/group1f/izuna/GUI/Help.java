@@ -25,7 +25,7 @@ public class Help extends Menu {
 
             @Override
             public void onInteracted(KeyboardHandler.Key key) {
-                gameCore.currentMenu = new MainMenu(gameCore);
+                gameCore.setCurrentMenu(new MainMenu(gameCore));
             }
         };
 
