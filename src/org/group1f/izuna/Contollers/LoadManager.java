@@ -13,7 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.group1f.izuna.Contollers.XML.*;
 import org.group1f.izuna.GUI.MenuElement;
@@ -37,6 +36,7 @@ public class LoadManager {
     private static HashMap<String, Image> menuBucket;
     private static Queue<Level> levelBucket;
     private static HashMap<String, Integer> weaponDefaultCountBucket;
+    private static HashMap<String, Boolean> passwords;
 
     private LoadManager() {
         // Making it singleton
@@ -67,6 +67,7 @@ public class LoadManager {
         weaponBucket = new HashMap<String, Weapon>();
         enemyBucket = new HashMap<String, Enemy>();
         weaponDefaultCountBucket = new HashMap<String, Integer>();
+        passwords = new HashMap<String, Boolean>();
 
         readMenus();
         readSounds();
@@ -87,6 +88,10 @@ public class LoadManager {
         readBonus();
     }
 
+    /**
+     * 
+     * @return
+     */
     public static SoundEffect getAnExplosionSound() {
         Random r = new Random();
         return soundBucket.get("explosion_" + (r.nextInt(5) + 1));
@@ -152,10 +157,15 @@ public class LoadManager {
             LevelList waves = serializer.read(LevelList.class, levelsSource);
             for (LevelInfo levelData : waves.getList()) {
                 Level level = new Level();
+                passwords.put(levelData.getPassword(), true);
+                level.setPassword(levelData.getPassword());
                 for (WaveInfo waveData : levelData.getWaves()) {
                     AttackWave wave = new AttackWave();
                     for (WaveEnemy enemyData : waveData.getEnemies()) {
-                        Enemy enemy = LoadManager.getEnemy(enemyData.getKey());
+                        Enemy enemy = LoadManager.getEnemy(enemyData.getKey());      
+                        Weapon defaultWeapon = enemy.getDefaultWeapon();
+                        int difficulty = GameCore.getDifficulty();
+                        defaultWeapon.setRateOfFire((int) (defaultWeapon.getRateOfFire() * 1.0 / (difficulty+1)));
                         for (WavePath pathData : enemyData.getPaths()) {
                             String pathType = pathData.getType();
                             if (pathType.equals("linear")) {
@@ -182,6 +192,15 @@ public class LoadManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 
+     * @param password
+     * @return
+     */
+    public static boolean isValidPassword(String password) {
+        return passwords.containsKey(password);
     }
 
     private static void readWeaponAnims() {
@@ -440,6 +459,9 @@ public class LoadManager {
         return imageBucket.get(key);
     }
 
+    /**
+     * 
+     */
     public static void readBonus() {
         try {
             File root = new File("data/image/animation/bonus");
@@ -454,6 +476,11 @@ public class LoadManager {
         }
     }
 
+    /**
+     * 
+     * @param score
+     * @param name
+     */
     public static void submitHighScore(int score, String name) {
         try {
             String page = getHTML("http://localhost/izuna/add.php?name=" + name + "&score=" + score);
@@ -462,6 +489,10 @@ public class LoadManager {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public static ArrayList<Score> getHighScores() {
         ArrayList<Score> scores = new ArrayList<Score>();
         try {

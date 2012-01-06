@@ -11,12 +11,14 @@ import org.group1f.izuna.GameCore;
 public class MainMenu extends Menu {
 
     /**
+     * This function creates two start game buttons, options button, password
+     * button, high scores button, help button and exit button with their
+     * interaction with keyboard at the creation of the object.
      *
-     * @param game
+     * @param game: core of the game which is the main controller of the game.
      */
     public MainMenu(final GameCore game) {
         super(game);
-        // START GAME
         MenuButton startGame1Player = new MenuButton(LoadManager.getMenuElement("main", "startGame1Player")) {
 
             @Override

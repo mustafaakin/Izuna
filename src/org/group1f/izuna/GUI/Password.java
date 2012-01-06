@@ -26,7 +26,9 @@ public class Password extends Menu{
 
             @Override
             public void onInteracted(KeyboardHandler.Key key) {
-                owner.currentMenu = new MainMenu(owner); 
+                if ( key.equals(KeyboardHandler.Key.Enter)){
+                    owner.checkPassword();
+                }
             }
         };
         this.addElement(title);

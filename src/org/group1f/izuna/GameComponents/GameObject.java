@@ -76,6 +76,10 @@ public abstract class GameObject extends Sprite {
         return dieSound;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Point getPrevPosition() {
         return prevPosition;
     }

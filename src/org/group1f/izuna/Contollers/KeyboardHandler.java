@@ -122,6 +122,9 @@ public class KeyboardHandler implements KeyListener {
          *
          */
         Player1_Weapon4,
+        /**
+         * 
+         */
         Player1_Weapon5,
         /**
          *
@@ -155,6 +158,9 @@ public class KeyboardHandler implements KeyListener {
          *
          */
         Player2_Weapon4,
+        /**
+         * 
+         */
         Player2_Weapon5,
         /**
          *
@@ -164,6 +170,9 @@ public class KeyboardHandler implements KeyListener {
          *
          */
         Enter,
+        /**
+         * 
+         */
         Backspace
     }
 

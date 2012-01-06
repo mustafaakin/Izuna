@@ -43,10 +43,20 @@ public class Player extends GameObject implements SpaceShip {
         isDying = false;
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public int getWeaponCount(String key) {
         return this.weapons.get(key);
     }
 
+    /**
+     * 
+     * @param key
+     * @param amount
+     */
     public void increaseWeapon(String key, int amount) {
         addWeapon(key, weapons.get(key) + amount);
     }
@@ -220,10 +230,14 @@ public class Player extends GameObject implements SpaceShip {
         if (p.y > 720 - width) {
             p.y = 720 - width;
         }
-
         return p;
     }
 
+    /**
+     * 
+     * @param player
+     * @return
+     */
     public String getStatusText(int player) {
         String status = "Player " + player + "   Health: " + getHealth() + "   Weapons: "
                 + "   Plasma:" + getWeaponCount("plasma_player" + player)

@@ -2,6 +2,7 @@
 	<List>
 		<Level no="1">
 			<Name>A New Hope</Name>
+			<Password>ABCD</Password>
 			<Waves>
 				<Wave>
 					<Enemies>
@@ -175,6 +176,27 @@
 									<endY>200</endY>
 									<duration>1500</duration>
 								</Path>								
+							</Paths>
+						</Enemy>
+					</Enemies>
+				</Wave>
+			</Waves>
+		</Level>
+		<Level no="2">
+			<Name>Empire Strikes Back</Name>
+			<Password>AAAA</Password>
+			<Waves>
+				<Wave>
+					<Enemies>
+						<Enemy key="blueShipA">
+							<Paths>
+								<Path type="linear">
+									<startX>1400</startX>
+									<startY>100</startY>
+									<endX>950</endX>
+									<endY>100</endY>
+									<duration>1500</duration>
+								</Path>
 							</Paths>
 						</Enemy>
 					</Enemies>

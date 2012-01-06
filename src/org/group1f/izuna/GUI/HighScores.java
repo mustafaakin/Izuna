@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.group1f.izuna.GUI;
 
 import java.util.ArrayList;
@@ -18,9 +14,10 @@ public class HighScores extends Menu {
 
     private ArrayList<Score> highScores;
 
-    /**
-     *
-     * @param game
+ /**
+     * This function creates high scores text and back button with interaction 
+     * keyboard at the creation of the object. It only shows high scores to user.
+     * @param game: core of the game which is the main controller of the game.
      */
     public HighScores(final GameCore game) {
         super(game);
@@ -38,6 +35,10 @@ public class HighScores extends Menu {
         this.addButton(back);
     }
 
+    /**
+     * 
+     * @return
+     */
     public ArrayList<Score> getHighScores() {
         return highScores;
     }

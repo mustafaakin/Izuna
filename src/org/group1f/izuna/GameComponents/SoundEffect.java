@@ -15,6 +15,8 @@ public class SoundEffect {
     private Player player;
 
     /**
+     * Constructs a SoundEffect with given filename, but no initialization is
+     * occurred until .play() is called.
      *
      * @param filename
      */
@@ -28,7 +30,7 @@ public class SoundEffect {
     }
 
     /**
-     *
+     * Shuts down the music.
      */
     public void close() {
         if (player != null) {
@@ -37,7 +39,7 @@ public class SoundEffect {
     }
 
     /**
-     *
+     * Plays the music within a new thread.
      */
     public void play() {
         boolean doPlay = GameCore.preferences().getBoolean("sound", true);

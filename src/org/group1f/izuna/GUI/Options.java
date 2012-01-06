@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.group1f.izuna.GUI;
 
 import org.group1f.izuna.Contollers.KeyboardHandler;
@@ -5,26 +9,27 @@ import org.group1f.izuna.Contollers.LoadManager;
 import org.group1f.izuna.GameCore;
 
 /**
- *
- * @author mcad
+ * This class is used for displaying options menu.
+ * @author Naime
  */
 public class Options extends Menu{
     /**
-     * 
+     * This value is used for property key that holds sound value for game.
      */
     public static final String SOUND = "sound";
     /**
-     * 
+     * This value is used for property key that holds difficulty value for game.
      */
     public static final String DIFFICULTY = "difficulty";
     /**
-     * 
+     * This value is used for property key that holds 3D feature, if game runs in 3D mode.
      */
     public static final String _3D = "3D";
     
     /**
-     * 
-     * @param game
+     * This function creates sound button, anaglyph button, difficulty button and 
+     * back button with their interactions keyboard at the creation of the object.
+     * @param game: core of the game which is the main controller of the game.
      */
     public Options(final GameCore game) {
         super(game);
@@ -78,6 +83,5 @@ public class Options extends Menu{
         this.addButton(anaglyph);
         this.addButton(back);
 
-    }
-    
+    }    
 }

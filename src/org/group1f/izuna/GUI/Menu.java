@@ -7,11 +7,14 @@ import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 import org.group1f.izuna.GameCore;
 
 /**
- *
+ * Super class of game menus.
  * @author Mustafa
  */
 public class Menu {
 
+    /**
+     * Core of the game which is the main controller of the game.
+     */
     private GameCore owner;
     private ArrayList<MenuButton> buttons;
     private ArrayList<MenuElement> elements;
@@ -19,8 +22,9 @@ public class Menu {
     private int active;
 
     /**
-     * 
-     * @param owner
+     * This function creates buttons and elements at the creation of the object.
+     * @param owner {@link Menu #owner}:
+     * Core of the game which is the main controller of the game.
      */
     public Menu(GameCore owner) {
         this.buttons = new ArrayList<MenuButton>();
@@ -30,8 +34,8 @@ public class Menu {
     }
 
     /**
-     * 
-     * @param key
+     * This function handles button press action.
+     * @param key: pressed key
      */
     public void onClicked(Key key) {
         if (key.equals(Key.Player1_Down)) {
@@ -44,7 +48,7 @@ public class Menu {
     }
 
     /**
-     * 
+     * This funtion adds button.
      * @param button
      */
     public void addButton(MenuButton button) {
@@ -52,16 +56,17 @@ public class Menu {
     }
 
     /**
-     * 
-     * @param element
+     * This function adds element.
+     * @param element: element represents a gui element that has no click action.
+     * It just displays text file.
      */
     public void addElement(MenuElement element) {
         this.elements.add(element);
     }
 
     /**
-     * 
-     * @return
+     * This function gets images to draw.
+     * @return images: images which will be drawn to menu screens.
      */
     public List<Image> getImagesToDraw() {
         ArrayList<Image> images = new ArrayList<Image>();
@@ -76,8 +81,8 @@ public class Menu {
     }
 
     /**
-     * 
-     * @return
+     * This function gets game core.
+     * @return: owner: game core of the game.
      */
     public GameCore getOwner() {
         return owner;

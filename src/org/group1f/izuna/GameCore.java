@@ -9,10 +9,7 @@ import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import org.group1f.izuna.Contollers.*;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
-import org.group1f.izuna.GUI.GameOver;
-import org.group1f.izuna.GUI.HighScores;
-import org.group1f.izuna.GUI.MainMenu;
-import org.group1f.izuna.GUI.Menu;
+import org.group1f.izuna.GUI.*;
 import org.group1f.izuna.GameComponents.*;
 import org.group1f.izuna.GameComponents.Drawing.Animation;
 
@@ -64,6 +61,10 @@ public class GameCore {
         }
     }
 
+    /**
+     * 
+     * @return
+     */
     public static int getDifficulty() {
         return GameCore.preferences().getInt("difficulty", 0);
     }
@@ -94,6 +95,8 @@ public class GameCore {
                 g.drawImage(LoadManager.getImage("game_over"), 460, 230, null);
                 g.drawString("YOUR SCORE IS: " + getLastGameScore(), 500, 500);
                 g.drawString("Enter your name: " + enteredCharsSoFar, 500, 560);
+            } else if (currentMenu instanceof Password) {
+                g.drawString("Enter Password: " + enteredCharsSoFar, 500, 400);
             }
             g.dispose();
             FullScreenManager.update();
@@ -236,6 +239,9 @@ public class GameCore {
         inMenu = true;
     }
 
+    /**
+     * 
+     */
     public void enterGameOver() {
         game.setBackgroundMusic(LoadManager.getSoundEffect("main_menu"));
         game.getBackgroundMusic().play();
@@ -245,18 +251,33 @@ public class GameCore {
         game = new GameState();
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getEnteredCharsSoFar() {
         return enteredCharsSoFar;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getLastGameScore() {
         return lastGameScore;
     }
 
+    /**
+     * 
+     * @return
+     */
     public GameState getGame() {
         return game;
     }
 
+    /**
+     * 
+     */
     public void tryToLoadNewLevel() {
         long timeDifference = System.currentTimeMillis() - game.getLastEnemyDeath();
         if (timeDifference > 5000) {
@@ -301,9 +322,9 @@ public class GameCore {
         }
         Random rand = new Random();
         int i = rand.nextInt(100);
-        if (i < 90) {
+        if (i < 10) { // 10% probability of having bonus
             Point position = new Point(e.getPosition());
-            Bonus bonus = new Bonus(LoadManager.getAnim("bonus").clone(), (i % 4 + 1) * 10, i % 2 == 0);
+            Bonus bonus = new Bonus(LoadManager.getAnim("bonus").clone(), (i % 4 + 1) * 10, i % 2 == 0); // %50 health, %50 bonus, added health varies from 10 to 30.
 
             Point start = new Point(position);
             Point end = new Point(position);
@@ -314,12 +335,18 @@ public class GameCore {
             bonus.addPath(path);
             bonus.setPathActivationTime(System.currentTimeMillis());
             this.game.getBonuses().add(bonus);
-
-            System.out.println("addingBonus");
         }
         game.getCurrentLevel().killEnemy(e);
         game.setLastEnemyDeath(System.currentTimeMillis());
-        game.increaseScore(e.getDefaultHealth());
+        
+        int difficulty = GameCore.getDifficulty();        
+        double factor = 1;
+        if ( difficulty == 1){
+            factor = 1.25;
+        } else if ( difficulty == 2){
+            factor = 1.75;
+        }
+        game.increaseScore((int)(e.getDefaultHealth() * factor));
     }
 
     private void addWaveToGame(AttackWave wave) {
@@ -331,9 +358,46 @@ public class GameCore {
         }
     }
 
+    /**
+     * 
+     */
+    public void checkPassword() {
+        LoadManager.loadLevels();
+        if (LoadManager.isValidPassword(enteredCharsSoFar)) {
+            int i = 0;
+            while (i < 20000) {
+                Level level = LoadManager.getNextLevel();
+                if (level.getPassword().equals(enteredCharsSoFar)) {
+                    game = new GameState();
+                    game.setP1(LoadManager.getPlayer(1));
+                    game.setCurrentLevel(level);
+                    game.setCurrentLevelNo(i);
+                    AttackWave wave = game.getCurrentLevel().startLevel();
+                    initBackgrounds();
+                    addWaveToGame(wave);
+                    inMenu = false;
+                    return;
+                }
+                i++;
+            }
+        }
+        this.currentMenu = new MainMenu(this);
+    }
+
+    /**
+     * 
+     * @param c
+     */
     public void keyTypeFromKeyboard(char c) {
-        if (inMenu && currentMenu instanceof GameOver && c > 32 && c < 128) {
-            enteredCharsSoFar += c;
+        if (c > 32 && c < 128) {
+            if (inMenu) {
+                if (currentMenu instanceof GameOver) {
+                    enteredCharsSoFar += c;
+                } else if (currentMenu instanceof Password && enteredCharsSoFar.length() < 4) {
+                    enteredCharsSoFar += c;
+                    enteredCharsSoFar = enteredCharsSoFar.toUpperCase();
+                }
+            }
         }
     }
     // check player inputs for two players

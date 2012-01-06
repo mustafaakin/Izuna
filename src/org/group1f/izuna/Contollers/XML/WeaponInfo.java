@@ -32,6 +32,10 @@ public class WeaponInfo {
         return key + "-" + DefaultAmount + "-" + CausedDamage;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getType() {
         return type;
     }

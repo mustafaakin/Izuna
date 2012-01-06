@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ * This class is used for handling attack wave operaitons.
  * @author Mustafa
  */
 public class AttackWave {
@@ -12,23 +12,24 @@ public class AttackWave {
     private List<Enemy> enemies = new ArrayList<Enemy>();
 
     /**
-     * 
-     * @param enemy
+     * This function adds enemy to game.
+     * @param enemy: the creation of the game which is enemy
      */
     public void addEnemy(Enemy enemy) {
         enemies.add(enemy);
     }
 
     /**
-     * 
-     * @return
+     * This function handles enemies empty or not.
+     * @return enemies.isEmpty() : if there is enemy it is false, if there is no enemy 
+     * it is true.
      */
     public boolean isFinished() {
         return enemies.isEmpty();
     }
 
     /**
-     * 
+     * This function removes enemy.
      * @param e
      */
     public void removeEnemy(Enemy e) {
@@ -38,9 +39,9 @@ public class AttackWave {
     }
 
     /**
-     * 
+     * This function starts the attack wave.
      * @param time
-     * @return
+     * @return enemies
      */
     public List<Enemy> startWave(long time) {
         for (Enemy enemy : enemies) {

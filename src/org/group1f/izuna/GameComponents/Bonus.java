@@ -10,6 +10,9 @@ import org.group1f.izuna.GameComponents.Drawing.*;
  */
 public class Bonus extends AIControllable {
 
+    /**
+     * 
+     */
     public final static long DEFAULT_BONUS_FALL_DURATION = 750;
     private boolean bonusType; // default = health, 1 = weapon
     private int bonusValue;

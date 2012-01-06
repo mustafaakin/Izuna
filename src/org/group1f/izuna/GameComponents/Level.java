@@ -11,7 +11,7 @@ public class Level {
 
     private Queue<AttackWave> waves;
     private AttackWave currentWave;
-
+    private String password;
     /**
      * 
      * @return
@@ -74,5 +74,21 @@ public class Level {
      */
     public void killEnemy(Enemy e) {
         currentWave.removeEnemy(e);
-    }    
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * 
+     * @param password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    } 
 }

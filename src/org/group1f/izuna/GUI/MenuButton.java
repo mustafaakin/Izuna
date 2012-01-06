@@ -6,7 +6,8 @@ import java.util.List;
 import org.group1f.izuna.Contollers.KeyboardHandler.Key;
 
 /**
- * 
+ * This abstract class is used for creation of button.
+ *
  * @author Mustafa
  */
 abstract public class MenuButton {
@@ -16,8 +17,10 @@ abstract public class MenuButton {
     private ArrayList<MenuElement> elements;
 
     /**
-     * 
-     * @param defaultElement
+     * This function gets the default element which only shows ui text and it
+     * converts element to button which can gain focus and have a click action.
+     *
+     * @param defaultElement : default element shows ui text.
      */
     public MenuButton(MenuElement defaultElement) {
         this.defaultElement = defaultElement;
@@ -26,16 +29,19 @@ abstract public class MenuButton {
     }
 
     /**
-     * 
-     * @param element
+     * This function adds element.
+     *
+     * @param element: element represents a gui element that has no click
+     * action.
      */
     public void addElement(MenuElement element) {
         elements.add(element);
     }
 
     /**
-     * 
-     * @param key
+     * This function handles key is pressed.
+     *
+     * @param key: pressed key
      */
     public void onClick(Key key) {
         if (!elements.isEmpty()) {
@@ -48,16 +54,13 @@ abstract public class MenuButton {
         onInteracted(key);
     }
 
-    /**
-     * 
-     * @param key
-     */
     abstract public void onInteracted(Key key);
 
     /**
-     * 
+     * This function gets images.
+     *
      * @param rollOver
-     * @return
+     * @return result
      */
     public List<Image> getImages(boolean rollOver) {
         ArrayList<Image> result = new ArrayList<Image>();
@@ -70,18 +73,20 @@ abstract public class MenuButton {
     }
 
     /**
-     * 
-     * @return
+     * This function gets active.
+     *
+     * @return active
      */
     public int getActive() {
         return active;
     }
 
     /**
-     * 
+     * This function sets active.
+     *
      * @param active
      */
     public void setActive(int active) {
         this.active = active;
-    }        
+    }
 }

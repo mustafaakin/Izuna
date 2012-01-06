@@ -29,6 +29,9 @@ public class GameState {
     private int score;
     volatile private ArrayList<GameObject> explosions;
 
+    /**
+     * 
+     */
     public GameState() {
         enemies = new ArrayList<Enemy>();
         bonuses = new ArrayList<Bonus>();
@@ -39,118 +42,234 @@ public class GameState {
         startTime = System.currentTimeMillis();
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isShowLevelCleared() {
         return showLevelCleared;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isShowWaveCleared() {
         return showWaveCleared;
     }
 
+    /**
+     * 
+     * @return
+     */
     public SoundEffect getBackgroundMusic() {
         return backgroundMusic;
     }
 
+    /**
+     * 
+     * @return
+     */
     public ArrayList<Bonus> getBonuses() {
         return bonuses;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Level getCurrentLevel() {
         return currentLevel;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getCurrentLevelNo() {
         return currentLevelNo;
     }
 
+    /**
+     * 
+     * @return
+     */
     public long getCurrentTime() {
         return currentTime;
     }
 
+    /**
+     * 
+     * @return
+     */
     public long getLastEnemyDeath() {
         return lastEnemyDeath;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Player getP1() {
         return p1;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Player getP2() {
         return p2;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * 
+     * @return
+     */
     public long getStartTime() {
         return startTime;
     }
 
+    /**
+     * 
+     * @param backgroundMusic
+     */
     public void setBackgroundMusic(SoundEffect backgroundMusic) {
         this.backgroundMusic = backgroundMusic;
     }
 
+    /**
+     * 
+     * @param bonuses
+     */
     public void setBonuses(ArrayList<Bonus> bonuses) {
         this.bonuses = bonuses;
     }
 
+    /**
+     * 
+     * @param currentLevel
+     */
     public void setCurrentLevel(Level currentLevel) {
         this.currentLevel = currentLevel;
     }
 
+    /**
+     * 
+     * @param currentLevelNo
+     */
     public void setCurrentLevelNo(int currentLevelNo) {
         this.currentLevelNo = currentLevelNo;
     }
 
+    /**
+     * 
+     * @param currentTime
+     */
     public void setCurrentTime(long currentTime) {
         this.currentTime = currentTime;
     }
 
+    /**
+     * 
+     * @param enemies
+     */
     public void setEnemies(ArrayList<Enemy> enemies) {
         this.enemies = enemies;
     }
 
+    /**
+     * 
+     * @param enemyWeapons
+     */
     public void setEnemyWeapons(ArrayList<Weapon> enemyWeapons) {
         this.enemyWeapons = enemyWeapons;
     }
 
+    /**
+     * 
+     * @param explosions
+     */
     public void setExplosions(ArrayList<GameObject> explosions) {
         this.explosions = explosions;
     }
 
+    /**
+     * 
+     * @param lastEnemyDeath
+     */
     public void setLastEnemyDeath(long lastEnemyDeath) {
         this.lastEnemyDeath = lastEnemyDeath;
     }
 
+    /**
+     * 
+     * @param p1
+     */
     public void setP1(Player p1) {
         this.p1 = p1;
     }
 
+    /**
+     * 
+     * @param p2
+     */
     public void setP2(Player p2) {
         this.p2 = p2;
     }
 
+    /**
+     * 
+     * @param score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * 
+     * @param startTime
+     */
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     * 
+     * @param userWeapons
+     */
     public void setUserWeapons(ArrayList<Weapon> userWeapons) {
         this.userWeapons = userWeapons;
     }
 
+    /**
+     * 
+     * @return
+     */
     public synchronized ArrayList<Weapon> getEnemyWeapons() {
         return enemyWeapons;
     }
 
+    /**
+     * 
+     * @param showLevelCleared
+     */
     public void setShowLevelCleared(boolean showLevelCleared) {
         this.showLevelCleared = showLevelCleared;
     }
 
+    /**
+     * 
+     * @param showWaveCleared
+     */
     public void setShowWaveCleared(boolean showWaveCleared) {
         this.showWaveCleared = showWaveCleared;
     }
@@ -179,6 +298,10 @@ public class GameState {
         return userWeapons;
     }
 
+    /**
+     * 
+     * @param difference
+     */
     public void increaseScore(int difference) {
         int difficulty = GameCore.getDifficulty();
         double factor = 1;

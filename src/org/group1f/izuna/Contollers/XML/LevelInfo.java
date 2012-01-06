@@ -16,9 +16,15 @@ public class LevelInfo {
     private int no;
     @Element
     private String Name;
+    @Element
+    private String Password;
     @ElementList()
     private List<WaveInfo> Waves;
 
+    public String getPassword() {
+        return Password;
+    }
+    
     /**
      * 
      * @return

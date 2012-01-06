@@ -9,7 +9,13 @@ import org.group1f.izuna.GameComponents.Drawing.Animation;
  */
 public class Weapon extends AIControllable {
 
+    /**
+     * 
+     */
     public static int USER_WEAPON_END_POSITION = 1400;
+    /**
+     * 
+     */
     public static int ENEMY_WEAPON_END_POSITION = -200;
 
     /**
@@ -81,14 +87,20 @@ public class Weapon extends AIControllable {
     }
 
     /**
+     * 
+     * @param rateOfFire
+     */
+    public void setRateOfFire(int rateOfFire) {
+        this.rateOfFire = rateOfFire;
+    }
+
+    /**
      *
      * @param still
-     * @param die
-     * @param explode
      * @param damageAmount
      * @param rateOfFire
      * @param fireSound
-     * @param explodeSound
+     * @param type 
      * @param speed
      */
     public Weapon(Animation still, int damageAmount, int rateOfFire, SoundEffect fireSound, int speed, int type) {
@@ -105,6 +117,10 @@ public class Weapon extends AIControllable {
         return new Weapon(super.getStillAnimation(), damageAmount, rateOfFire, fireSound, speed, type);
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getType() {
         return type;
     }

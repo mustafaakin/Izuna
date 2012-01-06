@@ -8,25 +8,27 @@ import org.group1f.izuna.GameCore;
  *
  * @author mcad
  */
-public class Help extends Menu{
-    
-    
+public class Help extends Menu {
+
     /**
-     * 
-     * @param gameCore
+     * This function creates help text and back button with their interaction
+     * keyboard at the creation of the object.
+     *
+     * @param gameCore: core of the game which is the main controller of the
+     * game.
      */
-    public Help(final GameCore gameCore){
+    public Help(final GameCore gameCore) {
         super(gameCore);
         MenuElement helpText = LoadManager.getMenuElement("help", "help");
-        
+
         MenuButton back = new MenuButton(LoadManager.getMenuElement("help", "back")) {
 
             @Override
             public void onInteracted(KeyboardHandler.Key key) {
-                gameCore.currentMenu = new MainMenu(gameCore); 
+                gameCore.currentMenu = new MainMenu(gameCore);
             }
         };
-        
+
         this.addElement(helpText);
         this.addButton(back);
     }

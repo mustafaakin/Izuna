@@ -21,6 +21,7 @@ public class Enemy extends AIControllable implements SpaceShip {
     private int health;
     private boolean isRFinished = true;
     private int defaultHealth;
+
     /**
      * Constructs a default enemy object with given parameters.
      *
@@ -40,10 +41,22 @@ public class Enemy extends AIControllable implements SpaceShip {
         this.defaultWeapon = defaultWeapon;
     }
 
+    /**
+     * 
+     * @return
+     */
+    public Weapon getDefaultWeapon() {
+        return defaultWeapon;
+    }
+
+    /**
+     * 
+     * @return
+     */
     public int getDefaultHealth() {
         return defaultHealth;
     }
-    
+
     /**
      * Sets the default weapon.
      *
@@ -174,10 +187,9 @@ public class Enemy extends AIControllable implements SpaceShip {
         Random rand = new Random();
 
         int difficulty = GameCore.getDifficulty();
-        int randomLength = 60 - 10 * difficulty;
-
+        int randomLength = 30 - 10 * difficulty;
         int randomNumber = rand.nextInt(randomLength);
-        if (randomNumber == 5) {
+        if (randomNumber == 0) {
             lastFired = time;
             Weapon weapon = defaultWeapon.clone();
             weapon.setDoesBelongEnemy(true);
