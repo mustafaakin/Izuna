@@ -138,7 +138,6 @@ public class Weapon extends AIControllable {
             this.addPath(path);
             this.setPathActivationTime(time);
         } else {
-            System.out.println("WEAPON END:" + end);
             LinearPath path = new LinearPath(start, end, speed);
             this.addPath(path);
             this.setPathActivationTime(time);

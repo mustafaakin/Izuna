@@ -41,17 +41,7 @@ public class GameCore {
     /**
      *
      */
-    public Level currentLevel;
-    /**
-     *
-     */
     public Menu currentMenu;
-    private long startTime;
-    private long currentTime;
-    private long lastEnemyDeath;
-    private boolean doShowLevelCleared = false;
-    private boolean doShowWaveCleared = false;
-    private int currentLevelNo;
     private GameObject backLayer;
     private GameObject frontLayer;
     private String enteredCharsSoFar = "";
@@ -104,8 +94,8 @@ public class GameCore {
             g.dispose();
             FullScreenManager.update();
         } else {
-            long elapsedTime = System.currentTimeMillis() - currentTime;
-            currentTime += elapsedTime;
+            long elapsedTime = System.currentTimeMillis() - game.getCurrentTime();
+            game.setCurrentTime(game.getCurrentTime() + elapsedTime);
             try {
                 renderBattlefield(elapsedTime);
                 updateBattlefield(elapsedTime);
@@ -120,14 +110,14 @@ public class GameCore {
      * @param isSinglePlayer
      */
     public void startGame(boolean isSinglePlayer) {
-        game.p1 = LoadManager.getPlayer(1);
+        game.setP1(LoadManager.getPlayer(1));
         if (!isSinglePlayer) {
-            game.p2 = LoadManager.getPlayer(2);
+            game.setP2(LoadManager.getPlayer(2));
         }
         LoadManager.loadLevels();
 
-        currentLevel = LoadManager.getNextLevel();
-        AttackWave wave = currentLevel.startLevel();
+        game.setCurrentLevel(LoadManager.getNextLevel());
+        AttackWave wave = game.getCurrentLevel().startLevel();
         initBackgrounds();
 
         List<Enemy> enemies = wave.startWave(System.currentTimeMillis());
@@ -137,7 +127,7 @@ public class GameCore {
             game.getEnemies().add(enemy);
         }
         inMenu = false;
-        game.backgroundMusic.close();
+        game.getBackgroundMusic().close();
     }
 
     /*
@@ -163,8 +153,7 @@ public class GameCore {
 
     private void initBackgrounds() {
         Animation back = new Animation();
-        Image i_back = LoadManager.getImage("background/" + currentLevelNo);
-        System.out.println("GETTING BACK" + i_back);
+        Image i_back = LoadManager.getImage("background/" + game.getCurrentLevelNo());
         back.addFrame(i_back, i_back);
 
         this.backLayer = new GameObject(back) {
@@ -221,52 +210,50 @@ public class GameCore {
      *
      */
     public void enterMainMenu() {
-        game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
-        game.backgroundMusic.play();
-        startTime = System.currentTimeMillis();
+        game.setBackgroundMusic(LoadManager.getSoundEffect("main_menu"));
+        game.getBackgroundMusic().play();
+        game.setStartTime(System.currentTimeMillis());
         currentMenu = new MainMenu(this);
-        currentTime = startTime;
+        game.setCurrentTime(game.getStartTime());
         inMenu = true;
     }
 
     public void enterGameOver() {
-        game.backgroundMusic = LoadManager.getSoundEffect("main_menu");
-        game.backgroundMusic.play();
-        startTime = System.currentTimeMillis();
+        game.setBackgroundMusic(LoadManager.getSoundEffect("main_menu"));
+        game.getBackgroundMusic().play();
         currentMenu = new GameOver(this);
-        currentTime = startTime;
         inMenu = true;
     }
 
     public void tryToLoadNewLevel() {
-        long timeDifference = System.currentTimeMillis() - lastEnemyDeath;
+        long timeDifference = System.currentTimeMillis() - game.getLastEnemyDeath();
         if (timeDifference > 5000) {
-            if (currentLevel.isFinished()) {
-                currentLevel = LoadManager.getNextLevel();
-                if (currentLevel == null) {
+            if (game.getCurrentLevel().isFinished()) {
+                game.setCurrentLevel(LoadManager.getNextLevel());
+                if (game.getCurrentLevel() == null) {
                     enterGameOver();
                 } else {
-                    currentLevelNo++;
-                    AttackWave wave = this.currentLevel.startLevel();
+                    game.setCurrentLevelNo(game.getCurrentLevelNo() + 1);
+                    AttackWave wave = game.getCurrentLevel().startLevel();
                     initBackgrounds();
                     addWaveToGame(wave);
                 }
-                doShowLevelCleared = false;
-                doShowWaveCleared = false;
-            } else if (this.currentLevel.getCurrentWave().isFinished()) {
-                AttackWave wave = this.currentLevel.swapNextWave();
+                game.setShowLevelCleared(false);
+                game.setShowWaveCleared(false);
+            } else if (game.getCurrentLevel().getCurrentWave().isFinished()) {
+                AttackWave wave = game.getCurrentLevel().swapNextWave();
                 addWaveToGame(wave);
-                doShowLevelCleared = false;
-                doShowWaveCleared = false;
+                game.setShowLevelCleared(false);
+                game.setShowWaveCleared(false);
             }
         } else {
-            if (currentLevel.isFinished()) {
-                doShowLevelCleared = true;
-            } else if (currentLevel.getCurrentWave().isFinished()) {
-                doShowWaveCleared = true;
+            if (game.getCurrentLevel().isFinished()) {
+                game.setShowLevelCleared(true);
+            } else if (game.getCurrentLevel().getCurrentWave().isFinished()) {
+                game.setShowWaveCleared(true);
             } else {
-                doShowLevelCleared = false;
-                doShowWaveCleared = false;
+                game.setShowLevelCleared(false);
+                game.setShowWaveCleared(false);
             }
         }
     }
@@ -280,8 +267,8 @@ public class GameCore {
         synchronized (enemies) {
             enemies.remove(e);
         }
-        this.currentLevel.killEnemy(e);
-        lastEnemyDeath = System.currentTimeMillis();
+        game.getCurrentLevel().killEnemy(e);
+        game.setLastEnemyDeath(System.currentTimeMillis());
     }
 
     private void addWaveToGame(AttackWave wave) {
@@ -294,7 +281,7 @@ public class GameCore {
     }
 
     public void keyTypeFromKeyboard(char c) {
-        if (inMenu && currentMenu instanceof GameOver) {
+        if (inMenu && currentMenu instanceof GameOver && c > 32 && c < 128) {
             enteredCharsSoFar += c;
         }
     }
@@ -307,6 +294,13 @@ public class GameCore {
      */
     public void inputFromKeyboard(Key key, boolean isPressed) {
         if (key == null) {
+            return;
+        }
+        if (key.equals(Key.Backspace)
+                && isPressed && inMenu
+                && currentMenu instanceof GameOver
+                && enteredCharsSoFar.length() > 0) {
+            enteredCharsSoFar = enteredCharsSoFar.substring(0, enteredCharsSoFar.length() - 1);
             return;
         }
         Set<Key> pressed = input.getActive();
@@ -328,7 +322,7 @@ public class GameCore {
             }
 
 
-            if (game.p2 != null) {
+            if (game.getP2() != null) {
                 if (pressed.contains(Key.Player2_Weapon1)) {
                     fireUserWeapon("proton_player2", false);
                 }
@@ -348,7 +342,7 @@ public class GameCore {
         }
 
         movePlayer(true, pressed, isPressed);
-        if (game.p2 != null) {
+        if (game.getP2() != null) {
             movePlayer(false, pressed, isPressed);
         }
 
@@ -358,7 +352,7 @@ public class GameCore {
     }
 
     private void fireUserWeapon(String key, boolean isFirstPlayer) {
-        Weapon weapon = (isFirstPlayer ? game.p1 : game.p2).fire(key, System.currentTimeMillis());
+        Weapon weapon = (isFirstPlayer ? game.getP1() : game.getP2()).fire(key, System.currentTimeMillis());
         if (weapon != null) {
             weapon.playFire();
         }
@@ -395,9 +389,9 @@ public class GameCore {
                     continue;
                 }
                 fireEnemyWeapon(enemy);
-                if (PhysicsHandler.checkSpriteCollisions(enemy, game.p1)) {
+                if (PhysicsHandler.checkSpriteCollisions(enemy, game.getP2())) {
                 }
-                if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(enemy, game.p2)) {
+                if (game.getP2() != null && PhysicsHandler.checkSpriteCollisions(enemy, game.getP2())) {
                 } //
                 for (int i = 0; i < game.getUserWeapons().size(); i++) {
                     Weapon w = game.getUserWeapons().get(i);
@@ -426,23 +420,24 @@ public class GameCore {
             if (w == null) {
                 continue;
             }
-            if (PhysicsHandler.checkSpriteCollisions(w, game.p1)) {
-                w.applyDamage(game.p1);
-                Point p = new Point(game.p1.getPosition());
-                GameObject explosion = LoadManager.getExplosion(game.p1.getHealth() <= 0, p);
+            if (PhysicsHandler.checkSpriteCollisions(w, game.getP1())) {
+                w.applyDamage(game.getP1());
+                Point p = new Point(game.getP1().getPosition());
+                GameObject explosion = LoadManager.getExplosion(game.getP1().getHealth() <= 0, p);
                 game.getExplosions().add(explosion);
 
                 LoadManager.getAnExplosionSound().play();
                 game.getEnemyWeapons().remove(w);
             }
-            if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(w, game.p2)) {
+
+            if (game.getP2() != null && PhysicsHandler.checkSpriteCollisions(w, game.getP2())) {
             }
         }
 
-        for (Bonus b : game.bonuses) {
-            if (PhysicsHandler.checkSpriteCollisions(b, game.p1)) {
+        for (Bonus b : game.getBonuses()) {
+            if (PhysicsHandler.checkSpriteCollisions(b, game.getP1())) {
             }
-            if (game.p2 != null && PhysicsHandler.checkSpriteCollisions(b, game.p2)) {
+            if (game.getP2() != null && PhysicsHandler.checkSpriteCollisions(b, game.getP2())) {
             }
         }
 
@@ -464,7 +459,7 @@ public class GameCore {
     }
 
     private void movePlayer(boolean isFirstPlayer, Set<Key> pressed, boolean isPressed) {
-        Player player = isFirstPlayer ? game.p1 : game.p2;
+        Player player = isFirstPlayer ? game.getP1() : game.getP2();
         if (!inMenu && isPressed) {
             if (pressed.contains(isFirstPlayer ? Key.Player1_Left : Key.Player2_Left)) {
                 player.setvX(-3);
@@ -499,15 +494,12 @@ public class GameCore {
         this.backLayer.paint(g);
         this.frontLayer.paint(g);
 
-        game.p1.update(elapsedTime);
-        game.p1.paint(g);
-        if (game.p2 != null) {
-            game.p2.update(elapsedTime);
-            game.p2.paint(g);
-        }
-        for (int i = 0; i < game.backgroundLayers.length; i++) {
-            Image background = game.backgroundLayers[i];
-            g.drawImage(background, 0, 0, null);
+        game.getP1().update(elapsedTime);
+        game.getP1().paint(g);
+
+        if (game.getP2() != null) {
+            game.getP2().update(elapsedTime);
+            game.getP2().paint(g);
         }
 
         List<Enemy> enemies = game.getEnemies();
@@ -586,10 +578,10 @@ public class GameCore {
             }
         }
 
-        if (doShowLevelCleared) {
+        if (game.isShowLevelCleared()) {
             Image i = LoadManager.getImage("level_cleared");
             g.drawImage(i, 390, 200, null);
-        } else if (doShowWaveCleared) {
+        } else if (game.isShowWaveCleared()) {
             Image i = LoadManager.getImage("wave_cleared");
             g.drawImage(i, 390, 200, null);
 

@@ -26,6 +26,7 @@ public class KeyboardHandler implements KeyListener {
 
         map.put(KeyEvent.VK_ESCAPE, Key.Escape);
         map.put(KeyEvent.VK_ENTER, Key.Enter);
+        map.put(KeyEvent.VK_BACK_SPACE, Key.Backspace);
 
 
         map.put(KeyEvent.VK_DOWN, Key.Player1_Down);
@@ -162,7 +163,8 @@ public class KeyboardHandler implements KeyListener {
         /**
          *
          */
-        Enter
+        Enter,
+        Backspace
     }
 
     // For both released & pressed keys, this method will be invoked.

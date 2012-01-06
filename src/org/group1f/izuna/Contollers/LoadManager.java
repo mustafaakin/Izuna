@@ -146,7 +146,6 @@ public class LoadManager {
             for (File f : root.listFiles()) {
                 imageBucket.put("background/" + f.getName().replace(".jpg", ""), ImageIO.read(f));
             }
-            System.out.println(imageBucket.keySet());
             levelBucket = new ArrayDeque<Level>();
             Serializer serializer = new Persister();
             File levelsSource = new File("data/levels.xml");
@@ -156,7 +155,6 @@ public class LoadManager {
                 for (WaveInfo waveData : levelData.getWaves()) {
                     AttackWave wave = new AttackWave();
                     for (WaveEnemy enemyData : waveData.getEnemies()) {
-                        System.out.println("Adding Enemy:" + enemyData.getKey());
                         Enemy enemy = LoadManager.getEnemy(enemyData.getKey());
                         for (WavePath pathData : enemyData.getPaths()) {
                             String pathType = pathData.getType();
@@ -173,8 +171,6 @@ public class LoadManager {
 
                                 QuadraticPath path = new QuadraticPath(startPoint, endPoint, middlePoint, pathData.getDuration());
                                 enemy.addPath(path);
-                            } else {
-                                System.out.println("WTF PATH");
                             }
                         }
                         wave.addEnemy(enemy);
@@ -420,7 +416,6 @@ public class LoadManager {
      * @return
      */
     public static Weapon getWeapon(String key) {
-        System.out.println(key);
         return weaponBucket.get(key).clone();
     }
 
