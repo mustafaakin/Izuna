@@ -9,22 +9,7 @@ import org.group1f.izuna.GameComponents.Drawing.*;
  */
 public class Bonus extends AIControllable {
 
-    /**
-     * 
-     */
-    public enum BonusState {
-
-        /**
-         * 
-         */
-        STATE_FIRED,
-        /**
-         *
-         */
-        STATE_HIT
-    }
-    private final static long DEFAULT_BONUS_FALL_DURATION = 750;
-    private BonusState state;
+    public final static long DEFAULT_BONUS_FALL_DURATION = 750;
     private boolean bonusType; // default = health, 1 = weapon
     private int bonusValue;
 
@@ -32,13 +17,12 @@ public class Bonus extends AIControllable {
      * 
      * @param still
      * @param value
-     * @param type
+     * @param isWeapon
      */
-    public Bonus(Animation still, int value, boolean type) {
+    public Bonus(Animation still, int value, boolean isWeapon) {
         super(still);
         bonusValue = value;
-        bonusType = type;
-        state = BonusState.STATE_FIRED;
+        bonusType = isWeapon;
     }
 
     @Override
@@ -64,19 +48,6 @@ public class Bonus extends AIControllable {
         super.update(elapsedTime);
     }
 
-    /**
-     * 
-     * @param state
-     */
-    public void setState(BonusState state) {
-        if (this.state != state) {
-            this.state = state;
-            if (state == BonusState.STATE_HIT) {
-                setvX(0);
-                setvY(0);
-            }
-        }
-    }
 
     /**
      * 

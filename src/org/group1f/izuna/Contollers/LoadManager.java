@@ -84,6 +84,7 @@ public class LoadManager {
         initilazieSources(enemies, weapons);
         loadLevels();
         readExplosions();
+        readBonus();
     }
 
     public static SoundEffect getAnExplosionSound() {
@@ -307,12 +308,15 @@ public class LoadManager {
     private static void readMenus() throws IOException {
         File level_cleared = new File("data/image/level_cleared.png");
         File wave_cleared = new File("data/image/wave_cleared.png");
+        File game_over = new File("data/image/game_over.png");
 
         imageBucket.put("level_cleared", ImageIO.read(level_cleared));
         imageBucket.put("wave_cleared", ImageIO.read(wave_cleared));
+        imageBucket.put("game_over", ImageIO.read(game_over));
 
         File background = new File("data/image/menu/background.png");
         imageBucket.put("menu_background", ImageIO.read(background));
+
         File root = new File("data/image/menu/");
         for (File f : root.listFiles()) {
             if (f.isDirectory()) {
@@ -435,6 +439,28 @@ public class LoadManager {
      */
     public static Image getImage(String key) {
         return imageBucket.get(key);
+    }
+
+    public static void readBonus() {
+        try {
+            File root = new File("data/image/animation/bonus");
+            Animation bonus = new Animation();
+            for (File f : root.listFiles()) {
+                Image i = ImageIO.read(f);
+                bonus.addFrame(i, i);
+            }
+            animationBucket.put("bonus", bonus);
+        } catch (Exception ex) {
+            System.err.println("Cannot read the bonus:" + ex.getMessage());
+        }
+    }
+
+    public static void submitHighScore(int score, String name) {
+        try {
+            String page = getHTML("http://localhost/izuna/add.php?name=" + name + "&score=" + score);
+        } catch (Exception ex) {
+            System.err.println("Could not submit high score.");
+        }
     }
 
     public static ArrayList<Score> getHighScores() {

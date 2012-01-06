@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.util.Random;
 import org.group1f.izuna.GameComponents.Drawing.*;
+import org.group1f.izuna.GameCore;
 
 /**
  *
@@ -19,7 +20,7 @@ public class Enemy extends AIControllable implements SpaceShip {
     private SoundEffect enteringSound;
     private int health;
     private boolean isRFinished = true;
-
+    private int defaultHealth;
     /**
      * Constructs a default enemy object with given parameters.
      *
@@ -27,18 +28,22 @@ public class Enemy extends AIControllable implements SpaceShip {
      * @param rollLeft
      * @param rollRight
      * @param health
-     * @param defaultWeapon  
+     * @param defaultWeapon
      */
     public Enemy(Animation still, Animation rollLeft, Animation rollRight, int health, Weapon defaultWeapon) {
         super(still);
         this.rollLeft = rollLeft;
         this.rollRight = rollRight;
-        this.enteringSound = enteringSound;
         this.health = health;
+        this.defaultHealth = health;
         isDying = false;
         this.defaultWeapon = defaultWeapon;
     }
 
+    public int getDefaultHealth() {
+        return defaultHealth;
+    }
+    
     /**
      * Sets the default weapon.
      *
@@ -134,11 +139,7 @@ public class Enemy extends AIControllable implements SpaceShip {
      */
     @Override
     public void setHealth(int newValue) {
-        if (newValue > 100) {
-            health = 100;
-        } else {
-            health = newValue;
-        }
+        health = newValue;
     }
 
     /**
@@ -171,12 +172,16 @@ public class Enemy extends AIControllable implements SpaceShip {
             return null;
         }
         Random rand = new Random();
-        int randomNumber = rand.nextInt(30);
+
+        int difficulty = GameCore.getDifficulty();
+        int randomLength = 60 - 10 * difficulty;
+
+        int randomNumber = rand.nextInt(randomLength);
         if (randomNumber == 5) {
             lastFired = time;
             Weapon weapon = defaultWeapon.clone();
             weapon.setDoesBelongEnemy(true);
-            
+
             Image img = getCurrentImage();
             int shipHeight = img.getHeight(null);
             int weaponHeight = weapon.getCurrentImage().getHeight(null);

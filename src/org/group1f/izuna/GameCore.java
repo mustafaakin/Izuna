@@ -4,10 +4,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 import org.group1f.izuna.Contollers.*;
@@ -45,6 +42,7 @@ public class GameCore {
     private GameObject backLayer;
     private GameObject frontLayer;
     private String enteredCharsSoFar = "";
+    private int lastGameScore = 0;
 
     /**
      *
@@ -66,9 +64,13 @@ public class GameCore {
         }
     }
 
+    public static int getDifficulty() {
+        return GameCore.preferences().getInt("difficulty", 0);
+    }
     /*
      * in an infinite loop calculate time in miliseconds call updateBattlefield
      */
+
     private void gameLoop() {
         if (inMenu) {
             List<Image> images = currentMenu.getImagesToDraw();
@@ -89,7 +91,9 @@ public class GameCore {
                     pos = pos + 35;
                 }
             } else if (currentMenu instanceof GameOver) {
-                g.drawString(enteredCharsSoFar, 500, 500);
+                g.drawImage(LoadManager.getImage("game_over"), 460, 230, null);
+                g.drawString("YOUR SCORE IS: " + getLastGameScore(), 500, 500);
+                g.drawString("Enter your name: " + enteredCharsSoFar, 500, 560);
             }
             g.dispose();
             FullScreenManager.update();
@@ -122,12 +126,16 @@ public class GameCore {
 
         List<Enemy> enemies = wave.startWave(System.currentTimeMillis());
         for (Enemy enemy : enemies) {
+            int difficulty = GameCore.getDifficulty();
+            enemy.setHealth(enemy.getHealth() + difficulty * 10);
             enemy.setPathActivationTime(System.currentTimeMillis());
             enemy.setStartingPosition();
             game.getEnemies().add(enemy);
         }
         inMenu = false;
-        game.getBackgroundMusic().close();
+        if (game.getBackgroundMusic() != null) {
+            game.getBackgroundMusic().close();
+        }
     }
 
     /*
@@ -172,7 +180,12 @@ public class GameCore {
                 } else {
                     return;
                 }
-                getPosition().translate(-1, 0);
+                int width = this.getCurrentImage().getWidth(null);
+                Point pos = getPosition();
+                if (pos.x + width < 1280) {
+                    return;
+                }
+                pos.translate(-1, 0);
 
                 super.update(elapsedTime);
 
@@ -200,7 +213,12 @@ public class GameCore {
                 } else {
                     return;
                 }
-                super.getPosition().translate(-1, 0);
+                int width = this.getCurrentImage().getWidth(null);
+                Point pos = getPosition();
+                if (pos.x + width < 1280) {
+                    return;
+                }
+                pos.translate(-1, 0);
                 super.update(elapsedTime);
             }
         };
@@ -221,8 +239,22 @@ public class GameCore {
     public void enterGameOver() {
         game.setBackgroundMusic(LoadManager.getSoundEffect("main_menu"));
         game.getBackgroundMusic().play();
+        lastGameScore = game.getScore();
         currentMenu = new GameOver(this);
         inMenu = true;
+        game = new GameState();
+    }
+
+    public String getEnteredCharsSoFar() {
+        return enteredCharsSoFar;
+    }
+
+    public int getLastGameScore() {
+        return lastGameScore;
+    }
+
+    public GameState getGame() {
+        return game;
     }
 
     public void tryToLoadNewLevel() {
@@ -267,8 +299,29 @@ public class GameCore {
         synchronized (enemies) {
             enemies.remove(e);
         }
+        Random rand = new Random();
+        int i = rand.nextInt(100);
+        if (i < 90) {
+            Point position = new Point(e.getPosition());
+            Bonus bonus = new Bonus(LoadManager.getAnim("bonus").clone(), i, false);
+
+            Point start = new Point(position);
+            Point end = new Point(position);
+
+            end.y = start.y;
+            end.x = -200; // The position that the weapon will disappear        
+            LinearPath path = new LinearPath(start, end, Bonus.DEFAULT_BONUS_FALL_DURATION);
+            bonus.addPath(path);
+            bonus.setPathActivationTime(System.currentTimeMillis());
+            this.game.getBonuses().add(bonus);
+            
+            System.out.println("addingBonus");
+        }
+
+
         game.getCurrentLevel().killEnemy(e);
         game.setLastEnemyDeath(System.currentTimeMillis());
+        game.increaseScore(e.getDefaultHealth());
     }
 
     private void addWaveToGame(AttackWave wave) {
@@ -389,9 +442,11 @@ public class GameCore {
                     continue;
                 }
                 fireEnemyWeapon(enemy);
-                if (PhysicsHandler.checkSpriteCollisions(enemy, game.getP2())) {
+                if (PhysicsHandler.checkSpriteCollisions(enemy, game.getP1())) {
+                    enterGameOver();
                 }
                 if (game.getP2() != null && PhysicsHandler.checkSpriteCollisions(enemy, game.getP2())) {
+                    enterGameOver();
                 } //
                 for (int i = 0; i < game.getUserWeapons().size(); i++) {
                     Weapon w = game.getUserWeapons().get(i);
@@ -422,6 +477,10 @@ public class GameCore {
             }
             if (PhysicsHandler.checkSpriteCollisions(w, game.getP1())) {
                 w.applyDamage(game.getP1());
+                if (game.getP1().getHealth() <= 0) {
+                    enterGameOver();
+                }
+
                 Point p = new Point(game.getP1().getPosition());
                 GameObject explosion = LoadManager.getExplosion(game.getP1().getHealth() <= 0, p);
                 game.getExplosions().add(explosion);
@@ -431,6 +490,17 @@ public class GameCore {
             }
 
             if (game.getP2() != null && PhysicsHandler.checkSpriteCollisions(w, game.getP2())) {
+                w.applyDamage(game.getP2());
+                if (game.getP2().getHealth() <= 0) {
+                    enterGameOver();
+                }
+
+                Point p = new Point(game.getP2().getPosition());
+                GameObject explosion = LoadManager.getExplosion(game.getP2().getHealth() <= 0, p);
+                game.getExplosions().add(explosion);
+
+                LoadManager.getAnExplosionSound().play();
+                game.getEnemyWeapons().remove(w);
             }
         }
 
@@ -574,6 +644,23 @@ public class GameCore {
                         }
                     }
                 } catch (Exception e) {
+                }
+            }
+        }
+
+
+        ArrayList<Bonus> bonus = game.getBonuses();
+        synchronized (bonus) {
+            if (!bonus.isEmpty()) {
+                try {
+                    for (Bonus k : bonus) {
+                        if (k != null) {
+                            k.update(elapsedTime);                            
+                            k.paint(g);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }

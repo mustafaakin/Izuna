@@ -48,7 +48,7 @@ public class KeyboardHandler implements KeyListener {
         map.put(KeyEvent.VK_2, Key.Player2_Weapon2);
         map.put(KeyEvent.VK_3, Key.Player2_Weapon3);
         map.put(KeyEvent.VK_4, Key.Player2_Weapon4);
-        map.put(KeyEvent.VK_TAB, Key.Player2_Weapon5);
+        map.put(KeyEvent.VK_T, Key.Player2_Weapon5);
 
     }
 

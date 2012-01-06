@@ -18,6 +18,7 @@ public class GameOver extends Menu {
      *
      * @param gameCore
      */
+    
     public GameOver(final GameCore gameCore) {
         super(gameCore);
 
@@ -25,7 +26,8 @@ public class GameOver extends Menu {
 
             @Override
             public void onInteracted(KeyboardHandler.Key key) {
-                if (key.equals(KeyboardHandler.Key.Enter)) {
+                if (key.equals(KeyboardHandler.Key.Enter)) {      
+                    LoadManager.submitHighScore(gameCore.getLastGameScore(), gameCore.getEnteredCharsSoFar());
                     gameCore.currentMenu = new MainMenu(gameCore);
                 }
             }

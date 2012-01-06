@@ -180,4 +180,15 @@ public class GameState {
     public synchronized ArrayList<Weapon> getUserWeapons() {
         return userWeapons;
     }
+    
+    public void increaseScore(int difference){
+        int difficulty = GameCore.getDifficulty();
+        double factor = 1;
+        if ( difficulty == 1){
+            factor = 1.25;
+        } else if ( factor == 2){
+            factor = 1.75;
+        }
+        score += (double)(difference * factor);
+    }
 }
